@@ -4,17 +4,11 @@ This project is developed by my teammate and I as an assignment for Data Structu
 
 ## How to Use Git with Netbeans?
 <br>
-1. Open an empty netbeans project.
+1. Please view this video (0:10 - 2:54) on how to clone the remote repository into your desktop. https://youtu.be/aBVOAnygcZw
 
-2. Right click the project, choose Git>Initialise repo
-- A repo which is your project folder is created.
-
-3. Then at the top panel of your ide, click Team>Remote>Clone. 
-- A window will popup and ask you which repo you want to clone.Paste this url https://github.com/zhuolisam/BugsLife.git.
-- Select remote branch, which is master, and select your destination folder(by defauly your current project folder).
-
-
-4. Then you can see all files are cloned from the remote repo into your local repo!
+2. The link to the remote repository is https://github.com/Darrensow/Bugs-Life.git
+   
+3. Once you follow all the steps in the video, you can see all files are cloned from the remote repo into your local repo!
 
 # How to work with your teammate?
 <br>
