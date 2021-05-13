@@ -6,18 +6,27 @@ import java.util.Scanner;
 
 public class Window {
 
-    private Project project_control = new Project();
-    private static ArrayList<Project> project_Array = new ArrayList<>();
-    PeopleADT people_Array = new PeopleADT();
+    private Project project_control = new Project();   //use for call or use method from project class
+    private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
+    PeopleADT people_Array = new PeopleADT();                           // store people
 //    private ArrayList<people> people_Array = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
-    private static int numberproject = 0;
-    private People current_people;
+    private static int numberproject = 0;    // project id
+    private People current_people; // current user logged
 
+    /**
+     *
+     * @param project want to remove
+     */
     public void removeproject(Project project_obj) {
         project_Array.remove(project_obj);
     }
 
+    /**
+     *
+     * @param action
+     * @return true if action success , false if false.
+     */
     public boolean ac(String ac) {
         if ("register".equals(ac)) {
             current_people = new User().register();
@@ -33,10 +42,9 @@ public class Window {
         }
     }
 
-    //@para
-    //action addproject, search project,sort the display
-    //directly to respective method
-    //@return 
+    /**
+     * open window
+     */
     public void userwindow() { // display project original window
         sortBased(1);
         boolean quit = false;
@@ -71,6 +79,11 @@ public class Window {
         }
     }
 
+    /**
+     *
+     * @param keyword or ID of the project
+     *
+     */
     public void search(String input) {
         if (isnumberic(input)) {
             entertheprojext(Integer.parseInt(input.substring(1)));
@@ -87,6 +100,11 @@ public class Window {
         }
     }
 
+    /**
+     *
+     * @param seachkeyword
+     * @return true if have that project
+     */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Project> temp = new ArrayList<>();
         PriorityQueue<Project> pq = new PriorityQueue<>();
@@ -118,7 +136,11 @@ public class Window {
         }
     }
 
-    //check whether is number or not 
+    /**
+     *
+     * @param keyword
+     * @return true if it is an id
+     */
     public boolean isnumberic(String sen) {
         try {
             if (sen.charAt(0) != '#') {
@@ -134,11 +156,20 @@ public class Window {
         return true;
     }
 
+    /**
+     *
+     * @param project name add project
+     */
     public void addproject(String name) {
         project_Array.add(new Project(name, numberproject, current_people));
         numberproject++;
     }
 
+    /**
+     *
+     * @param action change sort
+     *
+     */
     public void sortBased(int num) {
         if (num == 1) {
             project_control.setSignal("ID");
@@ -147,10 +178,17 @@ public class Window {
         }
     }
 
+    /**
+     *
+     * @param project index enter project window
+     */
     public void entertheprojext(int index) {
         project_Array.get(index).projectwindow(current_people);
     }
 
+    /**
+     * print in sorted array
+     */
     public void print() {
         PriorityQueue<Project> pq = new PriorityQueue<>();
         for (int i = 0; i < project_Array.size(); i++) {

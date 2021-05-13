@@ -6,36 +6,52 @@ import java.util.Scanner;
 
 public class Project implements Comparable<Project> {
 
-    private Window window_control = new Window();
-    private static ArrayList<Issue> issue_Array = new ArrayList<>();
-    PeopleADT people_Array = new PeopleADT();
+    private Window window_control = new Window(); //call or use method from window class
+    private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
+    PeopleADT people_Array = new PeopleADT();   // store people
 //    ArrayList<people> people_Array = new ArrayList<>();
-    private Issue issue_control = new Issue();
+    private Issue issue_control = new Issue(); // call or use method from issue class 
     Scanner sc = new Scanner(System.in);
-    private static int numissue = 0;
-    private Integer ID;
-    private String name;
-    private People current_people;
-    private String signal;
-    private People owner;
+    private static int numissue = 0;  // issue id
+    private Integer ID;  //project id
+    private String name; //project name
+    private People current_people;  //current log in people
+    private String signal;  // use for sort / change compareto method
+    private People owner;  // project owner
 
     public Project() {
     }
-
+/**
+ * 
+ * @param signal 
+ * set signal
+ */
     public void setSignal(String signal) {
         this.signal = signal;
     }
-
+/**
+ * 
+ * @param issue want to remove
+ * remove issue
+ */
     public void removeissue(Issue issue_obj) {
         issue_Array.remove(issue_obj);
     }
-
+/**
+ * 
+ * @param name
+ * @param ID
+ * @param owner 
+ * create project
+ */
     public Project(String name, int ID, People owner) {
         this.ID = ID;
         this.name = name;
         this.owner = owner;
     }
-
+/**
+ * owner of project window
+ */
     public void projectwindow_owner() {
         sortBased(1);
         boolean quit = false;
@@ -84,7 +100,9 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-
+/**
+ * normal user window
+ */
     public void projectwindow() {
         sortBased(1);
         boolean quit = false;
@@ -130,11 +148,11 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-
-    /**
-     *
-     * @param current_people Current user logged in
-     */
+/**
+ * 
+ * @param current_people 
+ * determine whether is owner or not
+ */
     public void projectwindow(People current_people) {
         if (current_people == owner) {
             projectwindow_owner();
@@ -150,7 +168,9 @@ public class Project implements Comparable<Project> {
     public String getName() {
         return name;
     }
-
+/**
+ * remove project
+ */
     public void clear() {
         for (int i = 0; i < issue_Array.size(); i++) {
             issue_Array.get(i).getAssignee().reduceassigned();
@@ -158,7 +178,9 @@ public class Project implements Comparable<Project> {
         window_control.removeproject(this);
     }
 
-//String title, String text, String creator, String assignee, String[] tags, int priop
+/**
+ * add issue
+ */
     public void addissue() {
         System.out.println("Enter issue name");
         String issue_name = sc.next();
@@ -201,7 +223,11 @@ public class Project implements Comparable<Project> {
         issue_Array.add(new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags, priority));
         numissue++;
     }
-
+/**
+ * 
+ * @param keyword search
+ * search issue
+ */
     public void search(String input) { //  only input number will directly assume as ID
         if (isnumberic(input)) {
             entertheissue(Integer.parseInt(input.substring(1)));
@@ -217,7 +243,12 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-
+/**
+ * 
+ * @param seachkeyword
+ * print issue
+ * @return true if have isseu
+ */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Issue> temp = new ArrayList<>();
         PriorityQueue<Issue> pq = new PriorityQueue<>();
@@ -258,7 +289,13 @@ public class Project implements Comparable<Project> {
             return false;
         }
     }
-
+/**
+ * 
+ * @param comment arraylist
+ * @param keyword
+ * check a wword in the comment 
+ * @return 
+ */
     public boolean checkcomment(ArrayList<Comment> arr, String token) {
         for (int i = 0; i < arr.size(); i++) {
             if (arr.get(i).getText().contains(token + " ")) {
@@ -272,7 +309,7 @@ public class Project implements Comparable<Project> {
         return false;
     }
 
-    //check whether is number or not 
+    //check whether is id or not
     public boolean isnumberic(String sen) {
         try {
             if (sen.charAt(0) != '#') {
@@ -287,7 +324,11 @@ public class Project implements Comparable<Project> {
         }
         return true;
     }
-
+/**
+ * 
+ * @param action
+ * change signal
+ */
     public void sortBased(int num) {
         if (num == 1) {
             issue_control.setSignal("PRIORITY");
@@ -295,7 +336,9 @@ public class Project implements Comparable<Project> {
             issue_control.setSignal("TIME");
         }
     }
-
+/*
+    print array
+    */
     public void print() {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         for (int i = 0; i < issue_Array.size(); i++) {
@@ -305,7 +348,9 @@ public class Project implements Comparable<Project> {
             System.out.println(pq.poll());
         }
     }
-
+/*
+  include  filter kind
+    */
     public void filterin(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
@@ -327,7 +372,9 @@ public class Project implements Comparable<Project> {
             System.out.println(pq.poll());
         }
     }
-
+/*
+    exclude filter 
+    */
     public void filterout(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
@@ -357,13 +404,18 @@ public class Project implements Comparable<Project> {
         return null;
     }
 
+    /**
+     * 
+     * @param issue index
+     * enter issue window
+     */
     public void entertheissue(int index) {
-
+        issue_Array.get(index).issuewindow(current_people);
     }
 
     @Override
     public int compareTo(Project o) {
-        if (signal == "ID") {
+        if (signal == "NAME") {
             return this.name.compareTo(o.name);
         } else {
             return this.ID.compareTo(o.ID);
