@@ -13,8 +13,8 @@ public class Issue implements Comparable<Issue>, Cloneable {
     private LocalDateTime time;
     private People creator;
     private People assignee;
-    private ArrayList<Comment> comment;
-    private static int numbercomment;
+    private ArrayList<Comment> comment = new ArrayList<>();
+    private static int numbercomment = 1;
     private String tags;
     private Integer priority;
     private String status;
@@ -65,7 +65,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
-                    addcomment();
+                    addComment();
                     break;
                 case 2:
                     react();
@@ -91,7 +91,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
-                    addcomment();
+                    addComment();
                     break;
                 case 2:
                     react();
@@ -130,7 +130,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
         //upload any change into text or database
     }
 
-    public void addcomment() {
+    public void addComment() {
 
         System.out.println("enter comment");
         String text = sc.nextLine();
@@ -156,6 +156,21 @@ public class Issue implements Comparable<Issue>, Cloneable {
         text = text_obj.getString();
         comment.add(new Comment(current_people, text, numbercomment));
         numbercomment++;
+    }
+
+    /**
+     * Displays the whole comment section.
+     * Regarding the wrapping of the text, have to modify the toString() in Comment class
+     * @return String representation of the whole comment section.
+     */
+    public String displayCommentSection() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Comments\n-----------");
+        sb.append("-----------");
+        for (Comment value : comment) {
+            sb.append(value);
+        }
+        return sb.toString();
     }
 
     public void clear() {

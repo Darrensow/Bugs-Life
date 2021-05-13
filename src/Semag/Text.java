@@ -45,11 +45,15 @@ public class Text<E> {
         list.clear();
     }
 
+    //StringBuilder can KIV first, can consider changing to better optimize the memory
     public String getString() {
         String result = "";
+//        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             result += list.get(i) + "\n";
+//            sb.append(list.get(i) + "\n");
         }
+//        return sb.toString();
         return result;
     }
 }
