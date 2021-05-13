@@ -165,10 +165,9 @@ public class Issue implements Comparable<Issue>, Cloneable {
      * Regarding the wrapping of the text, have to modify the toString() in Comment class
      * @return String representation of the whole comment section.
      */
-    public String displayCommentSection() {
+    public String displayCommentsSection() {
         StringBuilder sb = new StringBuilder();
         sb.append("Comments\n-----------");
-        sb.append("-----------");
         for (Comment value : comment) {
             sb.append(value);
         }

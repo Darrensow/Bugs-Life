@@ -2,6 +2,7 @@ package Semag;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Comment {
 
@@ -15,7 +16,7 @@ public class Comment {
     private int angry = 0;
     private int likes = 0;
     private int dislikes = 0;
-
+    private static Scanner sc = new Scanner(System.in);
     //empty constructor
     public Comment() { }
 
@@ -58,21 +59,73 @@ public class Comment {
     }
 
     /**
-     * @return String representation of the comment
+     * @return String representation of the comment + its own replies section
      */
     @Override
     public String toString() {
         String str = "#" + this.commentID;
-        str += "\nCreated by " + this.createdBy + " on " + this.createdOn;
+        str += "\n" + this.createdBy + " | " + this.createdOn;
         str += "\n" + this.text;
         str += "\nReactions: ANGRY(" + this.angry + ") | HAPPY(" + this.happy + ")";
         str += "\nLikes: " + this.likes;
         str += "\nDislikes: " + this.dislikes;
+        str += displayRepliesSection();
         return str + "\n";
     }
 
-    public void addReply() {
+    /**
+     * Displays the whole replies section.
+     * Regarding the wrapping of the text, have to modify the toString() in Reply class
+     * @return String representation of the whole repleis section.
+     */
+    public String displayRepliesSection() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n\tReplies\n-----------");
+        for (Reply value : replies) {
+            sb.append(value);
+        }
+        return sb.toString();
+    }
 
+    /**
+     * Add replies under the comment
+     */
+    public void addReply() {
+        //can be modified afterwards
+        System.out.println("enter comment");
+        String text = sc.nextLine();
+        Text<String> text_obj = new Text<>();
+        Text<String> temp_text = new Text<>();
+        while (!text.equals("#quit")) {
+            if (text.equals("#undo")) {
+                if (text_obj.getSize() < 0) {
+                    break;
+                }
+                temp_text.push(text_obj.pop());
+            } else if (text.equals("#redo")) {
+                if (temp_text.getSize() < 0) {
+                    break;
+                }
+                text_obj.push(temp_text.pop());
+            } else {
+                text_obj.push(text);
+                temp_text.clear();
+            }
+            text = sc.nextLine();
+        }
+        text = text_obj.getString();
+
+        //call the constructor with 3 parameters in the Reply class.
+        //discuss again how to link the People who are commenting and also Replying - KIV
+        /**
+         * My idea is below (create a new People on the spot and add their reply to the comments)
+         * Anyone can reply (Anonymous)
+         * Users can reply (non-Anonymous)
+         */
+        /*
+            People replier = new People(...);
+            replies.add(new Reply(replier, text));
+         */
     }
 
     //methods that may be used for GUI implementation - KIV first
