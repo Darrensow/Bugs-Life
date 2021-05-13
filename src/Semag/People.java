@@ -10,7 +10,7 @@ public class People {
     public People() {
     }
 
-    public People(int password, String name, int ID) {
+    public People(int password, String name,int ID) {
         this.password = password;
         this.name = name;
         this.ID=ID;
