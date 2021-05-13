@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Issue implements Comparable<Issue>, Cloneable {
 
-    private Project project_control =new Project();
+    private Project project_control = new Project();
     private int ID;
     private String title;
     private String text;
@@ -110,8 +110,10 @@ public class Issue implements Comparable<Issue>, Cloneable {
 
     public void issuewindow(People current_people) {
         if (current_people == creator) {
+            this.current_people = current_people;
             issuewindow_owner();
         } else {
+            this.current_people = current_people;
             issuewindow();
         }
     }
@@ -161,8 +163,9 @@ public class Issue implements Comparable<Issue>, Cloneable {
     }
 
     /**
-     * Displays the whole comment section.
-     * Regarding the wrapping of the text, have to modify the toString() in Comment class
+     * Displays the whole comment section. Regarding the wrapping of the text,
+     * have to modify the toString() in Comment class
+     *
      * @return String representation of the whole comment section.
      */
     public String displayCommentsSection() {

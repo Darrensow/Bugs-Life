@@ -155,8 +155,10 @@ public class Project implements Comparable<Project> {
  */
     public void projectwindow(People current_people) {
         if (current_people == owner) {
+            this.current_people=current_people;
             projectwindow_owner();
         } else {
+            this.current_people=current_people;
             projectwindow();
         }
     }
