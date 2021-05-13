@@ -30,6 +30,5 @@ public class Comment extends Window {
     public String getText() {
         return text;
     }
-    
 
 }

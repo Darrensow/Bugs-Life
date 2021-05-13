@@ -131,6 +131,10 @@ public class Project implements Comparable<Project> {
         }
     }
 
+    /**
+     *
+     * @param current_people Current user logged in
+     */
     public void projectwindow(People current_people) {
         if (current_people == owner) {
             projectwindow_owner();
