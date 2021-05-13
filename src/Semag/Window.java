@@ -16,7 +16,7 @@ public class Window {
 
     /**
      *
-     * @param project want to remove
+     * @param project_obj want to remove
      */
     public void removeproject(Project project_obj) {
         project_Array.remove(project_obj);
@@ -24,7 +24,7 @@ public class Window {
 
     /**
      *
-     * @param action
+     * @param ac
      * @return true if action success , false if false.
      */
     public boolean ac(String ac) {
@@ -81,7 +81,7 @@ public class Window {
 
     /**
      *
-     * @param keyword or ID of the project
+     * @param input keyword or ID of the project
      *
      */
     public void search(String input) {
@@ -138,7 +138,7 @@ public class Window {
 
     /**
      *
-     * @param keyword
+     * @param sen keyword
      * @return true if it is an id
      */
     public boolean isnumberic(String sen) {
@@ -158,7 +158,7 @@ public class Window {
 
     /**
      *
-     * @param project name add project
+     * @param name project name add project
      */
     public void addproject(String name) {
         project_Array.add(new Project(name, numberproject, current_people));
@@ -167,7 +167,7 @@ public class Window {
 
     /**
      *
-     * @param action change sort
+     * @param num action change sort
      *
      */
     public void sortBased(int num) {
@@ -180,7 +180,7 @@ public class Window {
 
     /**
      *
-     * @param project index enter project window
+     * @param index project index enter project window
      */
     public void entertheprojext(int index) {
         project_Array.get(index).projectwindow(current_people);
