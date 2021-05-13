@@ -10,6 +10,7 @@ public class SEMAG {
         Scanner sc = new Scanner(System.in);
         // login
         Window obj = new Window();
+        System.out.println("df");
         while(true){
             System.out.println("login / register");
             String input1 = sc.nextLine();
@@ -18,6 +19,7 @@ public class SEMAG {
             }
             obj.userwindow();
         }
+
     }
     
 }
