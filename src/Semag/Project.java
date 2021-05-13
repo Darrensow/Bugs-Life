@@ -255,7 +255,7 @@ public class Project implements Comparable<Project> {
         }
     }
 
-    public boolean checkcomment(ArrayList<comment> arr, String token) {
+    public boolean checkcomment(ArrayList<Comment> arr, String token) {
         for (int i = 0; i < arr.size(); i++) {
             if (arr.get(i).getText().contains(token + " ")) {
                 return true;

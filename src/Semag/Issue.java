@@ -13,7 +13,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
     private LocalDateTime time;
     private People creator;
     private People assignee;
-    private ArrayList<comment> comment;
+    private ArrayList<Comment> comment;
     private static int numbercomment;
     private String tags;
     private Integer priority;
@@ -154,7 +154,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
             text = sc.nextLine();
         }
         text = text_obj.getString();
-        comment.add(new comment(current_people, text, numbercomment));
+        comment.add(new Comment(current_people, text, numbercomment));
         numbercomment++;
     }
 
@@ -174,7 +174,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
         return text;
     }
 
-    public ArrayList<comment> getComment() {
+    public ArrayList<Comment> getComment() {
         return comment;
     }
 

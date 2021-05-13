@@ -2,7 +2,7 @@ package Semag;
 
 import java.time.LocalDate;
 
-public class comment extends Window {
+public class Comment extends Window {
 
     private static int number = 0;
     private int ID;
@@ -12,7 +12,7 @@ public class comment extends Window {
     private int happy = 0;
     private int angry = 0;  // can add on
 
-    public comment(People createdby, String text, int ID) {
+    public Comment(People createdby, String text, int ID) {
         this.ID = ID;
         Date = LocalDate.now();
         this.name = createdby;
