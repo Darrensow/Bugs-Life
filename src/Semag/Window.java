@@ -1,8 +1,13 @@
 package Semag;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Scanner;
+import javax.swing.JFileChooser;
 
 public class Window {
 
@@ -198,4 +203,94 @@ public class Window {
             System.out.println(pq.poll());
         }
     }
+
+    // 1 = txt , 2 = csv
+    public void selectfile(int num) {  //select file location and set file name
+        JFileChooser choose = new JFileChooser();
+        choose.setCurrentDirectory(new File("."));  // select where the file window start
+        if (num == 1) {
+            choose.setSelectedFile(new File("report.txt"));
+        } else if (num == 2) {
+            choose.setSelectedFile(new File("report.csv"));
+        }
+
+        int res = choose.showSaveDialog(choose);     // select file to save
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File file = new File(choose.getSelectedFile().getAbsolutePath());
+            createtextfile(file, num);
+        }
+    }
+
+    public void createtextfile(File file_name, int num) {
+        int resolved = 0;
+        int unresolved = 0;
+        int in_progress = 0;
+        ArrayList<labelCounter> label = new ArrayList<>();
+        int num_label = 0;
+        labelCounter top_label;
+        for (int i = 0; i < project_Array.size(); i++) {
+            for (int j = 0; j < project_Array.get(i).issue_Arraysize(); j++) {
+                Issue temp = project_Array.get(i).issuegetindex(j);
+                switch (temp.getStatus()) {
+                    case "resolved":
+                        resolved++;
+                        break;
+                    case "unresolved":
+                        unresolved++;
+                        break;
+                    case "in progress":
+                        in_progress++;
+                        break;
+                }
+                int have = -1;
+                for (int k = 0; k < label.size(); k++) {
+                    if (label.get(k).getName().equals(temp.getTags())) {
+                        label.get(k).add();
+                        have = 1;
+                        break;
+                    }
+                }
+                if (have == -1) {
+                    label.add(new labelCounter(temp.getTags()));
+                }
+            }
+        }
+        PriorityQueue<labelCounter> pq = new PriorityQueue<>();
+        for (int i = 0; i < label.size(); i++) {
+            pq.add(label.get(i));
+        }
+        top_label = pq.peek();
+        int max = -1;
+        String top_perform = "";
+        for (int i = 0; i < people_Array.size(); i++) {
+            if (people_Array.get(i).getNumber_solved() > max) {
+                max = people_Array.get(i).getNumber_solved();
+                top_perform = people_Array.get(i).getName();
+            }
+        }
+        if (num == 1) {
+            try {
+                PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
+                out.println("Number of resolved issue : " + resolved);
+                out.println("Number of unresolved issue : " + unresolved);
+                out.println("Number of in progress issue : " + in_progress);
+                out.println("Most frequent label : " + top_label.getName() + " (total: " + top_label.getTotal() + " )");
+                out.println("Top performer in team: " + top_perform + "(total: " + max + " )");
+                out.close();
+            } catch (IOException e) {
+                System.out.println("Problem with file output");
+            }
+        } else if (num == 2) {
+            try {
+                PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
+                out.println("Number of resolved issue, Number of unresolved issue, Number of in progress issue, Most frequent label, Top performer in team");
+                out.println(resolved + ", " + unresolved + ", " + in_progress + ", " + top_label.getName() + " (" + top_label.getTotal() + "), " + top_perform + " (" + max + ") ");
+                out.close();
+            } catch (IOException e) {
+                System.out.println("Problem with file output");
+            }
+        }
+
+    }
+
 }

@@ -6,14 +6,27 @@ public class People {
     private String name;
     private int assigned = 0;
     private int ID;
+    private int number_solved = 0;
 
+    public void insolve() {
+        number_solved++;
+    }
+
+    public void resolve() {
+        number_solved --;
+    }
+
+    public int getNumber_solved() {
+        return number_solved;
+    }
+    
     public People() {
     }
 
-    public People(int password, String name,int ID) {
+    public People(int password, String name, int ID) {
         this.password = password;
         this.name = name;
-        this.ID=ID;
+        this.ID = ID;
     }
 
     public int getPassword() {
@@ -27,13 +40,13 @@ public class People {
     public void assigned() {
         assigned++;
     }
-    public  void reduceassigned(){
+
+    public void reduceassigned() {
         assigned--;
     }
 
     public String getName() {
         return name;
     }
-    
 
 }

@@ -21,37 +21,38 @@ public class Project implements Comparable<Project> {
 
     public Project() {
     }
-/**
- * 
- * @param signal 
- * set signal
- */
+
+    /**
+     *
+     * @param signal set signal
+     */
     public void setSignal(String signal) {
         this.signal = signal;
     }
-/**
- * 
- * @param issue want to remove
- * remove issue
- */
+
+    /**
+     *
+     * @param issue want to remove remove issue
+     */
     public void removeissue(Issue issue_obj) {
         issue_Array.remove(issue_obj);
     }
-/**
- * 
- * @param name
- * @param ID
- * @param owner 
- * create project
- */
+
+    /**
+     *
+     * @param name
+     * @param ID
+     * @param owner create project
+     */
     public Project(String name, int ID, People owner) {
         this.ID = ID;
         this.name = name;
         this.owner = owner;
     }
-/**
- * owner of project window
- */
+
+    /**
+     * owner of project window
+     */
     public void projectwindow_owner() {
         sortBased(1);
         boolean quit = false;
@@ -100,9 +101,10 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-/**
- * normal user window
- */
+
+    /**
+     * normal user window
+     */
     public void projectwindow() {
         sortBased(1);
         boolean quit = false;
@@ -148,17 +150,17 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-/**
- * 
- * @param current_people 
- * determine whether is owner or not
- */
+
+    /**
+     *
+     * @param current_people determine whether is owner or not
+     */
     public void projectwindow(People current_people) {
         if (current_people == owner) {
-            this.current_people=current_people;
+            this.current_people = current_people;
             projectwindow_owner();
         } else {
-            this.current_people=current_people;
+            this.current_people = current_people;
             projectwindow();
         }
     }
@@ -170,9 +172,10 @@ public class Project implements Comparable<Project> {
     public String getName() {
         return name;
     }
-/**
- * remove project
- */
+
+    /**
+     * remove project
+     */
     public void clear() {
         for (int i = 0; i < issue_Array.size(); i++) {
             issue_Array.get(i).getAssignee().reduceassigned();
@@ -180,9 +183,9 @@ public class Project implements Comparable<Project> {
         window_control.removeproject(this);
     }
 
-/**
- * add issue
- */
+    /**
+     * add issue
+     */
     public void addissue() {
         System.out.println("Enter issue name");
         String issue_name = sc.next();
@@ -225,11 +228,11 @@ public class Project implements Comparable<Project> {
         issue_Array.add(new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags, priority));
         numissue++;
     }
-/**
- * 
- * @param keyword search
- * search issue
- */
+
+    /**
+     *
+     * @param keyword search search issue
+     */
     public void search(String input) { //  only input number will directly assume as ID
         if (isnumberic(input)) {
             entertheissue(Integer.parseInt(input.substring(1)));
@@ -245,12 +248,12 @@ public class Project implements Comparable<Project> {
             }
         }
     }
-/**
- * 
- * @param seachkeyword
- * print issue
- * @return true if have isseu
- */
+
+    /**
+     *
+     * @param seachkeyword print issue
+     * @return true if have isseu
+     */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Issue> temp = new ArrayList<>();
         PriorityQueue<Issue> pq = new PriorityQueue<>();
@@ -291,13 +294,13 @@ public class Project implements Comparable<Project> {
             return false;
         }
     }
-/**
- * 
- * @param comment arraylist
- * @param keyword
- * check a wword in the comment 
- * @return 
- */
+
+    /**
+     *
+     * @param comment arraylist
+     * @param keyword check a wword in the comment
+     * @return
+     */
     public boolean checkcomment(ArrayList<Comment> arr, String token) {
         for (int i = 0; i < arr.size(); i++) {
             if (arr.get(i).getText().contains(token + " ")) {
@@ -326,11 +329,11 @@ public class Project implements Comparable<Project> {
         }
         return true;
     }
-/**
- * 
- * @param action
- * change signal
- */
+
+    /**
+     *
+     * @param action change signal
+     */
     public void sortBased(int num) {
         if (num == 1) {
             issue_control.setSignal("PRIORITY");
@@ -338,9 +341,10 @@ public class Project implements Comparable<Project> {
             issue_control.setSignal("TIME");
         }
     }
-/*
+
+    /*
     print array
-    */
+     */
     public void print() {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         for (int i = 0; i < issue_Array.size(); i++) {
@@ -350,9 +354,10 @@ public class Project implements Comparable<Project> {
             System.out.println(pq.poll());
         }
     }
-/*
+
+    /*
   include  filter kind
-    */
+     */
     public void filterin(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
@@ -374,9 +379,10 @@ public class Project implements Comparable<Project> {
             System.out.println(pq.poll());
         }
     }
-/*
+
+    /*
     exclude filter 
-    */
+     */
     public void filterout(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
@@ -407,9 +413,8 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     * 
-     * @param issue index
-     * enter issue window
+     *
+     * @param issue index enter issue window
      */
     public void entertheissue(int index) {
         issue_Array.get(index).issuewindow(current_people);
@@ -424,4 +429,13 @@ public class Project implements Comparable<Project> {
         }
 
     }
+
+    public int issue_Arraysize() {
+        return issue_Array.size();
+    }
+
+    public Issue issuegetindex(int index) {
+        return issue_Array.get(index);
+    }
+
 }
