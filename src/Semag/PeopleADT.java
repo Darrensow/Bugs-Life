@@ -21,4 +21,14 @@ public class PeopleADT {
     public int size() {
         return list.size();
     }
+
+    public boolean contain(String name) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

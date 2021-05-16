@@ -1,5 +1,6 @@
 package Semag;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -205,7 +206,7 @@ public class Window {
     }
 
     // 1 = txt , 2 = csv
-    public void selectfile(int num) {  //select file location and set file name
+    public void selectfile(int num) throws IOException {  //select file location and set file name
         JFileChooser choose = new JFileChooser();
         choose.setCurrentDirectory(new File("."));  // select where the file window start
         if (num == 1) {
@@ -221,7 +222,7 @@ public class Window {
         }
     }
 
-    public void createtextfile(File file_name, int num) {
+    public void createtextfile(File file_name, int num) throws IOException {
         int resolved = 0;
         int unresolved = 0;
         int in_progress = 0;
@@ -289,6 +290,17 @@ public class Window {
             } catch (IOException e) {
                 System.out.println("Problem with file output");
             }
+        }
+        //open the file
+        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
+        {
+            System.out.println("not supported");
+            return;
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (file_name.exists()) //checks file exists or not  
+        {
+            desktop.open(file_name);              //opens the specified file  
         }
 
     }

@@ -4,15 +4,24 @@ import java.util.Random;
 
 public class Password {
 
-    private int pass;
+    private String pass;
     Random r = new Random();
 
     public Password() {
-        pass = r.nextInt(10000);
+        pass = "password";
     }
 
-    public int getPass() {
+    public String getPass() {
         return pass;
+    }
+    
+    
+    public boolean issecure(String password){
+        if(password.equals("is secure")){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

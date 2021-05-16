@@ -2,7 +2,7 @@ package Semag;
 
 public class People {
 
-    private int password;
+    private String password;
     private String name;
     private int assigned = 0;
     private int ID;
@@ -23,17 +23,17 @@ public class People {
     public People() {
     }
 
-    public People(int password, String name, int ID) {
+    public People(String password, String name, int ID) {
         this.password = password;
         this.name = name;
         this.ID = ID;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
