@@ -2,6 +2,7 @@
 
 This project is developed by my teammate and I as an assignment for Data Structure.
 
+
 ## How to Use Git with Netbeans?
 
 1. Please view this video (0:10 - 2:54) on how to clone the remote repository into your desktop. https://youtu.be/aBVOAnygcZw
@@ -9,6 +10,7 @@ This project is developed by my teammate and I as an assignment for Data Structu
 2. The link to the remote repository is https://github.com/Darrensow/Bugs-Life.git
    
 3. Once you follow all the steps in the video, you can see all files are cloned from the remote repo into your local repo!
+
 
 ## How to Get Latest Updates from Teammate?
 
@@ -28,6 +30,7 @@ If your teammate had made some changes, and you just purely wants to accept all 
 
 
 3. Then, you can see the latest updates are copied into your local repo.
+
 
 ## What to do when you want to update changes in the repo?
 
