@@ -1,7 +1,9 @@
 package Semag;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Comment {
@@ -10,21 +12,35 @@ public class Comment {
     private static int number = 0;
     private int commentID;
     private Date createdOn;
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     private People createdBy;
     private String text;
+    private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
     private int happy = 0;
     private int angry = 0;
     private int likes = 0;
     private int dislikes = 0;
     private static Scanner sc = new Scanner(System.in);
+
+    /**
+     * This is a Hashmap that links the reaction and its count
+     */
+    private HashMap<String, Integer> counter = new HashMap<String, Integer>() {{
+        for (int i = 0; i < reaction.length; i++) {
+            put(reaction[i], 0);
+        }
+    }};
+
     //empty constructor
-    public Comment() { }
+    public Comment() {
+    }
 
     /**
      * Constructor with three parameters
+     *
      * @param createdBy The person who commented
-     * @param text His comment
-     * @param ID Comment number
+     * @param text      His comment
+     * @param ID        Comment number
      */
     public Comment(People createdBy, String text, int ID) {
         if (createdBy == null) {
@@ -34,6 +50,14 @@ public class Comment {
         this.createdOn = new Date();
         this.createdBy = createdBy;
         this.text = text;
+    }
+
+    /**
+     * This method will add reaction count through Hashmap
+     * @param reaction is the reaction in String, option is like, dislike, happy and angry
+     */
+    public void addReaction(String reaction) {
+        counter.replace(reaction, counter.get(reaction) + 1);
     }
 
     //Like and Dislike ---------------------
@@ -76,6 +100,7 @@ public class Comment {
     /**
      * Displays the whole replies section.
      * Regarding the wrapping of the text, have to modify the toString() in Reply class
+     *
      * @return String representation of the whole repleis section.
      */
     public String displayRepliesSection() {
@@ -127,6 +152,7 @@ public class Comment {
             replies.add(new Reply(replier, text));
          */
     }
+
 
     //methods that may be used for GUI implementation - KIV first
 //    public String displayLikes()

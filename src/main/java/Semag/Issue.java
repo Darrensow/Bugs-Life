@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Issue implements Cloneable {
@@ -31,8 +32,8 @@ public class Issue implements Cloneable {
         return super.clone();
     }
 
-    public Issue() { }
-
+    public Issue() {
+    }
 
 
     public People getAssignee() {
@@ -57,9 +58,6 @@ public class Issue implements Cloneable {
 //        }
 //    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     //add comment
     public void issuewindow_owner() {
@@ -71,12 +69,15 @@ public class Issue implements Cloneable {
             switch (input1) {
                 case 1:
                     addComment();
+                    changelog();
                     break;
                 case 2:
                     react();
+                    changelog();
                     break;
                 case 3:
                     clear();
+                    changelog();
                     break;
                 case 4:
                     quit = true;
@@ -121,6 +122,69 @@ public class Issue implements Cloneable {
         }
     }
 
+    /**
+     * This method check current status and allow the associated operation
+     * @param status the current status
+     */
+    public void setStatus(String status) {
+        if (status.equalsIgnoreCase("open")) {
+            System.out.println("Set a status(1)In Progress 2)Resolved 3)Closed): ");
+            switch (sc.nextInt()) {
+                case 1:
+                    status = "In Progress";
+                    break;
+                case 2:
+                    status = "Resolved";
+                    break;
+                case 3:
+                    status = "Closed";
+                    break;
+            }
+        } else if (status.equalsIgnoreCase("In progress")) {
+            System.out.println("Set a status(1)Closed 2)Resolved): ");
+            switch (sc.nextInt()) {
+                case 1:
+                    status = "Closed";
+                    break;
+                case 2:
+                    status = "Resolved";
+                    break;
+            }
+        } else if (status.equalsIgnoreCase("Resolved")) {
+            System.out.println("Set a status(1)Closed 2)Reopen): ");
+            switch (sc.nextInt()) {
+                case 1:
+                    status = "Closed";
+                    break;
+                case 2:
+                    status = "Reopened";
+                    break;
+            }
+        } else if (status.equalsIgnoreCase("Closed")) {
+            System.out.println("Set a status(1)Reopen): ");
+            switch (sc.nextInt()) {
+                case 1:
+                    status = "Reopen";
+                    break;
+                default:
+                    break;
+            }
+        } else if (status.equalsIgnoreCase("Reopened")) {
+            System.out.println("Set a status(1)In Progress 2)Resolved 3)Closed): ");
+            switch (sc.nextInt()) {
+                case 1:
+                    status = "In Progress";
+                    break;
+                case 2:
+                    status = "Resolved";
+                    break;
+                case 3:
+                    status = "Closed";
+                    break;
+            }
+        }
+    }
+
     public void react() {
         System.out.println("enter comment ID that you want to react");
         int index = sc.nextInt();
@@ -138,7 +202,6 @@ public class Issue implements Cloneable {
     }
 
     public void addComment() {
-
         System.out.println("enter comment");
         String text = sc.nextLine();
         Text<String> text_obj = new Text<>();
@@ -301,7 +364,7 @@ public class Issue implements Cloneable {
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
-    public void saveData(){
+    public void saveData() {
         dm.writeData(this);
     }
 
