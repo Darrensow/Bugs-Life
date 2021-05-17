@@ -1,5 +1,7 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,9 +31,9 @@ public class Issue implements Cloneable {
         return super.clone();
     }
 
-    public Issue() {
+    public Issue() { }
 
-    }
+
 
     public People getAssignee() {
         return assignee;
@@ -291,4 +293,133 @@ public class Issue implements Cloneable {
         }
     };
 
+
+    // Save and read data -- Jackson -- JSON --
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData(){
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        Issue temp = new Issue();
+    }
+
+    // -- Getter and setter methods --
+
+    public Project getProject_control() {
+        return project_control;
+    }
+
+    public void setProject_control(Project project_control) {
+        this.project_control = project_control;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public void setCreator(People creator) {
+        this.creator = creator;
+    }
+
+    public void setAssignee(People assignee) {
+        this.assignee = assignee;
+    }
+
+    public void setComment(ArrayList<Comment> comment) {
+        this.comment = comment;
+    }
+
+    public static void setNumbercomment(int numbercomment) {
+        Issue.numbercomment = numbercomment;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public DateTimeFormatter getDtf() {
+        return dtf;
+    }
+
+    public void setDtf(DateTimeFormatter dtf) {
+        this.dtf = dtf;
+    }
+
+    public People getCurrent_people() {
+        return current_people;
+    }
+
+    public void setCurrent_people(People current_people) {
+        this.current_people = current_people;
+    }
+
+    public Comparator<Issue> getIDComparator() {
+        return IDComparator;
+    }
+
+    public void setIDComparator(Comparator<Issue> IDComparator) {
+        this.IDComparator = IDComparator;
+    }
+
+    public Comparator<Issue> getTitleComparator() {
+        return TitleComparator;
+    }
+
+    public void setTitleComparator(Comparator<Issue> titleComparator) {
+        TitleComparator = titleComparator;
+    }
+
+    public Comparator<Issue> getPriorityComparator() {
+        return priorityComparator;
+    }
+
+    public void setPriorityComparator(Comparator<Issue> priorityComparator) {
+        this.priorityComparator = priorityComparator;
+    }
+
+    public Comparator<Issue> getStatusComparator() {
+        return statusComparator;
+    }
+
+    public void setStatusComparator(Comparator<Issue> statusComparator) {
+        this.statusComparator = statusComparator;
+    }
+
+    public Comparator<Issue> getTagComparator() {
+        return tagComparator;
+    }
+
+    public void setTagComparator(Comparator<Issue> tagComparator) {
+        this.tagComparator = tagComparator;
+    }
+
+    public Comparator<Issue> getTimeComparator() {
+        return timeComparator;
+    }
+
+    public void setTimeComparator(Comparator<Issue> timeComparator) {
+        this.timeComparator = timeComparator;
+    }
 }

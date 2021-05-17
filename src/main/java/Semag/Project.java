@@ -1,9 +1,10 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.*;
 
 public class Project {
-
     private Window window_control = new Window(); //call or use method from window class
     private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
     PeopleADT people_Array = new PeopleADT();   // store people
@@ -212,7 +213,7 @@ public class Project {
     }
 
     /**
-     * @param keyword search search issue
+     * @param input keyword search search issue
      */
     public void search(String input) { //  only input number will directly assume as ID
         if (isnumberic(input)) {
@@ -276,8 +277,8 @@ public class Project {
     }
 
     /**
-     * @param comment arraylist
-     * @param keyword check a wword in the comment
+     * @param arr comment arraylist
+     * @param token keyword check a wword in the comment
      * @return
      */
     public boolean checkcomment(ArrayList<Comment> arr, String token) {
@@ -393,8 +394,10 @@ public class Project {
         return null;
     }
 
+
+
     /**
-     * @param issue index enter issue window
+     * @param index issue index enter issue window
      */
     public void entertheissue(int index) {
         issue_Array.get(index).issuewindow(current_people);
@@ -440,4 +443,140 @@ public class Project {
             return o1.issue_Arraysize() - o2.issue_Arraysize();
         }
     };
+
+
+
+    // Save and read data -- Jackson -- JSON --
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData(){
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        Project temp = dm.readProjectData();
+        this.window_control = temp.window_control;
+        this.people_Array = temp.people_Array;
+        this.issue_control = temp.issue_control;
+        this.ID = temp.ID;
+        this.name = temp.name;
+        this.owner = temp.owner;
+        this.IDComparator = temp.IDComparator;
+        NameComparator = temp.NameComparator;
+        IssueCountComparator = temp.IssueCountComparator;
+    }
+
+    // -- Getter methods --
+
+
+    public Window getWindow_control() {
+        return window_control;
+    }
+
+    public static ArrayList<Issue> getIssue_Array() {
+        return issue_Array;
+    }
+
+    public PeopleADT getPeople_Array() {
+        return people_Array;
+    }
+
+    public Issue getIssue_control() {
+        return issue_control;
+    }
+
+    public Scanner getSc() {
+        return sc;
+    }
+
+    public static int getNumissue() {
+        return numissue;
+    }
+
+    //cannot include cuz this will load the last logged in person's detail instead..
+//    public People getCurrent_people() {
+//        return current_people;
+//    }
+
+    public People getOwner() {
+        return owner;
+    }
+
+    public Comparator<Project> getIDComparator() {
+        return IDComparator;
+    }
+
+    public Comparator<Project> getNameComparator() {
+        return NameComparator;
+    }
+
+    public Comparator<Project> getIssueCountComparator() {
+        return IssueCountComparator;
+    }
+
+    public static DataManagement getDm() {
+        return dm;
+    }
+
+    // -- Setter methods --
+    public void setWindow_control(Window window_control) {
+        this.window_control = window_control;
+    }
+
+    public static void setIssue_Array(ArrayList<Issue> issue_Array) {
+        Project.issue_Array = issue_Array;
+    }
+
+    public void setPeople_Array(PeopleADT people_Array) {
+        this.people_Array = people_Array;
+    }
+
+    public void setIssue_control(Issue issue_control) {
+        this.issue_control = issue_control;
+    }
+
+    public void setSc(Scanner sc) {
+        this.sc = sc;
+    }
+
+    public static void setNumissue(int numissue) {
+        Project.numissue = numissue;
+    }
+
+    public void setID(Integer ID) {
+        this.ID = ID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //cannot include cuz this will load the last logged in person's detail instead..
+//    public void setCurrent_people(People current_people) {
+//        this.current_people = current_people;
+//    }
+
+    public void setOwner(People owner) {
+        this.owner = owner;
+    }
+
+    public void setIDComparator(Comparator<Project> IDComparator) {
+        this.IDComparator = IDComparator;
+    }
+
+    public void setNameComparator(Comparator<Project> nameComparator) {
+        NameComparator = nameComparator;
+    }
+
+    public void setIssueCountComparator(Comparator<Project> issueCountComparator) {
+        IssueCountComparator = issueCountComparator;
+    }
+
+    public static void setDm(DataManagement dm) {
+        Project.dm = dm;
+    }
 }

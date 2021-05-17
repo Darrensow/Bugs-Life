@@ -1,5 +1,7 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +21,13 @@ public class Window {
     //    private ArrayList<people> people_Array = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     private static int numberproject = 0;    // project id
+
+    @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
+
+
+    public Window() {
+    }
 
     /**
      * @param project_obj want to remove
@@ -297,4 +305,67 @@ public class Window {
 
     }
 
+
+    // Save and read data -- Jackson -- JSON --
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData(){
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        Window temp = dm.readWindowData();
+        this.project_control = temp.project_control;
+        this.project_Array = temp.project_Array;
+        this.people_Array = temp.people_Array;
+        this.numberproject = temp.numberproject;
+    }
+
+
+
+    // -- Getter and setter methods --
+
+    public Project getProject_control() {
+        return project_control;
+    }
+
+    public void setProject_control(Project project_control) {
+        this.project_control = project_control;
+    }
+
+    public static ArrayList<Project> getProject_Array() {
+        return project_Array;
+    }
+
+    public static void setProject_Array(ArrayList<Project> project_Array) {
+        Window.project_Array = project_Array;
+    }
+
+    public PeopleADT getPeople_Array() {
+        return people_Array;
+    }
+
+    public void setPeople_Array(PeopleADT people_Array) {
+        this.people_Array = people_Array;
+    }
+
+    public static int getNumberproject() {
+        return numberproject;
+    }
+
+    public static void setNumberproject(int numberproject) {
+        Window.numberproject = numberproject;
+    }
+
+    public People getCurrent_people() {
+        return current_people;
+    }
+
+    public void setCurrent_people(People current_people) {
+        this.current_people = current_people;
+    }
 }

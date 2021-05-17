@@ -1,13 +1,20 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class User {
 
     private PeopleADT people_array = new PeopleADT();
+    @JsonIgnore
     Scanner sc = new Scanner(System.in);
+
     private static int ID = 0;
+
+    public User() {
+    }
 
     public People register() {
         System.out.println("Enter gmail");
@@ -67,4 +74,39 @@ public class User {
         return -1;
     }
 
+    // Save and read data -- Jackson -- JSON --
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData(){
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        User temp = dm.readUserData();
+        this.people_array = temp.people_array;
+        this.ID = temp.ID;
+    }
+
+
+    // -- Getter and setter methods --
+
+    public PeopleADT getPeople_array() {
+        return people_array;
+    }
+
+    public void setPeople_array(PeopleADT people_array) {
+        this.people_array = people_array;
+    }
+
+    public static int getID() {
+        return ID;
+    }
+
+    public static void setID(int ID) {
+        User.ID = ID;
+    }
 }
