@@ -1,45 +1,32 @@
 package Semag;
 
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.*;
 
-public class Project implements Comparable<Project> {
+public class Project {
 
     private Window window_control = new Window(); //call or use method from window class
     private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
     PeopleADT people_Array = new PeopleADT();   // store people
-//    ArrayList<people> people_Array = new ArrayList<>();
+    //    ArrayList<people> people_Array = new ArrayList<>();
     private Issue issue_control = new Issue(); // call or use method from issue class 
     Scanner sc = new Scanner(System.in);
     private static int numissue = 0;  // issue id
     private Integer ID;  //project id
     private String name; //project name
     private People current_people;  //current log in people
-    private String signal;  // use for sort / change compareto method
     private People owner;  // project owner
 
     public Project() {
     }
 
     /**
-     *
-     * @param signal set signal
-     */
-    public void setSignal(String signal) {
-        this.signal = signal;
-    }
-
-    /**
-     *
-     * @param issue want to remove remove issue
+     * @param issue_obj issue to be removed
      */
     public void removeissue(Issue issue_obj) {
         issue_Array.remove(issue_obj);
     }
 
     /**
-     *
      * @param name
      * @param ID
      * @param owner create project
@@ -54,18 +41,16 @@ public class Project implements Comparable<Project> {
      * owner of project window
      */
     public void projectwindow_owner() {
-        sortBased(1);
+        this.sortBased(1);
         boolean quit = false;
         while (quit == false) {
-            print();
             System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)delete project \n7)quit");
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
                     System.out.println("sort based on \n1)priority \n2)time");
                     int in2 = sc.nextInt();
-                    sortBased(in2);
-                    print();
+                    this.sortBased(2);
                     break;
                 case 2:
                     System.out.println("enter tags in format (#tags1#tags2)");
@@ -106,18 +91,16 @@ public class Project implements Comparable<Project> {
      * normal user window
      */
     public void projectwindow() {
-        sortBased(1);
+        this.sortBased(1);
         boolean quit = false;
         while (quit == false) {
-            print();
             System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)quit");
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
                     System.out.println("sort based on \n1)priority \n2)time");
                     int in2 = sc.nextInt();
-                    sortBased(in2);
-                    print();
+                    this.sortBased(2);
                     break;
                 case 2:
                     System.out.println("enter tags in format (#tags1#tags2)");
@@ -152,7 +135,6 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     *
      * @param current_people determine whether is owner or not
      */
     public void projectwindow(People current_people) {
@@ -230,7 +212,6 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     *
      * @param keyword search search issue
      */
     public void search(String input) { //  only input number will directly assume as ID
@@ -250,7 +231,6 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     *
      * @param seachkeyword print issue
      * @return true if have isseu
      */
@@ -296,7 +276,6 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     *
      * @param comment arraylist
      * @param keyword check a wword in the comment
      * @return
@@ -331,27 +310,29 @@ public class Project implements Comparable<Project> {
     }
 
     /**
+     * This method will sort the Issue with the column that the user wish, and str8 print it out
      *
-     * @param action change signal
+     * @param choose is the attribute of the Issue, eg ID, Title, returned as int
      */
-    public void sortBased(int num) {
-        if (num == 1) {
-            issue_control.setSignal("PRIORITY");
-        } else {
-            issue_control.setSignal("TIME");
+    public void sortBased(int choose) {
+        ArrayList<Issue> sortedIssueList = new ArrayList<>(issue_Array);
+        switch (choose) {
+            case 0: //0 is the first option, ID
+                Collections.sort(sortedIssueList, issue_control.IDComparator);
+            case 1: //1 is the sec option, Name
+                Collections.sort(sortedIssueList, issue_control.priorityComparator);
+            case 2: //2 is the third option, IssueCount
+                Collections.sort(sortedIssueList, issue_control.timeComparator);
         }
+        print(sortedIssueList);
     }
 
-    /*
-    print array
+    /**
+     * print array
      */
-    public void print() {
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
-        for (int i = 0; i < issue_Array.size(); i++) {
-            pq.add(issue_Array.get(i));
-        }
-        for (int i = 0; i < issue_Array.size(); i++) {
-            System.out.println(pq.poll());
+    public void print(ArrayList<?> toPrint) {
+        for (int i = 0; i < toPrint.size(); i++) {
+            System.out.println(toPrint.get(i));
         }
     }
 
@@ -413,21 +394,10 @@ public class Project implements Comparable<Project> {
     }
 
     /**
-     *
      * @param issue index enter issue window
      */
     public void entertheissue(int index) {
         issue_Array.get(index).issuewindow(current_people);
-    }
-
-    @Override
-    public int compareTo(Project o) {
-        if (signal == "NAME") {
-            return this.name.compareTo(o.name);
-        } else {
-            return this.ID.compareTo(o.ID);
-        }
-
     }
 
     public int issue_Arraysize() {
@@ -438,4 +408,36 @@ public class Project implements Comparable<Project> {
         return issue_Array.get(index);
     }
 
+    /**
+     * Comparator for sorting the list by Project ID
+     */
+    public Comparator<Project> IDComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.getID() - o2.getID();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Project Name
+     */
+    public Comparator<Project> NameComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Issues count
+     */
+    public Comparator<Project> IssueCountComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.issue_Arraysize() - o2.issue_Arraysize();
+        }
+    };
 }

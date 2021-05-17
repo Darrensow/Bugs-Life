@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
@@ -15,13 +16,12 @@ public class Window {
     private Project project_control = new Project();   //use for call or use method from project class
     private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
     PeopleADT people_Array = new PeopleADT();                           // store people
-//    private ArrayList<people> people_Array = new ArrayList<>();
+    //    private ArrayList<people> people_Array = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     private static int numberproject = 0;    // project id
     private People current_people; // current user logged
 
     /**
-     *
      * @param project_obj want to remove
      */
     public void removeproject(Project project_obj) {
@@ -29,7 +29,6 @@ public class Window {
     }
 
     /**
-     *
      * @param ac
      * @return true if action success , false if false.
      */
@@ -55,7 +54,6 @@ public class Window {
         sortBased(1);
         boolean quit = false;
         while (quit == false) {
-            print();
             System.out.println("action? \n1)sort \n2)add project 3)search project 4)quit");
             int input1 = sc.nextInt();
             switch (input1) {
@@ -63,7 +61,6 @@ public class Window {
                     System.out.println("sort based on \n1)ID \n2)name");
                     int in2 = sc.nextInt();
                     sortBased(in2);
-                    print();
                     break;
                 case 2:
                     System.out.println("Enter project name");
@@ -86,9 +83,7 @@ public class Window {
     }
 
     /**
-     *
      * @param input keyword or ID of the project
-     *
      */
     public void search(String input) {
         if (isnumberic(input)) {
@@ -107,7 +102,6 @@ public class Window {
     }
 
     /**
-     *
      * @param seachkeyword
      * @return true if have that project
      */
@@ -143,7 +137,6 @@ public class Window {
     }
 
     /**
-     *
      * @param sen keyword
      * @return true if it is an id
      */
@@ -163,7 +156,6 @@ public class Window {
     }
 
     /**
-     *
      * @param name project name add project
      */
     public void addproject(String name) {
@@ -172,20 +164,24 @@ public class Window {
     }
 
     /**
+     * This method will sort the project with the column that the user wish, and str8 print it out
      *
-     * @param num action change sort
-     *
+     * @param option is the attribute of the project, eg ID, Project Name, returned as int
      */
-    public void sortBased(int num) {
-        if (num == 1) {
-            project_control.setSignal("ID");
-        } else {
-            project_control.setSignal("NAME");
+    public void sortBased(int option) {
+        ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
+        switch (option) {
+            case 0: //0 is the first option, ID
+                Collections.sort(sortedProjectList, project_control.IDComparator);
+            case 1: //1 is the sec option, Name
+                Collections.sort(sortedProjectList, project_control.NameComparator);
+            case 2: //2 is the third option, IssueCount
+                Collections.sort(sortedProjectList, project_control.IssueCountComparator);
         }
+        print(sortedProjectList);
     }
 
     /**
-     *
      * @param index project index enter project window
      */
     public void entertheprojext(int index) {
@@ -195,13 +191,9 @@ public class Window {
     /**
      * print in sorted array
      */
-    public void print() {
-        PriorityQueue<Project> pq = new PriorityQueue<>();
-        for (int i = 0; i < project_Array.size(); i++) {
-            pq.add(project_Array.get(i));
-        }
-        for (int i = 0; i < project_Array.size(); i++) {
-            System.out.println(pq.poll());
+    public void print(ArrayList<?> toPrint) {
+        for (int i = 0; i < toPrint.size(); i++) {
+            System.out.println(toPrint.get(i));
         }
     }
 

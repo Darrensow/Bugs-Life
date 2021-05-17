@@ -4,9 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
-public class Issue implements Comparable<Issue>, Cloneable {
+public class Issue implements Cloneable {
 
     private Project project_control = new Project();
     private int ID;
@@ -20,7 +21,6 @@ public class Issue implements Comparable<Issue>, Cloneable {
     private String tags;
     private Integer priority;
     private String status;
-    private static String signal;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     Scanner sc = new Scanner(System.in);
     private People current_people;
@@ -54,6 +54,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
 //            tags.add(list[i]);
 //        }
 //    }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -121,7 +122,7 @@ public class Issue implements Comparable<Issue>, Cloneable {
     public void react() {
         System.out.println("enter comment ID that you want to react");
         int index = sc.nextInt();
-        System.out.println("Enter 'h' or happay , 'a' for angry.");
+        System.out.println("Enter 'h' or happy , 'a' for angry.");
         char reaction = sc.next().charAt(0);
         if (reaction == 'h') {
             comment.get(index).happy();
@@ -182,12 +183,29 @@ public class Issue implements Comparable<Issue>, Cloneable {
         comment.clear();
     }
 
-    public static void setSignal(String signal) {
-        Issue.signal = signal;
-    }
-
+    //----accessor
     public String getTitle() {
         return title;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public People getCreator() {
+        return creator;
+    }
+
+    public static int getNumbercomment() {
+        return numbercomment;
+    }
+
+    public Integer getPriority() {
+        return priority;
     }
 
     public String getText() {
@@ -210,14 +228,67 @@ public class Issue implements Comparable<Issue>, Cloneable {
 
     }
 
-    @Override
-    public int compareTo(Issue o) {
-        if (signal == "PRIORITY") {
-            return this.priority.compareTo(o.priority);
-        } else {
-            return this.time.compareTo(o.time);
+    /**
+     * Comparator for sorting the list by Project ID
+     */
+    public Comparator<Issue> IDComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getID() - o2.getID();
         }
+    };
 
-    }
+    /**
+     * Comparator for sorting the list by Title Name
+     */
+    public Comparator<Issue> TitleComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getTitle().compareTo(o2.getTitle());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Priority
+     */
+    public Comparator<Issue> priorityComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for descending order
+            return o2.getPriority() - o1.getPriority();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Status Alphabetical
+     */
+    public Comparator<Issue> statusComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getStatus().compareTo(o2.getStatus());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Tag
+     */
+    public Comparator<Issue> tagComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getStatus().compareTo(o2.getStatus());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Tag
+     */
+    public Comparator<Issue> timeComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getTime().compareTo(o2.getTime());
+        }
+    };
 
 }
