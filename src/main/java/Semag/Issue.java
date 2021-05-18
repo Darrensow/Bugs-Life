@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class Issue {
 
     private ArrayList<Issue> changelog;
-    private Project project_control = new Project();
     private int ID;
     private String title;
     private String text;
@@ -409,14 +408,6 @@ public class Issue {
     }
 
     // -- Getter and setter methods --
-
-    public Project getProject_control() {
-        return project_control;
-    }
-
-    public void setProject_control(Project project_control) {
-        this.project_control = project_control;
-    }
 
     public void setID(int ID) {
         this.ID = ID;

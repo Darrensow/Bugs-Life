@@ -15,7 +15,6 @@ import javax.swing.JFileChooser;
 
 public class Window {
 
-    private Project project_control = new Project();   //use for call or use method from project class
     private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
     PeopleADT people_Array = new PeopleADT();                           // store people
     //    private ArrayList<people> people_Array = new ArrayList<>();
@@ -180,11 +179,11 @@ public class Window {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
         switch (option) {
             case 0: //0 is the first option, ID
-                Collections.sort(sortedProjectList, project_control.IDComparator);
+                Collections.sort(sortedProjectList, Project.IDComparator);
             case 1: //1 is the sec option, Name
-                Collections.sort(sortedProjectList, project_control.NameComparator);
+                Collections.sort(sortedProjectList, Project.NameComparator);
             case 2: //2 is the third option, IssueCount
-                Collections.sort(sortedProjectList, project_control.IssueCountComparator);
+                Collections.sort(sortedProjectList, Project.IssueCountComparator);
         }
         print(sortedProjectList);
     }
@@ -326,7 +325,6 @@ public class Window {
 
     public void loadData() {
         Window temp = dm.readWindowData();
-        this.project_control = temp.project_control;
         this.project_Array = temp.project_Array;
         this.people_Array = temp.people_Array;
         this.numberproject = temp.numberproject;
@@ -335,14 +333,6 @@ public class Window {
 
 
     // -- Getter and setter methods --
-
-    public Project getProject_control() {
-        return project_control;
-    }
-
-    public void setProject_control(Project project_control) {
-        this.project_control = project_control;
-    }
 
     public static ArrayList<Project> getProject_Array() {
         return project_Array;

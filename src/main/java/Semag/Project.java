@@ -5,11 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.*;
 
 public class Project {
-    private Window window_control = new Window(); //call or use method from window class
     private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
     PeopleADT people_Array = new PeopleADT();   // store people
-    //    ArrayList<people> people_Array = new ArrayList<>();
-    private Issue issue_control = new Issue(); // call or use method from issue class 
     Scanner sc = new Scanner(System.in);
     private static int numissue = 0;  // issue id
     private Integer ID;  //project id
@@ -434,7 +431,7 @@ public class Project {
     /**
      * Comparator for sorting the list by Project Name
      */
-    public Comparator<Project> NameComparator = new Comparator<Project>() {
+    public static Comparator<Project> NameComparator = new Comparator<Project>() {
         @Override
         public int compare(Project o1, Project o2) {
             //for ascending order
@@ -445,7 +442,7 @@ public class Project {
     /**
      * Comparator for sorting the list by Issues count
      */
-    public Comparator<Project> IssueCountComparator = new Comparator<Project>() {
+    public static Comparator<Project> IssueCountComparator = new Comparator<Project>() {
         @Override
         public int compare(Project o1, Project o2) {
             //for ascending order
@@ -468,7 +465,6 @@ public class Project {
 
     public void loadData() {
         Project temp = dm.readProjectData();
-        this.window_control = temp.window_control;
         this.people_Array = temp.people_Array;
         this.ID = temp.ID;
         this.name = temp.name;
@@ -481,20 +477,12 @@ public class Project {
     // -- Getter methods --
 
 
-    public Window getWindow_control() {
-        return window_control;
-    }
-
     public static ArrayList<Issue> getIssue_Array() {
         return issue_Array;
     }
 
     public PeopleADT getPeople_Array() {
         return people_Array;
-    }
-
-    public Issue getIssue_control() {
-        return issue_control;
     }
 
     public Scanner getSc() {
@@ -530,21 +518,12 @@ public class Project {
         return dm;
     }
 
-    // -- Setter methods --
-    public void setWindow_control(Window window_control) {
-        this.window_control = window_control;
-    }
-
     public static void setIssue_Array(ArrayList<Issue> issue_Array) {
         Project.issue_Array = issue_Array;
     }
 
     public void setPeople_Array(PeopleADT people_Array) {
         this.people_Array = people_Array;
-    }
-
-    public void setIssue_control(Issue issue_control) {
-        this.issue_control = issue_control;
     }
 
     public void setSc(Scanner sc) {
