@@ -23,7 +23,8 @@ public class Project {
     /**
      * @param issue_obj issue to be removed
      */
-    public void removeissue(Issue issue_obj) {
+    public static void removeIssue(Issue issue_obj) {
+        issue_obj.getAssignee().reduceassigned();
         issue_Array.remove(issue_obj);
     }
 
@@ -76,7 +77,7 @@ public class Project {
                     search(in4);
                     break;
                 case 6:
-                    clear();
+                    deleteThisProject();
                     return;
                 case 7:
                     quit = true;
@@ -157,14 +158,16 @@ public class Project {
     }
 
     /**
-     * remove project
+     * delete this project
      */
-    public void clear() {
+    public void deleteThisProject() {
         for (int i = 0; i < issue_Array.size(); i++) {
-            issue_Array.get(i).getAssignee().reduceassigned();
+            removeIssue(issue_Array.get(i));
         }
-        window_control.removeproject(this);
+        Window.removeProject(this);
     }
+
+
 
     /**
      * add issue
@@ -319,17 +322,24 @@ public class Project {
         ArrayList<Issue> sortedIssueList = new ArrayList<>(issue_Array);
         switch (choose) {
             case 0: //0 is the first option, ID
-                Collections.sort(sortedIssueList, issue_control.IDComparator);
+                Collections.sort(sortedIssueList, Issue.IDComparator);
             case 1: //1 is the sec option, Name
-                Collections.sort(sortedIssueList, issue_control.priorityComparator);
+                Collections.sort(sortedIssueList, Issue.priorityComparator);
             case 2: //2 is the third option, IssueCount
-                Collections.sort(sortedIssueList, issue_control.timeComparator);
+                Collections.sort(sortedIssueList, Issue.timeComparator);
         }
         print(sortedIssueList);
     }
 
     /**
-     * print array
+     * print Issue list, this method is an overloading method
+     */
+    public void print() {
+        this.print(issue_Array);
+    }
+
+    /**
+     * print selected list
      */
     public void print(ArrayList<?> toPrint) {
         for (int i = 0; i < toPrint.size(); i++) {
@@ -395,11 +405,10 @@ public class Project {
     }
 
 
-
     /**
      * @param index issue index enter issue window
      */
-    public void entertheissue(int index) {
+    public void entertheissue(int index){
         issue_Array.get(index).issuewindow(current_people);
     }
 
@@ -414,7 +423,7 @@ public class Project {
     /**
      * Comparator for sorting the list by Project ID
      */
-    public Comparator<Project> IDComparator = new Comparator<Project>() {
+    public static Comparator<Project> IDComparator = new Comparator<Project>() {
         @Override
         public int compare(Project o1, Project o2) {
             //for ascending order
@@ -461,7 +470,6 @@ public class Project {
         Project temp = dm.readProjectData();
         this.window_control = temp.window_control;
         this.people_Array = temp.people_Array;
-        this.issue_control = temp.issue_control;
         this.ID = temp.ID;
         this.name = temp.name;
         this.owner = temp.owner;

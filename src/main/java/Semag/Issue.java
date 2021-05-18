@@ -2,16 +2,15 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Scanner;
 
-public class Issue implements Cloneable {
+public class Issue {
 
+    private ArrayList<Issue> changelog;
     private Project project_control = new Project();
     private int ID;
     private String title;
@@ -28,10 +27,6 @@ public class Issue implements Cloneable {
     Scanner sc = new Scanner(System.in);
     private People current_people;
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
     public Issue() {
     }
 
@@ -41,6 +36,7 @@ public class Issue implements Cloneable {
     }
 
     public Issue(int ID, String title, String text, People creator, People assignee, String tags, int priop) {
+        changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
         this.creator = creator;
@@ -51,13 +47,6 @@ public class Issue implements Cloneable {
         this.priority = priop;
         this.tags = tags;
     }
-
-//    public void addtags(String[] list) {
-//        for (int i = 0; i < list.length; i++) {
-//            tags.add(list[i]);
-//        }
-//    }
-
 
     //add comment
     public void issuewindow_owner() {
@@ -76,7 +65,7 @@ public class Issue implements Cloneable {
                     changelog();
                     break;
                 case 3:
-                    clear();
+                    deleteThisIssue();
                     changelog();
                     break;
                 case 4:
@@ -98,9 +87,11 @@ public class Issue implements Cloneable {
             switch (input1) {
                 case 1:
                     addComment();
+                    changelog();
                     break;
                 case 2:
                     react();
+                    changelog();
                     break;
                 case 3:
                     quit = true;
@@ -124,6 +115,7 @@ public class Issue implements Cloneable {
 
     /**
      * This method check current status and allow the associated operation
+     *
      * @param status the current status
      */
     public void setStatus(String status) {
@@ -198,7 +190,14 @@ public class Issue implements Cloneable {
     }
 
     public void changelog() {
-        //upload any change into text or database
+        changelog.add(this);
+    }
+
+    /**
+     * A window to show the changelog
+     */
+    public void viewChangelog() {
+        print();
     }
 
     public void addComment() {
@@ -229,12 +228,20 @@ public class Issue implements Cloneable {
     }
 
     /**
+     *This method is overloading.
+     * @return String representation of the whole comment section.
+     */
+    public String displayCommentsSection() {
+        return displayCommentsSection(this);
+    }
+
+    /**
      * Displays the whole comment section. Regarding the wrapping of the text,
      * have to modify the toString() in Comment class
      *
      * @return String representation of the whole comment section.
      */
-    public String displayCommentsSection() {
+    public String displayCommentsSection(Issue o) {
         StringBuilder sb = new StringBuilder();
         sb.append("Comments\n-----------");
         for (Comment value : comment) {
@@ -243,9 +250,37 @@ public class Issue implements Cloneable {
         return sb.toString();
     }
 
-    public void clear() {
-        project_control.removeissue(this);
-        comment.clear();
+    public void print() {
+        print(this);
+    }
+
+    /**
+     * Show full Issue page details
+     */
+    public void print(Issue o) {
+        StringBuilder sb = new StringBuilder();
+
+        String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n" +
+                        "Tag: %-20sPriority: %-20sCreated On: %-20s\n" +
+                        "Title: %-40s\n" +
+                        "Assigned to: %-20sCreated by: %-20s\n"
+                , o.getID(), o.getStatus(),
+                o.getTags(), o.getPriority(), o.getTime(),
+                o.getTitle(),
+                o.getAssignee(), o.getCreator());
+        sb.append(issueInfo);
+        sb.append("Issue Description\n-----------");
+        sb.append("\n" + o.getText());
+        sb.append(displayCommentsSection(o));
+
+        System.out.println(sb.toString());
+    }
+
+    /**
+     * Delete this Issue object
+     */
+    public void deleteThisIssue() {
+        Project.removeIssue(this);
     }
 
     //----accessor
@@ -289,14 +324,36 @@ public class Issue implements Cloneable {
         return tags;
     }
 
-    public void print() {
 
-    }
+    //-- Comparator Object --
+
+
+    /**
+     * Comparator for sorting the list by Priority
+     */
+    public static Comparator<Issue> priorityComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for descending order
+            return o2.getPriority() - o1.getPriority();
+        }
+    };
+
+
+    /**
+     * Comparator for sorting the list by Tag
+     */
+    public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getTime().compareTo(o2.getTime());
+        }
+    };
 
     /**
      * Comparator for sorting the list by Project ID
      */
-    public Comparator<Issue> IDComparator = new Comparator<Issue>() {
+    public static Comparator<Issue> IDComparator = new Comparator<Issue>() {
         @Override
         public int compare(Issue o1, Issue o2) {
             //for ascending order
@@ -312,17 +369,6 @@ public class Issue implements Cloneable {
         public int compare(Issue o1, Issue o2) {
             //for ascending order
             return o1.getTitle().compareTo(o2.getTitle());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Priority
-     */
-    public Comparator<Issue> priorityComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            //for descending order
-            return o2.getPriority() - o1.getPriority();
         }
     };
 
@@ -343,16 +389,6 @@ public class Issue implements Cloneable {
         @Override
         public int compare(Issue o1, Issue o2) {
             return o1.getStatus().compareTo(o2.getStatus());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Tag
-     */
-    public Comparator<Issue> timeComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            return o1.getTime().compareTo(o2.getTime());
         }
     };
 

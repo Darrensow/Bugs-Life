@@ -32,7 +32,7 @@ public class Window {
     /**
      * @param project_obj want to remove
      */
-    public void removeproject(Project project_obj) {
+    public static void removeProject(Project project_obj) {
         project_Array.remove(project_obj);
     }
 
@@ -197,7 +197,14 @@ public class Window {
     }
 
     /**
-     * print in sorted array
+     * print Project list, this method is an overloading method
+     */
+    public void print() {
+        this.print(project_Array);
+    }
+
+    /**
+     * print selected list
      */
     public void print(ArrayList<?> toPrint) {
         for (int i = 0; i < toPrint.size(); i++) {

@@ -26,15 +26,6 @@ public class DataManagement {
      */
 
 
-    public void writeData(Changelog obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("ChangeLog.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void writeData(Project obj) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -94,17 +85,6 @@ public class DataManagement {
      * Have to refer to the object itself using 'this' keyword.
      */
 
-    public Changelog readChangeLogData() {
-        Changelog returnObj = new Changelog();
-        try {
-            returnObj = new ObjectMapper().readerFor(Changelog.class).readValue(new File("ChangeLog.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
 
     public Project readProjectData() {
         Project returnObj = new Project();
