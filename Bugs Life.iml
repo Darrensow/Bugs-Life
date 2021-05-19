@@ -14,7 +14,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../java jar file/email/mail.jar!/" />
+          <root url="jar://$USER_HOME$/java jar file/email/mail.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -23,7 +23,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../java jar file/email/activation.jar!/" />
+          <root url="jar://$USER_HOME$/java jar file/email/activation.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

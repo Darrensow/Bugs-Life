@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>Bugs Life</artifactId>
+    <artifactId>Bugs-Life</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -27,7 +27,7 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+  </dependencies>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
