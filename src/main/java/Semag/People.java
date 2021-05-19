@@ -1,6 +1,8 @@
 package Semag;
 
-public class People {
+import java.io.Serializable;
+
+public class People implements Serializable {
 
     private String password;
     private String name;

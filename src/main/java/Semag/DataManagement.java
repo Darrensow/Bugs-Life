@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * JSON File saving using Jackson library
@@ -17,7 +18,7 @@ import java.io.IOException;
      * Once done, call the saveData() in the specific classes to load the data into the JSON file.
  */
 
-public class DataManagement {
+public class DataManagement implements Serializable {
 
     /*
      * Below are all methods to save data into JSON File.

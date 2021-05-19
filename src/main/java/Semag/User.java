@@ -2,10 +2,11 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class User {
+public class User implements Serializable {
 
     private PeopleADT people_array = new PeopleADT();
     @JsonIgnore
@@ -25,6 +26,11 @@ public class User {
         String content = "Hi this is the vertified code : " + verified;
         gmail_sender obj = new gmail_sender(gmail, title, content);
         obj.send();
+        System.out.println("enter the verified code : ");
+        String num = sc.nextLine();
+        while (!num.equals(verified)) {
+            System.out.println("enter the verified code : ");
+        }
         System.out.println("enter name");
         String name = sc.nextLine();
         while (people_array.contain(name) == true) {
@@ -33,8 +39,8 @@ public class User {
         }
         System.out.println("enter password:");
         String password = sc.nextLine();
-        while (!password_obj.issecure(password)) {
-            System.out.println("enter password:");
+        while (!password_obj.isValid(password)) {
+            System.out.println("re-enter password, password not secure:");
             password = sc.nextLine();
         }
         People people_obj = new People(password, name, ID);
@@ -81,7 +87,7 @@ public class User {
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
-    public void saveData(){
+    public void saveData() {
         dm.writeData(this);
     }
 
@@ -91,9 +97,7 @@ public class User {
         this.ID = temp.ID;
     }
 
-
     // -- Getter and setter methods --
-
     public PeopleADT getPeople_array() {
         return people_array;
     }

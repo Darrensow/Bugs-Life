@@ -4,6 +4,7 @@ package Semag;/*
  * and open the template in the editor.
  */
 
+import java.io.Serializable;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,7 +18,7 @@ import javax.mail.internet.MimeMessage;
  * you are required to downloadd this jar file add add it to your project to run linl: https://static.javatpoint.com/src/mail/mailactivation.zip
  * @author xianp
  */
-public class gmail_sender {
+public class gmail_sender implements Serializable {
 
     private String send_to;
     private String send_by = "xianpua2001.sim02@gmail.com";

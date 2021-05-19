@@ -1,19 +1,25 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.awt.Desktop;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 
-public class Window {
+public class Window implements Serializable {
 
     private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
     PeopleADT people_Array = new PeopleADT();                           // store people
@@ -23,7 +29,10 @@ public class Window {
 
     @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
-
+    private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+    private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
+    private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
+    private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
     public Window() {
     }
@@ -57,11 +66,11 @@ public class Window {
     /**
      * open window
      */
-    public void userwindow() { // display project original window
+    public void userwindow() throws IOException { // display project original window
         sortBased(1);
         boolean quit = false;
         while (quit == false) {
-            System.out.println("action? \n1)sort \n2)add project 3)search project 4)quit");
+            System.out.println("action? \n1)sort \n2)add project 3)search project 4)generate report 5)quit");
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
@@ -80,6 +89,11 @@ public class Window {
                     search(in4);
                     break;
                 case 4:
+                    System.out.println("Enter text want to generate 1)txt 2)csv 3)pdf");
+                    int num = sc.nextInt();
+                    selectfile(num);
+                    break;
+                case 5:
                     quit = true;
                     return;
                 default:
@@ -171,9 +185,11 @@ public class Window {
     }
 
     /**
-     * This method will sort the project with the column that the user wish, and str8 print it out
+     * This method will sort the project with the column that the user wish, and
+     * str8 print it out
      *
-     * @param option is the attribute of the project, eg ID, Project Name, returned as int
+     * @param option is the attribute of the project, eg ID, Project Name,
+     * returned as int
      */
     public void sortBased(int option) {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
@@ -219,6 +235,8 @@ public class Window {
             choose.setSelectedFile(new File("report.txt"));
         } else if (num == 2) {
             choose.setSelectedFile(new File("report.csv"));
+        } else if (num == 3) {
+            choose.setSelectedFile(new File("report.pdf"));
         }
 
         int res = choose.showSaveDialog(choose);     // select file to save
@@ -296,6 +314,14 @@ public class Window {
             } catch (IOException e) {
                 System.out.println("Problem with file output");
             }
+        } else if (num == 3) {
+            ArrayList<String> text = new ArrayList<>();
+            text.add("Number of resolved issue : " + resolved);
+            text.add("Number of unresolved issue : " + unresolved);
+            text.add("Number of in progress issue : " + in_progress);
+            text.add("Most frequent label : " + top_label.getName() + " (total: " + top_label.getTotal() + " )");
+            text.add("Top performer in team: " + top_perform + "(total: " + max + " )");
+            createpdf(file_name, text);
         }
         //open the file
         if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
@@ -311,6 +337,72 @@ public class Window {
 
     }
 
+    public void createpdf(File filename, ArrayList<String> text) {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(filename));
+            document.open();
+            addTitlePage(document);
+            addContent(document, text);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addTitlePage(Document document) throws DocumentException {
+        Paragraph preface = new Paragraph();
+        // We add one empty line
+        addEmptyLine(preface, 1);
+        // Lets write a big header
+        preface.add(new Paragraph("Report of Doge Buys life", catFont));
+
+        addEmptyLine(preface, 1);
+        // Will create: Report generated by: _name, _date
+        preface.add(new Paragraph("Report generated by: " + System.getProperty("user.name") + ", " + new Date(), smallBold));
+        addEmptyLine(preface, 3);
+        preface.add(new Paragraph("This document describes provide by team Doge.", smallBold));
+
+        addEmptyLine(preface, 8);
+
+        preface.add(new Paragraph("This document is for education purpose only.", redFont));
+
+        document.add(preface);
+        // Start a new page
+        document.newPage();
+    }
+
+    private static void addEmptyLine(Paragraph paragraph, int number) {
+        for (int i = 0; i < number; i++) {
+            paragraph.add(new Paragraph(" "));
+        }
+    }
+
+    private static void addContent(Document document, ArrayList<String> text) throws DocumentException {
+        Anchor anchor = new Anchor("Content", catFont); // change text beside the text
+        anchor.setName("Content");
+
+        // Second parameter is the number of the chapter
+        Chapter catPart = new Chapter(new Paragraph(anchor), 1);
+
+//        Paragraph subPara = new Paragraph("Subcategory 1", subFont);
+        for (int i = 0; i < text.size(); i++) {
+            catPart.add(new Paragraph(text.get(i)));
+        }
+        document.add(catPart);
+
+        // Next section
+        anchor = new Anchor("END", catFont);
+        anchor.setName("End");
+
+        // Second parameter is the number of the chapter
+        catPart = new Chapter(new Paragraph(anchor), 2);
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 20);
+        preface.add(new Paragraph("                                                                         End of the report", redFont));
+        catPart.add(preface);
+        document.add(catPart);
+    }
 
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
@@ -319,7 +411,7 @@ public class Window {
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
-    public void saveData(){
+    public void saveData() {
         dm.writeData(this);
     }
 
@@ -330,10 +422,7 @@ public class Window {
         this.numberproject = temp.numberproject;
     }
 
-
-
     // -- Getter and setter methods --
-
     public static ArrayList<Project> getProject_Array() {
         return project_Array;
     }
@@ -365,4 +454,5 @@ public class Window {
     public void setCurrent_people(People current_people) {
         this.current_people = current_people;
     }
+
 }

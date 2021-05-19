@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -37,7 +38,7 @@ import javax.swing.text.StyleConstants;
  *
  * @author xianp
  */
-public class chat_window implements ActionListener, MouseListener {
+public class chat_window implements ActionListener, MouseListener, Serializable {
 
     private String str = "";
     private boolean entered = false;

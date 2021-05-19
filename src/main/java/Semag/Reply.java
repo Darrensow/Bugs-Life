@@ -1,12 +1,13 @@
 package Semag;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * The replies don't have IDs, they are just separeted with a blank line
  */
 
-public class Reply {
+public class Reply implements Serializable {
     private Date createdOn;
     private People createdBy;
     private String text;

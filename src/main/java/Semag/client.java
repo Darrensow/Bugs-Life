@@ -8,6 +8,7 @@ package Semag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -18,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author xianp
  */
-public class client {
+public class client implements Serializable {
 
     final static int ServerPort = 1234;
 

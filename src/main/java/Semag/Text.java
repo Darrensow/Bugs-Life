@@ -1,8 +1,9 @@
 package Semag;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Text<E> {
+public class Text<E> implements Serializable {
 
     private ArrayList<E> list = new ArrayList<>();
 

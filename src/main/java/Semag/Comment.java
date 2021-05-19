@@ -1,12 +1,13 @@
 package Semag;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Comment {
+public class Comment implements Serializable {
 
     private ArrayList<Reply> replies = new ArrayList<>();
     private static int number = 0;

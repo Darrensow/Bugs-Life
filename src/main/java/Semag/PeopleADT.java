@@ -1,8 +1,9 @@
 package Semag;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PeopleADT {
+public class PeopleADT implements Serializable {
 
     private static ArrayList<People> list = new ArrayList<>();
 

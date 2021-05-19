@@ -1,8 +1,9 @@
 package Semag;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Password {
+public class Password implements Serializable {
 
     private String pass;
     Random r = new Random();

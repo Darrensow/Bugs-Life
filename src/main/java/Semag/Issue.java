@@ -2,13 +2,14 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
-public class Issue {
+public class Issue implements Serializable {
 
     private ArrayList<Issue> changelog;
     private int ID;

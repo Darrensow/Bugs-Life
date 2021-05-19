@@ -6,11 +6,13 @@ package Semag;/*
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
+
 /**
  *
  * @author xianp
  */
-public class labelCounter implements Comparable<labelCounter> {
+public class labelCounter implements Comparable<labelCounter> , Serializable {
     
     private String name;
     private Integer total = 0;

@@ -2,9 +2,10 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Project {
+public class Project implements Serializable {
     private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
     PeopleADT people_Array = new PeopleADT();   // store people
     Scanner sc = new Scanner(System.in);

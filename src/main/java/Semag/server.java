@@ -8,6 +8,7 @@ package Semag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Random;
  *
  * @author xianp
  */
-public class server {
+public class server implements Serializable {
 
     protected static ArrayList<clienthander> a = new ArrayList<>();
     private static ArrayList<Integer> code_list = new ArrayList<>();
