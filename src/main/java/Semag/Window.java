@@ -263,14 +263,20 @@ public class Window implements Serializable {
                 }
                 int have = -1;
                 for (int k = 0; k < label.size(); k++) {
-                    if (label.get(k).getName().equals(temp.getTags())) {
-                        label.get(k).add();
-                        have = 1;
-                        break;
+                    String[] tagsArray = temp.getTag();
+                    for (int l = 0; l < tagsArray.length; l++) {
+                        if (label.get(k).getName().equals(tagsArray[l])) {
+                            label.get(k).add();
+                            have = 1;
+                            break;
+                        }
                     }
                 }
                 if (have == -1) {
-                    label.add(new labelCounter(temp.getTags()));
+                    String[] tagsArray = temp.getTag();
+                    for (int k = 0; k < tagsArray.length; k++) {
+                        label.add(new labelCounter(tagsArray[k]));
+                    }
                 }
             }
         }

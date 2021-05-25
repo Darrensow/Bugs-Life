@@ -20,7 +20,7 @@ public class Issue implements Serializable {
     private People assignee;
     private ArrayList<Comment> comment = new ArrayList<>();
     private static int numbercomment = 1;
-    private String tags;
+    private String[] tag;
     private Integer priority;
     private String status;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -35,7 +35,7 @@ public class Issue implements Serializable {
         return assignee;
     }
 
-    public Issue(int ID, String title, String text, People creator, People assignee, String tags, int priop) {
+    public Issue(int ID, String title, String text, People creator, People assignee, String[] tag, int priop) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
@@ -45,7 +45,7 @@ public class Issue implements Serializable {
         this.text = text;
         this.status = "open";
         this.priority = priop;
-        this.tags = tags;
+        this.tag = tag;
     }
 
     //add comment
@@ -265,7 +265,7 @@ public class Issue implements Serializable {
                         "Title: %-40s\n" +
                         "Assigned to: %-20sCreated by: %-20s\n"
                 , o.getID(), o.getStatus(),
-                o.getTags(), o.getPriority(), o.getTime(),
+                o.getTag(), o.getPriority(), o.getTime(),
                 o.getTitle(),
                 o.getAssignee(), o.getCreator());
         sb.append(issueInfo);
@@ -320,8 +320,8 @@ public class Issue implements Serializable {
         return status;
     }
 
-    public String getTags() {
-        return tags;
+    public String[] getTag() {
+        return tag;
     }
 
 
@@ -442,8 +442,8 @@ public class Issue implements Serializable {
         Issue.numbercomment = numbercomment;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setTag(String[] tag) {
+        this.tag = tag;
     }
 
     public void setPriority(Integer priority) {

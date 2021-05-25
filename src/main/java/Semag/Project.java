@@ -146,8 +146,9 @@ public class Project implements Serializable {
     public void addissue() {
         System.out.println("Enter issue name");
         String issue_name = sc.next();
-        System.out.println("enter tags");
+        System.out.println("enter tags with spacing in between");
         String issue_tags = sc.nextLine();
+        String[] issue_tags_array = issue_tags.split(" ");
         System.out.println("Enter priority");
         int priority = sc.nextInt();
         People assignee_obj = new People();
@@ -182,7 +183,7 @@ public class Project implements Serializable {
             text = sc.nextLine();
         }
         text = text_obj.getString();
-        issue_Array.add(new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags, priority));
+        issue_Array.add(new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority));
         numissue++;
     }
 
@@ -354,7 +355,7 @@ public class Project implements Serializable {
         str.append(String.format(" %3d",o.getID()));
         str.append(String.format(" %-30s",o.getTitle()));
         str.append(String.format(" %-15s",o.getStatus()));
-        str.append(String.format(" %-15s",o.getTags()));
+        str.append(String.format(" %-15s",o.getTag()));
         str.append(String.format(" %10d",o.getPriority()));
         str.append(String.format(" %-20s", o.getTime()));
         str.append(String.format(" %-20s",o.getAssignee()));
@@ -371,16 +372,25 @@ public class Project implements Serializable {
         String[] tags = tag.split("#");
         String[] states = state.split("#");
         for (int i = 0; i < issue_Array.size(); i++) {
-            for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
-                    pq.add(issue_Array.get(i));
-                    break;
+            label :
+            {
+                /*
+                    note to Sam, my IDE says that the two if statements are always false.
+                    I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
+                 */
+                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
+                    if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
+                        pq.add(issue_Array.get(i));
+                        break label;
+                    }
+                    String[] tagsArray = issue_Array.get(i).getTag();
+                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
+                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
+                            pq.add(issue_Array.get(i));
+                            break label;
+                        }
+                    }
                 }
-                if (tags.length < j && issue_Array.get(i).getTags().equals(tags[j])) {
-                    pq.add(issue_Array.get(i));
-                    break;
-                }
-
             }
         }
         for (int i = 0; i < issue_Array.size(); i++) {
@@ -396,14 +406,24 @@ public class Project implements Serializable {
         String[] tags = tag.split("#");
         String[] states = state.split("#");
         for (int i = 0; i < issue_Array.size(); i++) {
-            for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
-                    break;
+            label :
+            {
+                /*
+                    note to Sam, my IDE says that the two if statements are always false.
+                    I think its the states.length > j and tags.length > j problem, could you check it out further?
+                 */
+                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
+                    if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
+                        break label;
+                    }
+                    String[] tagsArray = issue_Array.get(i).getTag();
+                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
+                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
+                            break label;
+                        }
+                    }
+                    pq.add(issue_Array.get(i));
                 }
-                if (tags.length < j && issue_Array.get(i).getTags().equals(tags[j])) {
-                    break;
-                }
-                pq.add(issue_Array.get(i));
             }
         }
         for (int i = 0; i < issue_Array.size(); i++) {
