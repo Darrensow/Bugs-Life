@@ -1,23 +1,14 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.awt.Desktop;
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.PriorityQueue;
-import java.util.Scanner;
-import javax.swing.JFileChooser;
+import java.util.*;
 
 public class Window implements Serializable {
 
@@ -37,12 +28,7 @@ public class Window implements Serializable {
     public Window() {
     }
 
-    /**
-     * @param project_obj want to remove
-     */
-    public static void removeProject(Project project_obj) {
-        project_Array.remove(project_obj);
-    }
+
 
     /**
      * @param ac
@@ -202,6 +188,14 @@ public class Window implements Serializable {
                 Collections.sort(sortedProjectList, Project.IssueCountComparator);
         }
         print(sortedProjectList);
+    }
+
+    /**
+     * @param project_obj want to remove
+     */
+    public static void removeProject(Project project_obj) {
+        project_Array.remove(project_obj);
+        numberproject--;
     }
 
     /**

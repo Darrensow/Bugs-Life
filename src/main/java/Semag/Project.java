@@ -19,14 +19,6 @@ public class Project implements Serializable {
     }
 
     /**
-     * @param issue_obj issue to be removed
-     */
-    public static void removeIssue(Issue issue_obj) {
-        issue_obj.getAssignee().reduceassigned();
-        issue_Array.remove(issue_obj);
-    }
-
-    /**
      * @param name
      * @param ID
      * @param owner create project
@@ -41,7 +33,7 @@ public class Project implements Serializable {
      * owner of project window
      */
     public void projectwindow_owner() {
-        this.sortBased(1);
+        this.sortIssueBased(1);
         boolean quit = false;
         while (quit == false) {
             System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)delete project \n7)quit");
@@ -50,7 +42,7 @@ public class Project implements Serializable {
                 case 1:
                     System.out.println("sort based on \n1)priority \n2)time");
                     int in2 = sc.nextInt();
-                    this.sortBased(2);
+                    this.sortIssueBased(2);
                     break;
                 case 2:
                     System.out.println("enter tags in format (#tags1#tags2)");
@@ -91,7 +83,7 @@ public class Project implements Serializable {
      * normal user window
      */
     public void projectwindow() {
-        this.sortBased(1);
+        this.sortIssueBased(1);
         boolean quit = false;
         while (quit == false) {
             System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)quit");
@@ -100,7 +92,7 @@ public class Project implements Serializable {
                 case 1:
                     System.out.println("sort based on \n1)priority \n2)time");
                     int in2 = sc.nextInt();
-                    this.sortBased(2);
+                    this.sortIssueBased(in2);
                     break;
                 case 2:
                     System.out.println("enter tags in format (#tags1#tags2)");
@@ -146,25 +138,6 @@ public class Project implements Serializable {
             projectwindow();
         }
     }
-
-    public int getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * delete this project
-     */
-    public void deleteThisProject() {
-        for (int i = 0; i < issue_Array.size(); i++) {
-            removeIssue(issue_Array.get(i));
-        }
-        Window.removeProject(this);
-    }
-
 
 
     /**
@@ -316,17 +289,43 @@ public class Project implements Serializable {
      *
      * @param choose is the attribute of the Issue, eg ID, Title, returned as int
      */
-    public void sortBased(int choose) {
+    public void sortIssueBased(int choose) {
         ArrayList<Issue> sortedIssueList = new ArrayList<>(issue_Array);
         switch (choose) {
             case 0: //0 is the first option, ID
                 Collections.sort(sortedIssueList, Issue.IDComparator);
-            case 1: //1 is the sec option, Name
+                break;
+            case 1: //1 is the sec option, Priority
                 Collections.sort(sortedIssueList, Issue.priorityComparator);
+                break;
             case 2: //2 is the third option, IssueCount
                 Collections.sort(sortedIssueList, Issue.timeComparator);
+                break;
+            default:
+                break;
         }
         print(sortedIssueList);
+    }
+
+
+    /**
+     * Delete current project
+     */
+    public void deleteThisProject() {
+        for (int i = 0; i < issue_Array.size(); i++) {
+            removeIssue(issue_Array.get(i));
+        }
+        Window.removeProject(this);
+    }
+
+    /**
+     * This is a method to just remove one issue from issue dashboard, called by Issue class
+     * @param issue_obj issue to be removed
+     */
+    public static void removeIssue(Issue issue_obj) {
+        issue_obj.getAssignee().reduceassigned();
+        issue_Array.remove(issue_obj);
+        numissue--;
     }
 
     /**
@@ -339,11 +338,30 @@ public class Project implements Serializable {
     /**
      * print selected list
      */
-    public void print(ArrayList<?> toPrint) {
+    public void print(ArrayList<Issue> toPrint) {
+        System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-20s %-20s %-20s", "ID", "Title", "Status",
+                "Tag", "Priority", "Time", "Assignee", "Creator"));
         for (int i = 0; i < toPrint.size(); i++) {
-            System.out.println(toPrint.get(i));
+            System.out.println(printOneIssue(toPrint.get(i)));
         }
     }
+
+    /**
+     * This method return string representation of one Issue in the Issue Dashboard
+     */
+    public String printOneIssue(Issue o){
+        StringBuilder str = new StringBuilder();
+        str.append(String.format(" %3d",o.getID()));
+        str.append(String.format(" %-30s",o.getTitle()));
+        str.append(String.format(" %-15s",o.getStatus()));
+        str.append(String.format(" %-15s",o.getTags()));
+        str.append(String.format(" %10d",o.getPriority()));
+        str.append(String.format(" %-20s", o.getTime()));
+        str.append(String.format(" %-20s",o.getAssignee()));
+        str.append(String.format(" %-20s" ,o.getCreator()));
+        return str.toString();
+    }
+
 
     /*
   include  filter kind
@@ -418,6 +436,8 @@ public class Project implements Serializable {
         return issue_Array.get(index);
     }
 
+
+    //--Comparator--
     /**
      * Comparator for sorting the list by Project ID
      */
@@ -477,6 +497,13 @@ public class Project implements Serializable {
 
     // -- Getter methods --
 
+    public int getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public static ArrayList<Issue> getIssue_Array() {
         return issue_Array;
@@ -484,14 +511,6 @@ public class Project implements Serializable {
 
     public PeopleADT getPeople_Array() {
         return people_Array;
-    }
-
-    public Scanner getSc() {
-        return sc;
-    }
-
-    public static int getNumissue() {
-        return numissue;
     }
 
     //cannot include cuz this will load the last logged in person's detail instead..
@@ -503,25 +522,8 @@ public class Project implements Serializable {
         return owner;
     }
 
-    public Comparator<Project> getIDComparator() {
-        return IDComparator;
-    }
 
-    public Comparator<Project> getNameComparator() {
-        return NameComparator;
-    }
-
-    public Comparator<Project> getIssueCountComparator() {
-        return IssueCountComparator;
-    }
-
-    public static DataManagement getDm() {
-        return dm;
-    }
-
-    public static void setIssue_Array(ArrayList<Issue> issue_Array) {
-        Project.issue_Array = issue_Array;
-    }
+    //Setter method
 
     public void setPeople_Array(PeopleADT people_Array) {
         this.people_Array = people_Array;
@@ -529,10 +531,6 @@ public class Project implements Serializable {
 
     public void setSc(Scanner sc) {
         this.sc = sc;
-    }
-
-    public static void setNumissue(int numissue) {
-        Project.numissue = numissue;
     }
 
     public void setID(Integer ID) {

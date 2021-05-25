@@ -341,7 +341,7 @@ public class Issue implements Serializable {
 
 
     /**
-     * Comparator for sorting the list by Tag
+     * Comparator for sorting the list by Time
      */
     public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
         @Override
@@ -362,7 +362,7 @@ public class Issue implements Serializable {
     };
 
     /**
-     * Comparator for sorting the list by Title Name
+     * Comparator for sorting the list by Title
      */
     public Comparator<Issue> TitleComparator = new Comparator<Issue>() {
         @Override
