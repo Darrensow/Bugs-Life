@@ -1,0 +1,313 @@
+{
+  "projects":[
+    {
+      "id":1,
+      "name": "Nuxtjs",
+      "issues":[
+        {
+          "id": 1,
+          "title": "Can't display the table",
+          "priority": 4,
+          "status": "In Progress",
+          "tag": [
+            "Frontend"
+          ],
+          "descriptionText": "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
+          "createdBy": "jhoe",
+          "assignee": "btan",
+          "timestamp": 1565192640,
+          "comments": [
+            {
+              "comment_id": 1,
+              "text": "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
+              "counter" : {
+                "happy" : 2,
+                "dislikes" : 0,
+                "angry" : 1,
+                "likes" : 5
+              },
+              "timestamp": 1565194800,
+              "user": "liew"
+            },
+            {
+              "comment_id": 2,
+              "text": "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
+              "counter" : {
+                "happy" : 10,
+                "dislikes" : 0,
+                "angry" : 1,
+                "likes" : 8
+              },
+              "timestamp": 1567340520,
+              "user": "ang"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Can't open file",
+          "priority": 3,
+          "status": "Open",
+          "tag": [
+            "Backend"
+          ],
+          "descriptionText": "Windows 10 Photo will not open a jpg file. I get \"We can't open this file.\" error message.\n\nThey're family photo that I sure would like to salvage.  Thanks",
+          "createdBy": "btan",
+          "assignee": "jhoe",
+          "timestamp": 1565279040,
+          "comments": [
+            {
+              "comment_id": 1,
+              "text": "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 1
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1565280000,
+              "user": "liew"
+            },
+            {
+              "comment_id": 2,
+              "text": "lad photos of windows 8 & 10 are worst possible application ever developed!\n\n                    just change default view to \"windows photo viewer\" if you dont have any other application",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 5
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1565301300,
+              "user": "btan"
+            },
+            {
+              "comment_id": 3,
+              "text": "Window 10 can but window vista does not work",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 9
+                },
+                {
+                  "reaction": "happy",
+                  "count": 0
+                }
+              ],
+              "timestamp": 1565401300,
+              "user": "ang"
+            }
+          ]
+        }
+
+      ]
+
+    },
+    {
+      "id":2,
+      "name": "Vuejs",
+      "issues":[
+        {
+          "id": 1,
+          "title": "Flash of unstyled content",
+          "priority": 6,
+          "status": "Open",
+          "tag": [
+            "cmty:bug-report"
+          ],
+          "descriptionText": "What is expected ?\nExpected correct scrollspy active link highlighting and all links work.\n\nWhat is actually happening?\nPage jumps to top before smooth scroll, which leads to weird links highlighting. Also, sometimes some links doesn't highlight (like Server Rendered in demo video)\n\nAdditional comments?\nDemonstration - https://imgur.com/a/GGvITVB",
+          "createdBy": "btan",
+          "assignee": "ang",
+          "timestamp": 1569920400,
+          "comments": [
+            {
+              "comment_id": 1,
+              "text": "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 1
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1570424400,
+              "user": "liew"
+            },
+            {
+              "comment_id": 2,
+              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 5
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1570438800,
+              "user": "ang"
+            },
+            {
+              "comment_id": 3,
+              "text": "Thanks for everything",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 1
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1570448800,
+              "user": "jhoe"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "User is \"trapped\" on 404 page",
+          "priority": 8,
+          "status": "Closed",
+          "tag": [
+            "Backend"
+          ],
+          "descriptionText": "When hitting the 404 page, the Nuxt layout isn't applied correctly.",
+          "createdBy": "ang",
+          "assignee": "jhoe",
+          "timestamp": 1570507200,
+          "comments": [
+            {
+              "comment_id": 1,
+              "text": "Still a problem. ",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 6
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1570525200,
+              "user": "btan"
+            },
+            {
+              "comment_id": 2,
+              "text": "/cc @clarkdo",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 5
+                },
+                {
+                  "reaction": "happy",
+                  "count": 3
+                }
+              ],
+              "timestamp": 1570536000,
+              "user": "ang"
+            }
+          ]
+        }
+
+      ]
+
+    },
+    {
+      "id":3,
+      "name": "Reactjs",
+      "issues":[
+        {
+          "id": 1,
+          "title": "Flash of unstyled content",
+          "priority": 1,
+          "status": "Open",
+          "tag": [
+            "cmty:bug-report"
+          ],
+          "descriptionText": "What is expected ?\nThere is no flash of unstyled content            \n\nWhat is actually happening?\nThere is a brief flash of unstyled content\n\nAdditional comments? \nDoesn't occur in Chrome",
+          "createdBy": "liew",
+          "assignee": "btan",
+          "timestamp": 1567339200,
+          "comments": [
+            {
+              "comment_id": 1,
+              "text": "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 1
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                },
+                {
+                  "reaction": "thumbsUp",
+                  "count": 5
+                }
+              ],
+              "timestamp": 1567854000,
+              "user": "liew"
+            },
+            {
+              "comment_id": 2,
+              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+              "react": [
+                {
+                  "reaction": "angry",
+                  "count": 9
+                },
+                {
+                  "reaction": "happy",
+                  "count": 2
+                }
+              ],
+              "timestamp": 1583855766 ,
+              "user": "ang"
+            }
+          ]
+        }
+      ]
+
+    }
+
+  ],
+  "users": [
+    {
+      "userid": 1,
+      "username": "jhoe",
+      "password": "password"
+    },
+    {
+      "userid": 2,
+      "username": "btan",
+      "password": "password"
+    },
+    {
+      "userid": 3,
+      "username": "liew",
+      "password": "password"
+    },
+    {
+      "userid": 4,
+      "username": "ang",
+      "password": "password"
+    }
+  ]
+}

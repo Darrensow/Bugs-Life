@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -78,6 +79,15 @@ public class DataManagement implements Serializable {
         }
     }
 
+    public void writeData(Comment obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Comment.json"), obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /*
@@ -138,7 +148,19 @@ public class DataManagement implements Serializable {
     public Issue readIssueData() {
         Issue returnObj = new Issue();
         try {
-            returnObj = new ObjectMapper().readerFor(Issue.class).readValue(new File("Issue.json"));
+            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Issue.class).readValue(new File("Issue.json"));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnObj;
+    }
+
+    public Comment readCommentData() {
+        Comment returnObj = new Comment();
+        try {
+            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Comment.class).readValue(new File("Comment.json"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

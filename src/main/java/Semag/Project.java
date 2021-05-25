@@ -225,13 +225,13 @@ public class Project implements Serializable {
                 } else if (issue_Array.get(i).getTitle().contains(" " + token[j])) {
                     temp.add(issue_Array.get(i));
                     break;
-                } else if (issue_Array.get(i).getText().contains(" " + token[j])) {
+                } else if (issue_Array.get(i).getDescriptionText().contains(" " + token[j])) {
                     temp.add(issue_Array.get(i));
-                } else if (issue_Array.get(i).getText().contains(token[j] + " ")) {
+                } else if (issue_Array.get(i).getDescriptionText().contains(token[j] + " ")) {
                     temp.add(issue_Array.get(i));
-                } else if (issue_Array.get(i).getText().contains(" " + token[j] + " ")) {
+                } else if (issue_Array.get(i).getDescriptionText().contains(" " + token[j] + " ")) {
                     temp.add(issue_Array.get(i));
-                } else if (checkcomment(issue_Array.get(i).getComment(), token[j])) {
+                } else if (checkcomment(issue_Array.get(i).getComments(), token[j])) {
                     temp.add(issue_Array.get(i));
                     break;
                 }

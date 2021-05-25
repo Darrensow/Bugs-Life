@@ -1,26 +1,29 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
+@JsonIgnoreProperties(value = {"number", "reaction", "happy", "angry", "likes", "dislikes", "sc"})
 public class Comment implements Serializable {
 
-    private ArrayList<Reply> replies = new ArrayList<>();
     private static int number = 0;
     private int commentID;
     private Date createdOn;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     private People createdBy;
     private String text;
+    private long timestamp;
+    private String user;
+
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
-    private int happy = 0;
-    private int angry = 0;
-    private int likes = 0;
-    private int dislikes = 0;
     private static Scanner sc = new Scanner(System.in);
 
     /**
@@ -51,6 +54,7 @@ public class Comment implements Serializable {
         this.createdOn = new Date();
         this.createdBy = createdBy;
         this.text = text;
+        this.timestamp = Instant.now().getEpochSecond();
     }
 
     /**
@@ -61,23 +65,6 @@ public class Comment implements Serializable {
         counter.replace(reaction, counter.get(reaction) + 1);
     }
 
-    //Like and Dislike ---------------------
-    public void like() {
-        this.likes++;
-    }
-
-    public void dislike() {
-        this.dislikes++;
-    }
-
-    //Reaction method ---------------------
-    public void happy() {
-        this.happy++;
-    }
-
-    public void angry() {
-        this.angry++;
-    }
 
     public String getText() {
         return this.text;
@@ -89,69 +76,21 @@ public class Comment implements Serializable {
     @Override
     public String toString() {
         String str = "#" + this.commentID;
-        str += "\n" + this.createdBy + " | " + this.createdOn;
+        str += "\t" + timestamp + " By : " + this.user;
         str += "\n" + this.text;
-        str += "\nReactions: ANGRY(" + this.angry + ") | HAPPY(" + this.happy + ")";
-        str += "\nLikes: " + this.likes;
-        str += "\nDislikes: " + this.dislikes;
-        str += displayRepliesSection();
+        str += reactionsToString();
         return str + "\n";
     }
 
-    /**
-     * Displays the whole replies section.
-     * Regarding the wrapping of the text, have to modify the toString() in Reply class
-     *
-     * @return String representation of the whole repleis section.
-     */
-    public String displayRepliesSection() {
+    //helper method for toString(), returns a String representation of all the reactions
+    private String reactionsToString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("\n\tReplies\n-----------");
-        for (Reply value : replies) {
-            sb.append(value);
-        }
+        sb.append("\n$$ Reactions: ");
+        sb.append("happy: " + counter.get("happy"));
+        sb.append(" | angry: " + counter.get("angry"));
+        sb.append(" | likes: " + counter.get("likes"));
+        sb.append(" | dislikes: " + counter.get("dislikes"));
         return sb.toString();
-    }
-
-    /**
-     * Add replies under the comment
-     */
-    public void addReply() {
-        //can be modified afterwards
-        System.out.println("enter comment");
-        String text = sc.nextLine();
-        Text<String> text_obj = new Text<>();
-        Text<String> temp_text = new Text<>();
-        while (!text.equals("#quit")) {
-            if (text.equals("#undo")) {
-                if (text_obj.getSize() < 0) {
-                    break;
-                }
-                temp_text.push(text_obj.pop());
-            } else if (text.equals("#redo")) {
-                if (temp_text.getSize() < 0) {
-                    break;
-                }
-                text_obj.push(temp_text.pop());
-            } else {
-                text_obj.push(text);
-                temp_text.clear();
-            }
-            text = sc.nextLine();
-        }
-        text = text_obj.getString();
-
-        //call the constructor with 3 parameters in the Reply class.
-        //discuss again how to link the People who are commenting and also Replying - KIV
-        /**
-         * My idea is below (create a new People on the spot and add their reply to the comments)
-         * Anyone can reply (Anonymous)
-         * Users can reply (non-Anonymous)
-         */
-        /*
-            People replier = new People(...);
-            replies.add(new Reply(replier, text));
-         */
     }
 
 
@@ -160,10 +99,31 @@ public class Comment implements Serializable {
 //    public String displayDislikes()
 //    public String displayReactions()
 
-    //Mutator methods --------------
-    public void setReplies(ArrayList<Reply> replies) {
-        this.replies = replies;
+    /*
+        -- Save and read data -- Jackson -- JSON --
+     */
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData() {
+        dm.writeData(this);
     }
+
+    public void loadData() {
+        Comment temp = dm.readCommentData();
+        this.commentID = temp.commentID;
+        this.text = temp.text;
+        this.counter = temp.counter;
+        this.timestamp = temp.timestamp;
+        this.user = temp.user;
+    }
+
+    /*
+        --- Mutator methods ---
+     */
 
     public static void setNumber(int number) {
         Comment.number = number;
@@ -185,27 +145,12 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public void setHappy(int happy) {
-        this.happy = happy;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
-
-    public void setAngry(int angry) {
-        this.angry = angry;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public void setDislikes(int dislikes) {
-        this.dislikes = dislikes;
-    }
-
-
-    //Accessor methods -----------------
-    public ArrayList<Reply> getReplies() {
-        return replies;
-    }
+    /*
+        --- Accessor methods ---
+     */
 
     public static int getNumber() {
         return number;
@@ -223,21 +168,24 @@ public class Comment implements Serializable {
         return createdBy;
     }
 
-    public int getHappy() {
-        return happy;
+
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public int getAngry() {
-        return angry;
+    public String getUser() {
+        return user;
     }
 
-    public int getLikes() {
-        return likes;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public int getDislikes() {
-        return dislikes;
+    public HashMap<String, Integer> getCounter() {
+        return counter;
     }
 
-
+    public void setCounter(HashMap<String, Integer> counter) {
+        this.counter = counter;
+    }
 }

@@ -1,0 +1,51 @@
+{
+  "id": 1,
+  "title": "Can't display the table",
+  "priority": 4,
+  "status": "In Progress",
+  "tag": [
+    "Frontend"
+  ],
+  "descriptionText": "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
+  "creator": {
+    "name": "jhoe",
+    "password": "password",
+    "assigned": 0,
+    "ID": 1,
+    "number_solved": 0
+  },
+  "assignee": {
+    "name": "btan",
+    "password": "password",
+    "assigned": 1,
+    "ID": 2,
+    "number_solved": 0
+  },
+  "timestamp": 1565192640,
+  "comments": [
+    {
+      "commentID": 1,
+      "text": "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
+      "counter" : {
+        "happy" : 2,
+        "dislikes" : 0,
+        "angry" : 1,
+        "likes" : 5
+      },
+      "timestamp": 1565194800,
+      "user": "liew"
+    },
+    {
+      "commentID": 2,
+      "text": "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
+      "counter" : {
+        "happy" : 10,
+        "dislikes" : 0,
+        "angry" : 1,
+        "likes" : 8
+      },
+      "timestamp": 1567340520,
+      "user": "ang"
+    }
+  ]
+}

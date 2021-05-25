@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,20 +10,22 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
+@JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable {
 
     private ArrayList<Issue> changelog;
-    private int ID;
+    private Integer ID;
     private String title;
-    private String text;
+    private String descriptionText;
     private LocalDateTime time;
     private People creator;
     private People assignee;
-    private ArrayList<Comment> comment = new ArrayList<>();
+    private ArrayList<Comment> comments = new ArrayList<>();
     private static int numbercomment = 1;
     private String[] tag;
     private Integer priority;
     private String status;
+    private long timestamp;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     Scanner sc = new Scanner(System.in);
     private People current_people;
@@ -35,14 +38,14 @@ public class Issue implements Serializable {
         return assignee;
     }
 
-    public Issue(int ID, String title, String text, People creator, People assignee, String[] tag, int priop) {
+    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
         this.creator = creator;
         this.assignee = assignee;
         time = LocalDateTime.now();
-        this.text = text;
+        this.descriptionText = text;
         this.status = "open";
         this.priority = priop;
         this.tag = tag;
@@ -118,7 +121,7 @@ public class Issue implements Serializable {
      *
      * @param status the current status
      */
-    public void setStatus(String status) {
+    public void updateStatus(String status) {
         if (status.equalsIgnoreCase("open")) {
             System.out.println("Set a status(1)In Progress 2)Resolved 3)Closed): ");
             switch (sc.nextInt()) {
@@ -183,9 +186,9 @@ public class Issue implements Serializable {
         System.out.println("Enter 'h' or happy , 'a' for angry.");
         char reaction = sc.next().charAt(0);
         if (reaction == 'h') {
-            comment.get(index).happy();
+//            comments.get(index).happy();
         } else {
-            comment.get(index).angry();
+//            comments.get(index).angry();
         }
     }
 
@@ -223,7 +226,7 @@ public class Issue implements Serializable {
             text = sc.nextLine();
         }
         text = text_obj.getString();
-        comment.add(new Comment(current_people, text, numbercomment));
+        comments.add(new Comment(current_people, text, numbercomment));
         numbercomment++;
     }
 
@@ -243,9 +246,9 @@ public class Issue implements Serializable {
      */
     public String displayCommentsSection(Issue o) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Comments\n-----------");
-        for (Comment value : comment) {
-            sb.append(value);
+        sb.append("Comments\n-----------\n");
+        for (Comment value : comments) {
+            sb.append(value).append("\n");
         }
         return sb.toString();
     }
@@ -261,19 +264,34 @@ public class Issue implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n" +
-                        "Tag: %-20sPriority: %-20sCreated On: %-20s\n" +
+                        "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n" +
                         "Title: %-40s\n" +
                         "Assigned to: %-20sCreated by: %-20s\n"
                 , o.getID(), o.getStatus(),
-                o.getTag(), o.getPriority(), o.getTime(),
+                o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
                 o.getTitle(),
-                o.getAssignee(), o.getCreator());
+                o.getAssignee().getName(), o.getCreator().getName());
         sb.append(issueInfo);
         sb.append("Issue Description\n-----------");
-        sb.append("\n" + o.getText());
-        sb.append(displayCommentsSection(o));
+        sb.append("\n" + o.getDescriptionText());
+        sb.append("\n").append(displayCommentsSection(o));
 
         System.out.println(sb.toString());
+    }
+
+    //Helper method to print(Issue o), returns all the tags in String format
+    private String returnAllTags(Issue o) {
+        StringBuilder sb = new StringBuilder();
+        String[] tagsArray = o.getTag();
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]);
+
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -283,49 +301,10 @@ public class Issue implements Serializable {
         Project.removeIssue(this);
     }
 
-    //----accessor
-    public String getTitle() {
-        return title;
-    }
 
-    public int getID() {
-        return ID;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public People getCreator() {
-        return creator;
-    }
-
-    public static int getNumbercomment() {
-        return numbercomment;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public ArrayList<Comment> getComment() {
-        return comment;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String[] getTag() {
-        return tag;
-    }
-
-
-    //-- Comparator Object --
+    /*
+        -- Comparator Object --
+     */
 
 
     /**
@@ -393,7 +372,9 @@ public class Issue implements Serializable {
     };
 
 
-    // Save and read data -- Jackson -- JSON --
+    /*
+        -- Save and read data -- Jackson -- JSON --
+     */
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
 
@@ -405,25 +386,65 @@ public class Issue implements Serializable {
     }
 
     public void loadData() {
-        Issue temp = new Issue();
+        Issue temp = dm.readIssueData();
+        this.ID = temp.ID;
+        this.title = temp.title;
+        this.descriptionText = temp.descriptionText;
+        this.creator = temp.creator;
+        this.assignee = temp.assignee;
+        this.comments = temp.comments;
+        this.timestamp = temp.timestamp;
+        this.tag = temp.tag;
+        this.priority = temp.priority;
+        this.status = temp.status;
     }
 
-    // -- Getter and setter methods --
+    /*
+        -- Getter and setter methods --
+     */
 
-    public void setID(int ID) {
+    public ArrayList<Issue> getChangelog() {
+        return changelog;
+    }
+
+    public void setChangelog(ArrayList<Issue> changelog) {
+        this.changelog = changelog;
+    }
+
+    public Integer getID() {
+        return ID;
+    }
+
+    public void setID(Integer ID) {
         this.ID = ID;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getDescriptionText() {
+        return descriptionText;
+    }
+
+    public void setDescriptionText(String descriptionText) {
+        this.descriptionText = descriptionText;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
     }
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public People getCreator() {
+        return creator;
     }
 
     public void setCreator(People creator) {
@@ -434,20 +455,52 @@ public class Issue implements Serializable {
         this.assignee = assignee;
     }
 
-    public void setComment(ArrayList<Comment> comment) {
-        this.comment = comment;
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public static int getNumbercomment() {
+        return numbercomment;
     }
 
     public static void setNumbercomment(int numbercomment) {
         Issue.numbercomment = numbercomment;
     }
 
+    public String[] getTag() {
+        return tag;
+    }
+
     public void setTag(String[] tag) {
         this.tag = tag;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public DateTimeFormatter getDtf() {
@@ -466,12 +519,28 @@ public class Issue implements Serializable {
         this.current_people = current_people;
     }
 
-    public Comparator<Issue> getIDComparator() {
+    public static Comparator<Issue> getPriorityComparator() {
+        return priorityComparator;
+    }
+
+    public static void setPriorityComparator(Comparator<Issue> priorityComparator) {
+        Issue.priorityComparator = priorityComparator;
+    }
+
+    public static Comparator<Issue> getTimeComparator() {
+        return timeComparator;
+    }
+
+    public static void setTimeComparator(Comparator<Issue> timeComparator) {
+        Issue.timeComparator = timeComparator;
+    }
+
+    public static Comparator<Issue> getIDComparator() {
         return IDComparator;
     }
 
-    public void setIDComparator(Comparator<Issue> IDComparator) {
-        this.IDComparator = IDComparator;
+    public static void setIDComparator(Comparator<Issue> IDComparator) {
+        Issue.IDComparator = IDComparator;
     }
 
     public Comparator<Issue> getTitleComparator() {
@@ -480,14 +549,6 @@ public class Issue implements Serializable {
 
     public void setTitleComparator(Comparator<Issue> titleComparator) {
         TitleComparator = titleComparator;
-    }
-
-    public Comparator<Issue> getPriorityComparator() {
-        return priorityComparator;
-    }
-
-    public void setPriorityComparator(Comparator<Issue> priorityComparator) {
-        this.priorityComparator = priorityComparator;
     }
 
     public Comparator<Issue> getStatusComparator() {
@@ -504,13 +565,5 @@ public class Issue implements Serializable {
 
     public void setTagComparator(Comparator<Issue> tagComparator) {
         this.tagComparator = tagComparator;
-    }
-
-    public Comparator<Issue> getTimeComparator() {
-        return timeComparator;
-    }
-
-    public void setTimeComparator(Comparator<Issue> timeComparator) {
-        this.timeComparator = timeComparator;
     }
 }
