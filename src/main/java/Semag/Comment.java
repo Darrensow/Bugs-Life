@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -15,7 +14,7 @@ import java.util.Scanner;
 public class Comment implements Serializable {
 
     private static int number = 0;
-    private int commentID;
+    private int ID;
     private Date createdOn;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     private People createdBy;
@@ -50,7 +49,7 @@ public class Comment implements Serializable {
         if (createdBy == null) {
             throw new NullPointerException("Person cannot be anonymous");
         }
-        this.commentID = ID;
+        this.ID = ID;
         this.createdOn = new Date();
         this.createdBy = createdBy;
         this.text = text;
@@ -75,7 +74,7 @@ public class Comment implements Serializable {
      */
     @Override
     public String toString() {
-        String str = "#" + this.commentID;
+        String str = "#" + this.ID;
         str += "\t" + timestamp + " By : " + this.user;
         str += "\n" + this.text;
         str += reactionsToString();
@@ -114,7 +113,7 @@ public class Comment implements Serializable {
 
     public void loadData() {
         Comment temp = dm.readCommentData();
-        this.commentID = temp.commentID;
+        this.ID = temp.ID;
         this.text = temp.text;
         this.counter = temp.counter;
         this.timestamp = temp.timestamp;
@@ -129,8 +128,8 @@ public class Comment implements Serializable {
         Comment.number = number;
     }
 
-    public void setCommentID(int commentID) {
-        this.commentID = commentID;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public void setCreatedOn(Date createdOn) {
@@ -156,8 +155,8 @@ public class Comment implements Serializable {
         return number;
     }
 
-    public int getCommentID() {
-        return commentID;
+    public int getID() {
+        return ID;
     }
 
     public Date getCreatedOn() {

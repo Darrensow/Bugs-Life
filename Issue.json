@@ -1,50 +1,62 @@
 {
-  "id": 1,
-  "title": "Can't display the table",
-  "priority": 4,
-  "status": "In Progress",
+  "id": 2,
+  "title": "Can't open file",
+  "priority": 3,
+  "status": "Open",
   "tag": [
-    "Frontend"
+    "Backend"
   ],
-  "descriptionText": "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
+  "descriptionText": "Windows 10 Photo will not open a jpg file. I get \"We can't open this file.\" error message.\n\nThey're family photo that I sure would like to salvage.  Thanks",
   "creator": {
-    "name": "jhoe",
+    "name": "btan",
     "password": "password",
-    "assigned": 0,
+    "assigned": 1,
     "ID": 1,
     "number_solved": 0
   },
   "assignee": {
-    "name": "btan",
+    "name": "jhoe",
     "password": "password",
     "assigned": 1,
     "ID": 2,
     "number_solved": 0
   },
-  "timestamp": 1565192640,
+  "timestamp": 1565279040,
   "comments": [
     {
-      "commentID": 1,
-      "text": "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
+      "id": 1,
+      "text": "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
       "counter" : {
-        "happy" : 2,
-        "dislikes" : 0,
-        "angry" : 1,
+        "happy" : 10,
+        "dislikes" : 1,
+        "angry" : 2,
         "likes" : 5
       },
-      "timestamp": 1565194800,
+      "timestamp": 1565280000,
       "user": "liew"
     },
     {
-      "commentID": 2,
-      "text": "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
+      "id": 2,
+      "text": "lad photos of windows 8 & 10 are worst possible application ever developed!\n\n                    just change default view to \"windows photo viewer\" if you dont have any other application",
       "counter" : {
-        "happy" : 10,
+        "happy" : 14,
         "dislikes" : 0,
         "angry" : 1,
         "likes" : 8
       },
-      "timestamp": 1567340520,
+      "timestamp": 1565301300,
+      "user": "btan"
+    },
+    {
+      "id": 3,
+      "text": "Window 10 can but window vista does not work",
+      "counter" : {
+        "happy" : 0,
+        "dislikes" : 0,
+        "angry" : 1,
+        "likes" : 0
+      },
+      "timestamp": 1565401300,
       "user": "ang"
     }
   ]
