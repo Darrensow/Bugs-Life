@@ -100,7 +100,7 @@ public class DataManagement implements Serializable {
     public Project readProjectData() {
         Project returnObj = new Project();
         try {
-            returnObj = new ObjectMapper().readerFor(Project.class).readValue(new File("Project.json"));
+            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Project.class).readValue(new File("Project.json"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {
