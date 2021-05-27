@@ -4,11 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class SEMAG implements Serializable {
@@ -26,6 +22,12 @@ public class SEMAG implements Serializable {
     Window obj = new Window();
 // USER INTERFACE
 
+    public SEMAG() throws SQLException {
+        connection = DriverManager.getConnection(url, username, password);
+        PreparedStatement ps = connection.prepareStatement(createTable);
+        ps.executeUpdate();
+        ps.close();
+    }
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         Scanner sc = new Scanner(System.in);
         SEMAG o = new SEMAG();
