@@ -39,7 +39,7 @@ public class People implements Serializable {
     private int number_solved = 0;
 
     @JsonIgnoreProperties
-    private Scanner sc = new Scanner(System.in);
+    private transient Scanner sc = new Scanner(System.in);
 
 
     public People() {

@@ -16,14 +16,14 @@ public class Comment implements Serializable {
     private static int number = 0;
     private int ID;
     private Date createdOn;
-    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    private transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     private People createdBy;
     private String text;
     private long timestamp;
     private String user;
 
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
-    private static Scanner sc = new Scanner(System.in);
+    private static transient Scanner sc = new Scanner(System.in);
 
     /**
      * This is a Hashmap that links the reaction and its count

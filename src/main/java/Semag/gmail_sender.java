@@ -1,4 +1,5 @@
-package Semag;/*
+package Semag;
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -22,7 +23,7 @@ public class gmail_sender implements Serializable {
 
     private String send_to;
     private String send_by = "xianpua2001.sim02@gmail.com";
-    private String send_by_password = "password"; //this is  fake password =, change the your owner password and send_by gmail
+    private String send_by_password = "@Xianpua2001.sim02"; //this is  fake password =, change the your owner password and send_by gmail
     private String title;
     private String content;
     private String host = "smtp.gmail.com";

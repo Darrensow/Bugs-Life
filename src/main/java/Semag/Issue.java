@@ -26,8 +26,8 @@ public class Issue implements Serializable {
     private Integer priority;
     private String status;
     private long timestamp;
-    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-    Scanner sc = new Scanner(System.in);
+    private transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+ transient   Scanner sc = new Scanner(System.in);
     private People current_people;
 
     private Project project_belongsTo;      //for the delete function

@@ -10,7 +10,7 @@ public class User implements Serializable {
 
     private PeopleADT people_array = new PeopleADT();
     @JsonIgnore
-    Scanner sc = new Scanner(System.in);
+    transient Scanner sc = new Scanner(System.in);
 
     private static int ID = 0;
 
@@ -61,7 +61,7 @@ public class User implements Serializable {
         String text2 = "";
         for (int i = 0; i < 3; i++) {
             System.out.println("enter password. " + (3 - i) + " time try left.");
-            int a = sc.nextInt();
+            String a = sc.next();
             if (people_array.get(b).getPassword().equals(a)) {
                 System.out.println("Welcome. " + people_array.get(b).getName());
                 return people_array.get(b);

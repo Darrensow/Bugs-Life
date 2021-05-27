@@ -9,7 +9,7 @@ public class Project implements Serializable {
 
     private ArrayList<Issue> issue = new ArrayList<>();  // store issue
     PeopleADT people_Array;   // store people
-    Scanner sc = new Scanner(System.in);
+   transient Scanner sc = new Scanner(System.in);
     private int numissue = 0;  // issue id
     private People current_people;  //current log in people
 

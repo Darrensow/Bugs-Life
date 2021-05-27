@@ -27,8 +27,7 @@ public class Window implements Serializable {
     //    private ArrayList<people> people_Array = new ArrayList<>();
 
     private static int numberproject = 0;    // to keep track of project id
-    Scanner sc = new Scanner(System.in);
-
+    transient Scanner sc = new Scanner(System.in);
 
     @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
@@ -38,7 +37,6 @@ public class Window implements Serializable {
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
-
     public Window() {
     }
 
@@ -47,6 +45,7 @@ public class Window implements Serializable {
      * @return true if action success , false if false.
      */
     public boolean ac(String ac) {
+        sc = new Scanner(System.in);
         if ("register".equals(ac)) {
             current_people = new User().register();
             people_Array.add(current_people);
@@ -237,19 +236,21 @@ public class Window implements Serializable {
     }
 
     /**
-     * This method return string representation of one Project in the Project Dashboard,
-     * this method is called by {@code print(ArrayList<Project> toPrint)}
+     * This method return string representation of one Project in the Project
+     * Dashboard, this method is called by
+     * {@code print(ArrayList<Project> toPrint)}
      */
-    public String printOneProject(Project o){
+    public String printOneProject(Project o) {
         StringBuilder str = new StringBuilder();
-        str.append(String.format(" %3d",o.getID()));
-        str.append(String.format(" %-30s",o.getName()));
-        str.append(String.format(" %-15d",o.getIssue().size()));
+        str.append(String.format(" %3d", o.getID()));
+        str.append(String.format(" %-30s", o.getName()));
+        str.append(String.format(" %-15d", o.getIssue().size()));
         return str.toString();
     }
 
     // 1 = txt , 2 = csv
     public void selectfile(int num) throws IOException {  //select file location and set file name
+//        System.out.println("the number is "+num);
         JFileChooser choose = new JFileChooser();
         choose.setCurrentDirectory(new File("."));  // select where the file window start
         if (num == 1) {

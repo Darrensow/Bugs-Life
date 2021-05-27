@@ -20,7 +20,8 @@ import java.util.logging.Logger;
  */
 public class clienthander implements Runnable, Serializable {
 
-    Scanner scn = new Scanner(System.in);
+   
+    transient Scanner scn = new Scanner(System.in);
     private String name;
     private int code;
     private String position;
