@@ -1,7 +1,6 @@
 package Tester;
 
-import Semag.Comment;
-import Semag.Issue;
+import Semag.Project;
 
 /**
  * This package is a tester to our program
@@ -15,13 +14,25 @@ public class ProjectTester {
             Once the troubleshooting for Project and Issue is done, the data.json file will be used as the main storage location
          */
         //Try to print from the Comment.json
-        Comment cmt = new Comment();
-        cmt.loadData();
-        System.out.println(cmt.toString());
+//        Comment cmt = new Comment();
+//        cmt.loadData();
+//        System.out.println(cmt.toString());
+//
+//        //Try to prin from the Issue.json
+//        Issue isu = new Issue();
+//        isu.loadData();
+//        isu.print();
 
-        //Try to prin from the Issue.json
-        Issue isu = new Issue();
-        isu.loadData();
-        isu.print();
+
+        /*
+        Try to print out the Issue dashboard
+        @author zhuoli
+         */
+        Project project = new Project();
+        project.loadData();
+        project.print();
+//        project.projectwindow();
+
+
     }
 }

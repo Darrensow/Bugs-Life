@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Project implements Serializable {
-    private static ArrayList<Issue> issue_Array = new ArrayList<>();  // store issue
-    PeopleADT people_Array = new PeopleADT();   // store people
+    private ArrayList<Issue> issue = new ArrayList<>();  // store issue
+    PeopleADT people_Array;   // store people
     Scanner sc = new Scanner(System.in);
-    private static int numissue = 0;  // issue id
+    private int numissue = 0;  // issue id
     private Integer ID;  //project id
     private String name; //project name
     private People current_people;  //current log in people
@@ -68,7 +68,6 @@ public class Project implements Serializable {
                     break;
                 case 6:
                     deleteThisProject();
-                    return;
                 case 7:
                     quit = true;
                     return;
@@ -151,7 +150,7 @@ public class Project implements Serializable {
         String[] issue_tags_array = issue_tags.split(" ");
         System.out.println("Enter priority");
         int priority = sc.nextInt();
-        People assignee_obj = new People();
+        People assignee_obj;
         while (true) {
             System.out.println("enter assignee:");
             String assignee = sc.nextLine();
@@ -183,7 +182,12 @@ public class Project implements Serializable {
             text = sc.nextLine();
         }
         text = text_obj.getString();
-        issue_Array.add(new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority));
+
+        //To push notification to assignee_obj
+
+        Issue iss = new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority,this);
+        issue.add(iss);
+        assignee_obj.addAssigned(this.ID,this.name,numissue,issue_name,current_people.getName());
         numissue++;
     }
 
@@ -214,25 +218,25 @@ public class Project implements Serializable {
         ArrayList<Issue> temp = new ArrayList<>();
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] token = seachkeyword.split(" ");
-        for (int i = 0; i < issue_Array.size(); i++) {
+        for (int i = 0; i < issue.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-                if (issue_Array.get(i).getTitle().contains(token[j] + " ")) {
-                    temp.add(issue_Array.get(i));
+                if (issue.get(i).getTitle().contains(token[j] + " ")) {
+                    temp.add(issue.get(i));
                     break;
-                } else if (issue_Array.get(i).getTitle().contains(" " + token[j] + " ")) {
-                    temp.add(issue_Array.get(i));
+                } else if (issue.get(i).getTitle().contains(" " + token[j] + " ")) {
+                    temp.add(issue.get(i));
                     break;
-                } else if (issue_Array.get(i).getTitle().contains(" " + token[j])) {
-                    temp.add(issue_Array.get(i));
+                } else if (issue.get(i).getTitle().contains(" " + token[j])) {
+                    temp.add(issue.get(i));
                     break;
-                } else if (issue_Array.get(i).getDescriptionText().contains(" " + token[j])) {
-                    temp.add(issue_Array.get(i));
-                } else if (issue_Array.get(i).getDescriptionText().contains(token[j] + " ")) {
-                    temp.add(issue_Array.get(i));
-                } else if (issue_Array.get(i).getDescriptionText().contains(" " + token[j] + " ")) {
-                    temp.add(issue_Array.get(i));
-                } else if (checkcomment(issue_Array.get(i).getComments(), token[j])) {
-                    temp.add(issue_Array.get(i));
+                } else if (issue.get(i).getDescriptionText().contains(" " + token[j])) {
+                    temp.add(issue.get(i));
+                } else if (issue.get(i).getDescriptionText().contains(token[j] + " ")) {
+                    temp.add(issue.get(i));
+                } else if (issue.get(i).getDescriptionText().contains(" " + token[j] + " ")) {
+                    temp.add(issue.get(i));
+                } else if (checkcomment(issue.get(i).getComments(), token[j])) {
+                    temp.add(issue.get(i));
                     break;
                 }
             }
@@ -256,7 +260,7 @@ public class Project implements Serializable {
      * @param token keyword check a wword in the comment
      * @return
      */
-    public boolean checkcomment(ArrayList<Comment> arr, String token) {
+    private boolean checkcomment(ArrayList<Comment> arr, String token) {
         for (int i = 0; i < arr.size(); i++) {
             if (arr.get(i).getText().contains(token + " ")) {
                 return true;
@@ -270,13 +274,13 @@ public class Project implements Serializable {
     }
 
     //check whether is id or not
-    public boolean isnumberic(String sen) {
+    private boolean isnumberic(String sen) {
         try {
             if (sen.charAt(0) != '#') {
                 return false;
             }
             double d = Double.parseDouble(sen.substring(1));
-            if (d > issue_Array.size()) {
+            if (d > issue.size()) {
                 return false;
             }
         } catch (NumberFormatException nfe) {
@@ -291,7 +295,7 @@ public class Project implements Serializable {
      * @param choose is the attribute of the Issue, eg ID, Title, returned as int
      */
     public void sortIssueBased(int choose) {
-        ArrayList<Issue> sortedIssueList = new ArrayList<>(issue_Array);
+        ArrayList<Issue> sortedIssueList = new ArrayList<>(issue);
         switch (choose) {
             case 0: //0 is the first option, ID
                 Collections.sort(sortedIssueList, Issue.IDComparator);
@@ -313,8 +317,8 @@ public class Project implements Serializable {
      * Delete current project
      */
     public void deleteThisProject() {
-        for (int i = 0; i < issue_Array.size(); i++) {
-            removeIssue(issue_Array.get(i));
+        for (int i = 0; i < issue.size(); i++) {
+            removeIssue(issue.get(i));
         }
         Window.removeProject(this);
     }
@@ -323,9 +327,9 @@ public class Project implements Serializable {
      * This is a method to just remove one issue from issue dashboard, called by Issue class
      * @param issue_obj issue to be removed
      */
-    public static void removeIssue(Issue issue_obj) {
+    public void removeIssue(Issue issue_obj) {
         issue_obj.getAssignee().reduceassigned();
-        issue_Array.remove(issue_obj);
+        issue.remove(issue_obj);
         numissue--;
     }
 
@@ -333,13 +337,14 @@ public class Project implements Serializable {
      * print Issue list, this method is an overloading method
      */
     public void print() {
-        this.print(issue_Array);
+        System.out.println(issue.size());
+        this.print(issue);
     }
 
     /**
      * print selected list
      */
-    public void print(ArrayList<Issue> toPrint) {
+    public static void print(ArrayList<Issue> toPrint) {
         System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-20s %-20s %-20s", "ID", "Title", "Status",
                 "Tag", "Priority", "Time", "Assignee", "Creator"));
         for (int i = 0; i < toPrint.size(); i++) {
@@ -350,7 +355,7 @@ public class Project implements Serializable {
     /**
      * This method return string representation of one Issue in the Issue Dashboard
      */
-    public String printOneIssue(Issue o){
+    public static String printOneIssue(Issue o){
         StringBuilder str = new StringBuilder();
         str.append(String.format(" %3d",o.getID()));
         str.append(String.format(" %-30s",o.getTitle()));
@@ -358,8 +363,8 @@ public class Project implements Serializable {
         str.append(String.format(" %-15s",o.getTag()));
         str.append(String.format(" %10d",o.getPriority()));
         str.append(String.format(" %-20s", o.getTime()));
-        str.append(String.format(" %-20s",o.getAssignee()));
-        str.append(String.format(" %-20s" ,o.getCreator()));
+        str.append(String.format(" %-20s",o.getAssignee().getName()));
+        str.append(String.format(" %-20s" ,o.getCreator().getName()));
         return str.toString();
     }
 
@@ -367,11 +372,11 @@ public class Project implements Serializable {
     /*
   include  filter kind
      */
-    public void filterin(String tag, String state) {
+    private void filterin(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
         String[] states = state.split("#");
-        for (int i = 0; i < issue_Array.size(); i++) {
+        for (int i = 0; i < issue.size(); i++) {
             label :
             {
                 /*
@@ -379,21 +384,21 @@ public class Project implements Serializable {
                     I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
                  */
                 for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
-                        pq.add(issue_Array.get(i));
+                    if (states.length < j && issue.get(i).getStatus().equals(states[j])) {
+                        pq.add(issue.get(i));
                         break label;
                     }
-                    String[] tagsArray = issue_Array.get(i).getTag();
+                    String[] tagsArray = issue.get(i).getTag();
                     for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
                         if (tags.length < j && tagsArray[k].equals(tags[j])) {
-                            pq.add(issue_Array.get(i));
+                            pq.add(issue.get(i));
                             break label;
                         }
                     }
                 }
             }
         }
-        for (int i = 0; i < issue_Array.size(); i++) {
+        for (int i = 0; i < issue.size(); i++) {
             System.out.println(pq.poll());
         }
     }
@@ -401,11 +406,11 @@ public class Project implements Serializable {
     /*
     exclude filter 
      */
-    public void filterout(String tag, String state) {
+    private void filterout(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
         String[] states = state.split("#");
-        for (int i = 0; i < issue_Array.size(); i++) {
+        for (int i = 0; i < issue.size(); i++) {
             label :
             {
                 /*
@@ -413,25 +418,25 @@ public class Project implements Serializable {
                     I think its the states.length > j and tags.length > j problem, could you check it out further?
                  */
                 for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue_Array.get(i).getStatus().equals(states[j])) {
+                    if (states.length < j && issue.get(i).getStatus().equals(states[j])) {
                         break label;
                     }
-                    String[] tagsArray = issue_Array.get(i).getTag();
+                    String[] tagsArray = issue.get(i).getTag();
                     for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
                         if (tags.length < j && tagsArray[k].equals(tags[j])) {
                             break label;
                         }
                     }
-                    pq.add(issue_Array.get(i));
+                    pq.add(issue.get(i));
                 }
             }
         }
-        for (int i = 0; i < issue_Array.size(); i++) {
+        for (int i = 0; i < issue.size(); i++) {
             System.out.println(pq.poll());
         }
     }
 
-    public People searchpeople(String name) {
+    private People searchpeople(String name) {
         for (int i = 0; i < people_Array.size(); i++) {
             if (name.equals(people_Array.get(i).getName())) {
                 return people_Array.get(i);
@@ -445,15 +450,15 @@ public class Project implements Serializable {
      * @param index issue index enter issue window
      */
     public void entertheissue(int index){
-        issue_Array.get(index).issuewindow(current_people);
+        issue.get(index).issuewindow(current_people);
     }
 
     public int issue_Arraysize() {
-        return issue_Array.size();
+        return issue.size();
     }
 
     public Issue issuegetindex(int index) {
-        return issue_Array.get(index);
+        return issue.get(index);
     }
 
 
@@ -510,13 +515,10 @@ public class Project implements Serializable {
         this.ID = temp.ID;
         this.name = temp.name;
         this.owner = temp.owner;
-        this.IDComparator = temp.IDComparator;
-        NameComparator = temp.NameComparator;
-        IssueCountComparator = temp.IssueCountComparator;
+        this.issue = temp.issue;
     }
 
     // -- Getter methods --
-
     public int getID() {
         return ID;
     }
@@ -525,18 +527,13 @@ public class Project implements Serializable {
         return name;
     }
 
-    public static ArrayList<Issue> getIssue_Array() {
-        return issue_Array;
+    public ArrayList<Issue> getIssue() {
+        return issue;
     }
 
     public PeopleADT getPeople_Array() {
         return people_Array;
     }
-
-    //cannot include cuz this will load the last logged in person's detail instead..
-//    public People getCurrent_people() {
-//        return current_people;
-//    }
 
     public People getOwner() {
         return owner;
@@ -549,9 +546,6 @@ public class Project implements Serializable {
         this.people_Array = people_Array;
     }
 
-    public void setSc(Scanner sc) {
-        this.sc = sc;
-    }
 
     public void setID(Integer ID) {
         this.ID = ID;
@@ -561,25 +555,9 @@ public class Project implements Serializable {
         this.name = name;
     }
 
-    //cannot include cuz this will load the last logged in person's detail instead..
-//    public void setCurrent_people(People current_people) {
-//        this.current_people = current_people;
-//    }
 
     public void setOwner(People owner) {
         this.owner = owner;
-    }
-
-    public void setIDComparator(Comparator<Project> IDComparator) {
-        this.IDComparator = IDComparator;
-    }
-
-    public void setNameComparator(Comparator<Project> nameComparator) {
-        NameComparator = nameComparator;
-    }
-
-    public void setIssueCountComparator(Comparator<Project> issueCountComparator) {
-        IssueCountComparator = issueCountComparator;
     }
 
     public static void setDm(DataManagement dm) {

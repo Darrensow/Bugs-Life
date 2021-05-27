@@ -1,7 +1,7 @@
 {
   "id":1,
   "name": "Nuxtjs",
-  "issues":[
+  "issue":[
     {
       "id": 1,
       "title": "Can't display the table",
@@ -15,14 +15,14 @@
         "name": "jhoe",
         "password": "password",
         "assigned": 1,
-        "ID": 1,
+        "id": 1,
         "number_solved": 0
       },
       "assignee": {
         "name": "btan",
         "password": "password",
         "assigned": 1,
-        "ID": 2,
+        "id": 2,
         "number_solved": 0
       },
       "timestamp": 1565192640,
@@ -66,14 +66,14 @@
         "name": "btan",
         "password": "password",
         "assigned": 1,
-        "ID": 1,
+        "id": 1,
         "number_solved": 0
       },
       "assignee": {
         "name": "jhoe",
         "password": "password",
         "assigned": 1,
-        "ID": 2,
+        "id": 2,
         "number_solved": 0
       },
       "timestamp": 1565279040,
@@ -119,3 +119,4 @@
   ]
 
 }
+

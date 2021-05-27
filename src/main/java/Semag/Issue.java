@@ -30,6 +30,8 @@ public class Issue implements Serializable {
     Scanner sc = new Scanner(System.in);
     private People current_people;
 
+    private Project project_belongsTo;      //for the delete function
+
     public Issue() {
     }
 
@@ -38,7 +40,7 @@ public class Issue implements Serializable {
         return assignee;
     }
 
-    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop) {
+    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop,Project project_belongsTo) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
@@ -49,6 +51,7 @@ public class Issue implements Serializable {
         this.status = "open";
         this.priority = priop;
         this.tag = tag;
+        this.project_belongsTo = project_belongsTo;
     }
 
     //add comment
@@ -133,48 +136,39 @@ public class Issue implements Serializable {
                     break;
                 case 3:
                     status = "Closed";
+                    current_people.addResolved();
                     break;
             }
-        } else if (status.equalsIgnoreCase("In progress")) {
+        } else if (status.equalsIgnoreCase("in progress")) {
             System.out.println("Set a status(1)Closed 2)Resolved): ");
             switch (sc.nextInt()) {
                 case 1:
                     status = "Closed";
+                    current_people.addResolved();
                     break;
                 case 2:
                     status = "Resolved";
                     break;
             }
-        } else if (status.equalsIgnoreCase("Resolved")) {
+        } else if (status.equalsIgnoreCase("resolved")) {
             System.out.println("Set a status(1)Closed 2)Reopen): ");
             switch (sc.nextInt()) {
                 case 1:
                     status = "Closed";
+                    current_people.addResolved();
                     break;
                 case 2:
-                    status = "Reopened";
+                    status = "Open";
                     break;
             }
-        } else if (status.equalsIgnoreCase("Closed")) {
+        } else if (status.equalsIgnoreCase("closed")) {
             System.out.println("Set a status(1)Reopen): ");
             switch (sc.nextInt()) {
                 case 1:
-                    status = "Reopen";
+                    status = "Open";
+                    current_people.declineResolved();
                     break;
                 default:
-                    break;
-            }
-        } else if (status.equalsIgnoreCase("Reopened")) {
-            System.out.println("Set a status(1)In Progress 2)Resolved 3)Closed): ");
-            switch (sc.nextInt()) {
-                case 1:
-                    status = "In Progress";
-                    break;
-                case 2:
-                    status = "Resolved";
-                    break;
-                case 3:
-                    status = "Closed";
                     break;
             }
         }
@@ -231,7 +225,8 @@ public class Issue implements Serializable {
     }
 
     /**
-     *This method is overloading.
+     * This method is overloading.
+     *
      * @return String representation of the whole comment section.
      */
     public String displayCommentsSection() {
@@ -266,7 +261,7 @@ public class Issue implements Serializable {
         String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n" +
                         "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n" +
                         "Title: %-40s\n" +
-                        "Assigned to: %-20sCreated by: %-20s\n"
+                        "Assigned to: %-20sCreated by: %-20s\n\n"
                 , o.getID(), o.getStatus(),
                 o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
                 o.getTitle(),
@@ -274,7 +269,7 @@ public class Issue implements Serializable {
         sb.append(issueInfo);
         sb.append("Issue Description\n-----------");
         sb.append("\n" + o.getDescriptionText());
-        sb.append("\n").append(displayCommentsSection(o));
+        sb.append("\n\n").append(displayCommentsSection(o));
 
         System.out.println(sb.toString());
     }
@@ -298,7 +293,7 @@ public class Issue implements Serializable {
      * Delete this Issue object
      */
     public void deleteThisIssue() {
-        Project.removeIssue(this);
+        project_belongsTo.removeIssue(this);
     }
 
 
@@ -412,7 +407,7 @@ public class Issue implements Serializable {
     }
 
     public Integer getID() {
-        return ID;
+        return this.ID;
     }
 
     public void setID(Integer ID) {
@@ -517,6 +512,14 @@ public class Issue implements Serializable {
 
     public void setCurrent_people(People current_people) {
         this.current_people = current_people;
+    }
+
+    public Project getProject_belongsTo() {
+        return project_belongsTo;
+    }
+
+    public void setProject_belongsTo(Project project_belongsTo) {
+        this.project_belongsTo = project_belongsTo;
     }
 
     public static Comparator<Issue> getPriorityComparator() {

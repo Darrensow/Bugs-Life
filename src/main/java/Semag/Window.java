@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -12,10 +13,14 @@ import java.util.*;
 
 public class Window implements Serializable {
 
+    @JsonProperty("projects")
     private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
+
+    @JsonProperty("users")
     PeopleADT people_Array = new PeopleADT();                           // store people
     //    private ArrayList<people> people_Array = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
+
     private static int numberproject = 0;    // project id
 
     @JsonIgnore //ignore as don't want to override user logged in
@@ -50,9 +55,11 @@ public class Window implements Serializable {
     }
 
     /**
-     * open window
+     * open window project dashboard
      */
     public void userwindow() throws IOException { // display project original window
+        current_people.displayNewAssigned();
+
         sortBased(1);
         boolean quit = false;
         while (quit == false) {
