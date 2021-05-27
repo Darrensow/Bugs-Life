@@ -40,7 +40,6 @@ public class SEMAG implements Serializable {
             serializeJavaObjectToDB(connection, o);
             connection.close();
         }
-
     }
 
     public static void serializeJavaObjectToDB(Connection conn, Object objectToSerialize) throws SQLException {

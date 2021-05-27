@@ -292,22 +292,28 @@
     {
       "userid": 1,
       "username": "jhoe",
-      "password": "password"
+      "password": "password",
+      "assigned" : 2
     },
     {
       "userid": 2,
       "username": "btan",
-      "password": "password"
+      "password": "password",
+      "assigned" : 2
     },
     {
       "userid": 3,
       "username": "liew",
-      "password": "password"
+      "password": "password",
+      "assigned" : 0
+
     },
     {
       "userid": 4,
       "username": "ang",
-      "password": "password"
+      "password": "password",
+      "assigned" : 1
+
     }
   ]
 }

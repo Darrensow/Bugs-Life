@@ -1,9 +1,10 @@
 package Tester;
 
-import Semag.Project;
+import Semag.Window;
 
 /**
  * This package is a tester to our program
+ *
  * @author ZHUOLI
  */
 public class ProjectTester {
@@ -28,11 +29,15 @@ public class ProjectTester {
         Try to print out the Issue dashboard
         @author zhuoli
          */
-        Project project = new Project();
-        project.loadData();
-        project.print();
+//        Project project = new Project();
+//        project.loadData();
+//        project.print();
 //        project.projectwindow();
 
+        Window w = new Window();
+        w.loadData();
+
+        System.out.println(w.getPeople_Array().size());
 
     }
 }

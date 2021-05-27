@@ -166,7 +166,7 @@ public class Issue implements Serializable {
             switch (sc.nextInt()) {
                 case 1:
                     status = "Open";
-                    current_people.declineResolved();
+                    current_people.reduceResolved();
                     break;
                 default:
                     break;

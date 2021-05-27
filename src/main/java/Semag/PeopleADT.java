@@ -1,11 +1,16 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PeopleADT implements Serializable {
 
     private static ArrayList<People> list = new ArrayList<>();
+
+    public PeopleADT() {
+    }
 
     public void add(People people_obj) {
         list.add(people_obj);
@@ -32,4 +37,28 @@ public class PeopleADT implements Serializable {
         return false;
     }
 
+    // Save and read data -- Jackson -- JSON --
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData(){
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        PeopleADT temp = dm.readPeopleADTData();
+        this.list = temp.getList();
+    }
+
+    // -- Getter & Setter --
+    public ArrayList<People> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<People> list) {
+        PeopleADT.list = list;
+    }
 }

@@ -6,13 +6,27 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Project implements Serializable {
+
     private ArrayList<Issue> issue = new ArrayList<>();  // store issue
     PeopleADT people_Array;   // store people
     Scanner sc = new Scanner(System.in);
     private int numissue = 0;  // issue id
-    private Integer ID;  //project id
-    private String name; //project name
     private People current_people;  //current log in people
+
+
+    /**
+     * Project ID
+     */
+    private Integer ID;  //project id
+
+    /**
+     * Project Name
+     */
+    private String name; //project name
+
+    /**
+     * Project Owner, which is a People
+     */
     private People owner;  // project owner
 
     public Project() {
@@ -328,7 +342,7 @@ public class Project implements Serializable {
      * @param issue_obj issue to be removed
      */
     public void removeIssue(Issue issue_obj) {
-        issue_obj.getAssignee().reduceassigned();
+        issue_obj.getAssignee().reduceAssigned();
         issue.remove(issue_obj);
         numissue--;
     }
@@ -337,14 +351,13 @@ public class Project implements Serializable {
      * print Issue list, this method is an overloading method
      */
     public void print() {
-        System.out.println(issue.size());
         this.print(issue);
     }
 
     /**
      * print selected list
      */
-    public static void print(ArrayList<Issue> toPrint) {
+    public void print(ArrayList<Issue> toPrint) {
         System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-20s %-20s %-20s", "ID", "Title", "Status",
                 "Tag", "Priority", "Time", "Assignee", "Creator"));
         for (int i = 0; i < toPrint.size(); i++) {
@@ -353,9 +366,10 @@ public class Project implements Serializable {
     }
 
     /**
-     * This method return string representation of one Issue in the Issue Dashboard
+     * This method return string representation of one Issue in the Issue Dashboard,
+     * this method is called by {@code print(ArrayList<Issue> toPrint)}
      */
-    public static String printOneIssue(Issue o){
+    public String printOneIssue(Issue o){
         StringBuilder str = new StringBuilder();
         str.append(String.format(" %3d",o.getID()));
         str.append(String.format(" %-30s",o.getTitle()));
@@ -519,16 +533,15 @@ public class Project implements Serializable {
     }
 
     // -- Getter methods --
+    public ArrayList<Issue> getIssue() {
+        return issue;
+    }
     public int getID() {
         return ID;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ArrayList<Issue> getIssue() {
-        return issue;
     }
 
     public PeopleADT getPeople_Array() {
@@ -542,10 +555,13 @@ public class Project implements Serializable {
 
     //Setter method
 
+    public void setIssue(ArrayList<Issue> issue) {
+        this.issue = issue;
+    }
+
     public void setPeople_Array(PeopleADT people_Array) {
         this.people_Array = people_Array;
     }
-
 
     public void setID(Integer ID) {
         this.ID = ID;

@@ -89,6 +89,15 @@ public class DataManagement implements Serializable {
         }
     }
 
+    public void writeData(PeopleADT obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("bla.json"), obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
      * Below are all methods to read data into JSON File.
@@ -136,7 +145,7 @@ public class DataManagement implements Serializable {
     public Window readWindowData() {
         Window returnObj = new Window();
         try {
-            returnObj = new ObjectMapper().readerFor(Window.class).readValue(new File("Window.json"));
+            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Window.class).readValue(new File("data.json"));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -162,6 +171,18 @@ public class DataManagement implements Serializable {
         Comment returnObj = new Comment();
         try {
             returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Comment.class).readValue(new File("Comment.json"));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnObj;
+    }
+
+    public PeopleADT readPeopleADTData() {
+        PeopleADT returnObj = new PeopleADT();
+        try {
+            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Comment.class).readValue(new File("PeopleADT.json"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

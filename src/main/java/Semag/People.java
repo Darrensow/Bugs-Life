@@ -1,19 +1,46 @@
 package Semag;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class People implements Serializable {
 
+    /**
+     * {@code list} is the user's newly assigned Issue
+     */
     public ArrayList<AssignedIssue> newAssignedNotification = new ArrayList<>();
+
+    /**
+     * {@code password} is the user's account password
+     */
     private String password;
+
+    /**
+     * {@code name} is the user's name
+     */
     private String name;
-    private int assigned = 0;
+
+    /**
+     * {@code ID} is the unique id of the user
+     */
     private int ID;
+
+    /**
+     * {@code assign} is the Issue that has been assigned to the user
+     */
+    private int assigned = 0;
+
+    /**
+     * {@code number_solved} is the unique id of the user
+     */
     private int number_solved = 0;
 
+    @JsonIgnoreProperties
     private Scanner sc = new Scanner(System.in);
+
 
     public People() {
     }
@@ -24,17 +51,9 @@ public class People implements Serializable {
         this.ID = ID;
     }
 
-    public void addResolved() {
-        number_solved++;
-    }
-
-    public void declineResolved() {
-        number_solved--;
-    }
-
     public void addAssigned(int projectID, String projectName, int IssueID, String IssueTitle, String creator) {
         newAssignedNotification.add(new AssignedIssue(projectID, projectName, IssueID, IssueTitle, creator));
-        assigned();
+        addAssigned();
     }
 
     public void displayNewAssigned() {
@@ -57,50 +76,62 @@ public class People implements Serializable {
         newAssignedNotification.get(newAssignedNotification.size() - select + 1).setAccepted(true);
     }
 
-    public void assigned() {
+
+    public void addResolved() {
+        number_solved++;
+    }
+
+    public void reduceResolved() {
+        number_solved--;
+    }
+
+    public void addAssigned() {
         assigned++;
     }
 
-    public void reduceassigned() {
+    public void reduceAssigned() {
         assigned--;
     }
 
+    //--Getter--
+    public ArrayList<AssignedIssue> getNewAssignedNotification() {
+        return newAssignedNotification;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getName() {
+        return name;
+    }
+    public int getID() {
+        return ID;
+    }
+    public int getAssigned() {
+        return assigned;
+    }
     public int getNumber_solved() {
         return number_solved;
     }
 
-    public String getPassword() {
-        return password;
+    //--Setter--
+    public void setNewAssignedNotification(ArrayList<AssignedIssue> newAssignedNotification) {
+        this.newAssignedNotification = newAssignedNotification;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAssigned() {
-        return assigned;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public void setID(int ID) {
         this.ID = ID;
     }
-
     public void setAssigned(int assigned) {
         this.assigned = assigned;
     }
-
+    public void setNumber_solved(int number_solved) {
+        this.number_solved = number_solved;
+    }
 }
 
 class AssignedIssue {

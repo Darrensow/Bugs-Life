@@ -13,27 +13,34 @@ import java.util.*;
 
 public class Window implements Serializable {
 
+    /**
+     * Project List
+     */
     @JsonProperty("projects")
     private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
+    /**
+     * List of registered User
+     */
     @JsonProperty("users")
     PeopleADT people_Array = new PeopleADT();                           // store people
     //    private ArrayList<people> people_Array = new ArrayList<>();
+
+    private static int numberproject = 0;    // to keep track of project id
     Scanner sc = new Scanner(System.in);
 
-    private static int numberproject = 0;    // project id
 
     @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
+
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
+
     public Window() {
     }
-
-
 
     /**
      * @param ac
@@ -58,7 +65,7 @@ public class Window implements Serializable {
      * open window project dashboard
      */
     public void userwindow() throws IOException { // display project original window
-        current_people.displayNewAssigned();
+//        current_people.displayNewAssigned();
 
         sortBased(1);
         boolean quit = false;
@@ -222,10 +229,23 @@ public class Window implements Serializable {
     /**
      * print selected list
      */
-    public void print(ArrayList<?> toPrint) {
+    public void print(ArrayList<Project> toPrint) {
+        System.out.println(String.format("%-3d %-30s %-15d ", "ID", "Name", "Issue Count"));
         for (int i = 0; i < toPrint.size(); i++) {
-            System.out.println(toPrint.get(i));
+            System.out.println(printOneProject(toPrint.get(i)));
         }
+    }
+
+    /**
+     * This method return string representation of one Project in the Project Dashboard,
+     * this method is called by {@code print(ArrayList<Project> toPrint)}
+     */
+    public String printOneProject(Project o){
+        StringBuilder str = new StringBuilder();
+        str.append(String.format(" %3d",o.getID()));
+        str.append(String.format(" %-30s",o.getName()));
+        str.append(String.format(" %-15d",o.getIssue().size()));
+        return str.toString();
     }
 
     // 1 = txt , 2 = csv
