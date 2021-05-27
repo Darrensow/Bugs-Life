@@ -230,7 +230,7 @@ public class Window implements Serializable {
      * print selected list
      */
     public void print(ArrayList<Project> toPrint) {
-        System.out.println(String.format("%-3d %-30s %-15d ", "ID", "Name", "Issue Count"));
+        System.out.println(String.format("%-3s %-30s %-15s ", "ID", "Name", "Issue Count"));
         for (int i = 0; i < toPrint.size(); i++) {
             System.out.println(printOneProject(toPrint.get(i)));
         }

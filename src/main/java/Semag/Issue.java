@@ -35,7 +35,6 @@ public class Issue implements Serializable {
     public Issue() {
     }
 
-
     public People getAssignee() {
         return assignee;
     }
