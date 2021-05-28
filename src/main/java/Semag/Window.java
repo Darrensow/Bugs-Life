@@ -16,13 +16,11 @@ public class Window implements Serializable {
     /**
      * Project List
      */
-    @JsonProperty("projects")
-    private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
+    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
     /**
      * List of registered User
      */
-    @JsonProperty("users")
     PeopleADT people_Array = new PeopleADT();                           // store people
     //    private ArrayList<people> people_Array = new ArrayList<>();
 
@@ -206,10 +204,10 @@ public class Window implements Serializable {
     /**
      * @param project_obj want to remove
      */
-    public static void removeProject(Project project_obj) {
-        project_Array.remove(project_obj);
-        numberproject--;
-    }
+//    public void removeProject(Project project_obj) {
+//        project_Array.remove(project_obj);
+//        numberproject--;
+//    }
 
     /**
      * @param index project index enter project window
@@ -451,12 +449,12 @@ public class Window implements Serializable {
     }
 
     // -- Getter and setter methods --
-    public static ArrayList<Project> getProject_Array() {
-        return project_Array;
+    public ArrayList<Project> getProject_Array() {
+        return this.project_Array;
     }
 
-    public static void setProject_Array(ArrayList<Project> project_Array) {
-        Window.project_Array = project_Array;
+    public void setProject_Array(ArrayList<Project> project_Array) {
+        this.project_Array = project_Array;
     }
 
     public PeopleADT getPeople_Array() {

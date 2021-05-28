@@ -9,8 +9,10 @@ public class Project implements Serializable {
 
     private ArrayList<Issue> issue = new ArrayList<>();  // store issue
     PeopleADT people_Array;   // store people
-   transient Scanner sc = new Scanner(System.in);
+    transient Scanner sc = new Scanner(System.in);
     private int numissue = 0;  // issue id
+
+    @JsonIgnore
     private People current_people;  //current log in people
 
 
@@ -328,13 +330,14 @@ public class Project implements Serializable {
 
 
     /**
-     * Delete current project
+         * Delete current project
+         * Update, this remove project we move it to Window
      */
     public void deleteThisProject() {
         for (int i = 0; i < issue.size(); i++) {
             removeIssue(issue.get(i));
         }
-        Window.removeProject(this);
+//        Window.removeProject(this);
     }
 
     /**

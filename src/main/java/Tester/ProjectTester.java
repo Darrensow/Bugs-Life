@@ -36,8 +36,7 @@ public class ProjectTester {
 
         Window w = new Window();
         w.loadData();
-
-        System.out.println(w.getPeople_Array().size());
+        w.print();
 
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class PeopleADT implements Serializable {
 
-    private static ArrayList<People> list = new ArrayList<>();
+    private ArrayList<People> list = new ArrayList<>();
 
     public PeopleADT() {
     }
@@ -59,6 +59,6 @@ public class PeopleADT implements Serializable {
     }
 
     public void setList(ArrayList<People> list) {
-        PeopleADT.list = list;
+        this.list = list;
     }
 }

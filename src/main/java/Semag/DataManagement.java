@@ -63,7 +63,7 @@ public class DataManagement implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Window.json"), obj);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("data.json"), obj);
         } catch (IOException e) {
             e.printStackTrace();
         }
