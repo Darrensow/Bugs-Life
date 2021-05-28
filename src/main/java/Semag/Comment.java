@@ -50,7 +50,7 @@ public class Comment implements Serializable {
         this.ID = ID;
         this.createdBy = createdBy;
         this.text = text;
-        this.timestamp = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
+        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
     }
 
     /**

@@ -49,7 +49,7 @@ public class Issue implements Serializable {
         this.priority = priop;
         this.tag = tag;
         this.project_belongsTo = project_belongsTo;
-        this.timestamp = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
+        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
     }
 
     //add comment
