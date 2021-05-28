@@ -22,7 +22,7 @@
         "number_solved" : 0,
         "id" : 2
       },
-      "timestamp" : 1565192640,
+      "timestamp" : "07/08/2019 23:44:00 GMT+08:00",
       "comments" : [ {
         "text" : "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
         "counter" : {
@@ -31,7 +31,7 @@
           "angry" : 1,
           "likes" : 5
         },
-        "timestamp" : 1565194800,
+        "timestamp" : "08/08/2019 00:20:00 GMT+08:00",
         "user" : "liew",
         "id" : 1,
         "commentID" : 1
@@ -43,7 +43,7 @@
           "angry" : 1,
           "likes" : 8
         },
-        "timestamp" : 1567340520,
+        "timestamp" : "01/09/2019 20:22:00 GMT+08:00",
         "user" : "ang",
         "id" : 2,
         "commentID" : 2
@@ -70,7 +70,7 @@
         "number_solved" : 0,
         "id" : 1
       },
-      "timestamp" : 1565279040,
+      "timestamp" : "08/08/2019 23:44:00 GMT+08:00",
       "comments" : [ {
         "text" : "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
         "counter" : {
@@ -79,7 +79,7 @@
           "angry" : 2,
           "likes" : 5
         },
-        "timestamp" : 1565280000,
+        "timestamp" : "09/08/2019 00:00:00 GMT+08:00",
         "user" : "liew",
         "id" : 1,
         "commentID" : 1
@@ -91,7 +91,7 @@
           "angry" : 1,
           "likes" : 8
         },
-        "timestamp" : 1565301300,
+        "timestamp" : "09/08/2019 05:55:00 GMT+08:00",
         "user" : "btan",
         "id" : 2,
         "commentID" : 2
@@ -103,7 +103,7 @@
           "angry" : 1,
           "likes" : 0
         },
-        "timestamp" : 1565401300,
+        "timestamp" : "10/08/2019 09:41:40 GMT+08:00",
         "user" : "ang",
         "id" : 3,
         "commentID" : 3
@@ -134,7 +134,7 @@
         "number_solved" : 0,
         "id" : 4
       },
-      "timestamp" : 1569920400,
+      "timestamp" : "01/10/2019 17:00:00 GMT+08:00",
       "comments" : [ {
         "text" : "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
         "counter" : {
@@ -143,7 +143,7 @@
           "angry" : 1,
           "likes" : 9
         },
-        "timestamp" : 1570424400,
+        "timestamp" : "07/10/2019 13:00:00 GMT+08:00",
         "user" : "liew",
         "id" : 1,
         "commentID" : 1
@@ -155,7 +155,7 @@
           "angry" : 10,
           "likes" : 8
         },
-        "timestamp" : 1570438800,
+        "timestamp" : "07/10/2019 17:00:00 GMT+08:00",
         "user" : "ang",
         "id" : 2,
         "commentID" : 2
@@ -167,7 +167,7 @@
           "angry" : 19,
           "likes" : 8
         },
-        "timestamp" : 1570448800,
+        "timestamp" : "07/10/2019 19:46:40 GMT+08:00",
         "user" : "jhoe",
         "id" : 3,
         "commentID" : 3
@@ -194,7 +194,7 @@
         "number_solved" : 0,
         "id" : 1
       },
-      "timestamp" : 1570507200,
+      "timestamp" : "08/10/2019 12:00:00 GMT+08:00",
       "comments" : [ {
         "text" : "Still a problem. ",
         "counter" : {
@@ -203,7 +203,7 @@
           "angry" : 1,
           "likes" : 10
         },
-        "timestamp" : 1570525200,
+        "timestamp" : "08/10/2019 17:00:00 GMT+08:00",
         "user" : "btan",
         "id" : 1,
         "commentID" : 1
@@ -215,7 +215,7 @@
           "angry" : 11,
           "likes" : 5
         },
-        "timestamp" : 1570536000,
+        "timestamp" : "08/10/2019 20:00:00 GMT+08:00",
         "user" : "ang",
         "id" : 2,
         "commentID" : 2
@@ -246,7 +246,7 @@
         "number_solved" : 0,
         "id" : 2
       },
-      "timestamp" : 1567339200,
+      "timestamp" : "01/09/2019 20:00:00 GMT+08:00",
       "comments" : [ {
         "text" : "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
         "counter" : {
@@ -255,7 +255,7 @@
           "angry" : 24,
           "likes" : 10
         },
-        "timestamp" : 1567854000,
+        "timestamp" : "07/09/2019 19:00:00 GMT+08:00",
         "user" : "liew",
         "id" : 1,
         "commentID" : 1
@@ -267,7 +267,7 @@
           "angry" : 5,
           "likes" : 9
         },
-        "timestamp" : 1583855766,
+        "timestamp" : "10/03/2020 23:56:06 GMT+08:00",
         "user" : "ang",
         "id" : 2,
         "commentID" : 2

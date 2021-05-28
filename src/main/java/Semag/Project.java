@@ -359,9 +359,10 @@ public class Project implements Serializable {
 
     /**
      * print selected list
+     * Tag formatting may be weird if there are a lot of tags( String[] )
      */
     public void print(ArrayList<Issue> toPrint) {
-        System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-20s %-20s %-20s", "ID", "Title", "Status",
+        System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-30s %-20s %-20s", "ID", "Title", "Status",
                 "Tag", "Priority", "Time", "Assignee", "Creator"));
         for (int i = 0; i < toPrint.size(); i++) {
             System.out.println(printOneIssue(toPrint.get(i)));
@@ -379,7 +380,7 @@ public class Project implements Serializable {
         str.append(String.format(" %-15s",o.getStatus()));
         str.append(String.format(" %-15s",o.getTag()));
         str.append(String.format(" %10d",o.getPriority()));
-        str.append(String.format(" %-20s", o.getTime()));
+        str.append(String.format(" %-30s", o.getTimestamp()));
         str.append(String.format(" %-20s",o.getAssignee().getName()));
         str.append(String.format(" %-20s" ,o.getCreator().getName()));
         return str.toString();

@@ -15,11 +15,9 @@ public class Comment implements Serializable {
 
     private static int number = 0;
     private int ID;
-    private Date createdOn;
-    private transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     private People createdBy;
     private String text;
-    private long timestamp;
+    private String timestamp;
     private String user;
 
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
@@ -50,10 +48,9 @@ public class Comment implements Serializable {
             throw new NullPointerException("Person cannot be anonymous");
         }
         this.ID = ID;
-        this.createdOn = new Date();
         this.createdBy = createdBy;
         this.text = text;
-        this.timestamp = Instant.now().getEpochSecond();
+        this.timestamp = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
     }
 
     /**
@@ -132,9 +129,6 @@ public class Comment implements Serializable {
         this.ID = ID;
     }
 
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
 
     public void setCreatedBy(People createdBy) {
         this.createdBy = createdBy;
@@ -144,7 +138,7 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
     /*
@@ -159,16 +153,13 @@ public class Comment implements Serializable {
         return ID;
     }
 
-    public Date getCreatedOn() {
-        return createdOn;
-    }
 
     public People getCreatedBy() {
         return createdBy;
     }
 
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 

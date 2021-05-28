@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ public class Issue implements Serializable {
     private Integer ID;
     private String title;
     private String descriptionText;
-    private LocalDateTime time;
     private People creator;
     private People assignee;
     private ArrayList<Comment> comments = new ArrayList<>();
@@ -25,8 +25,7 @@ public class Issue implements Serializable {
     private String[] tag;
     private Integer priority;
     private String status;
-    private long timestamp;
-    private transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    private String timestamp;
     transient Scanner sc = new Scanner(System.in);
     private People current_people;
 
@@ -45,12 +44,12 @@ public class Issue implements Serializable {
         this.title = title;
         this.creator = creator;
         this.assignee = assignee;
-        time = LocalDateTime.now();
         this.descriptionText = text;
         this.status = "open";
         this.priority = priop;
         this.tag = tag;
         this.project_belongsTo = project_belongsTo;
+        this.timestamp = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
     }
 
     //add comment
@@ -319,7 +318,7 @@ public class Issue implements Serializable {
     public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
         @Override
         public int compare(Issue o1, Issue o2) {
-            return o1.getTime().compareTo(o2.getTime());
+            return o1.getTimestamp().compareTo(o2.getTimestamp());
         }
     };
 
@@ -429,14 +428,6 @@ public class Issue implements Serializable {
         this.descriptionText = descriptionText;
     }
 
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
     public People getCreator() {
         return creator;
     }
@@ -489,20 +480,12 @@ public class Issue implements Serializable {
         this.status = status;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public DateTimeFormatter getDtf() {
-        return dtf;
-    }
-
-    public void setDtf(DateTimeFormatter dtf) {
-        this.dtf = dtf;
     }
 
     public People getCurrent_people() {

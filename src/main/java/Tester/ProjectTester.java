@@ -1,5 +1,7 @@
 package Tester;
 
+import Semag.Issue;
+import Semag.Project;
 import Semag.Window;
 
 /**
@@ -20,9 +22,14 @@ public class ProjectTester {
 //        System.out.println(cmt.toString());
 //
 //        //Try to prin from the Issue.json
-//        Issue isu = new Issue();
-//        isu.loadData();
-//        isu.print();
+        Issue isu = new Issue();
+        isu.loadData();
+        isu.print();
+
+//        Project prj = new Project();
+//        prj.loadData();
+//        prj.print();
+
 
 
         /*
@@ -34,9 +41,9 @@ public class ProjectTester {
 //        project.print();
 //        project.projectwindow();
 
-        Window w = new Window();
-        w.loadData();
-        w.print();
+//        Window w = new Window();
+//        w.loadData();
+//        w.print();
 
     }
 }
