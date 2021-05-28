@@ -21,13 +21,13 @@ public class Issue implements Serializable {
     private People creator;
     private People assignee;
     private ArrayList<Comment> comments = new ArrayList<>();
-    private static int numbercomment = 1;
+    private int numberOfComments;
     private String[] tag;
     private Integer priority;
     private String status;
     private long timestamp;
     private transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
- transient   Scanner sc = new Scanner(System.in);
+    transient Scanner sc = new Scanner(System.in);
     private People current_people;
 
     private Project project_belongsTo;      //for the delete function
@@ -219,8 +219,8 @@ public class Issue implements Serializable {
             text = sc.nextLine();
         }
         text = text_obj.getString();
-        comments.add(new Comment(current_people, text, numbercomment));
-        numbercomment++;
+        numberOfComments++;
+        comments.add(new Comment(current_people, text, numberOfComments));
     }
 
     /**
@@ -457,12 +457,12 @@ public class Issue implements Serializable {
         this.comments = comments;
     }
 
-    public static int getNumbercomment() {
-        return numbercomment;
+    public int getNumbercomment() {
+        return this.numberOfComments;
     }
 
-    public static void setNumbercomment(int numbercomment) {
-        Issue.numbercomment = numbercomment;
+    public void setNumbercomment(int numbercomment) {
+        this.numberOfComments = numbercomment;
     }
 
     public String[] getTag() {

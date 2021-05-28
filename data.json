@@ -48,7 +48,8 @@
         "id" : 2,
         "commentID" : 2
       } ],
-      "id" : 1
+      "id" : 1,
+      "numberOfComments": 2
     }, {
       "title" : "Can't open file",
       "priority" : 3,
@@ -107,7 +108,8 @@
         "id" : 3,
         "commentID" : 3
       } ],
-      "id" : 2
+      "id" : 2,
+      "numberOfComments": 3
     } ]
   }, {
     "name" : "Vuejs",
@@ -170,7 +172,8 @@
         "id" : 3,
         "commentID" : 3
       } ],
-      "id" : 1
+      "id" : 1,
+      "numberOfComments": 3
     }, {
       "title" : "User is \"trapped\" on 404 page",
       "priority" : 8,
@@ -217,7 +220,8 @@
         "id" : 2,
         "commentID" : 2
       } ],
-      "id" : 2
+      "id" : 2,
+      "numberOfComments": 2
     } ]
   }, {
     "name" : "Reactjs",
@@ -268,7 +272,8 @@
         "id" : 2,
         "commentID" : 2
       } ],
-      "id" : 1
+      "id" : 1,
+      "numberOfComments": 2
     } ]
   } ],
   "people_Array" : {
