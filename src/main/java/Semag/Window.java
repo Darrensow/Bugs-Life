@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
+@JsonIgnoreProperties(value = {"sc", "sc", "current_people", "catFont", "redFont", "subFont", "smallBold"})
 public class Window implements Serializable {
 
     /**
@@ -24,10 +26,9 @@ public class Window implements Serializable {
     PeopleADT people_Array = new PeopleADT();                           // store people
     //    private ArrayList<people> people_Array = new ArrayList<>();
 
-    private static int numberproject = 0;    // to keep track of project id
+    private int numberproject = 0;    // to keep track of project id
     transient Scanner sc = new Scanner(System.in);
 
-    @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
 
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -465,12 +466,12 @@ public class Window implements Serializable {
         this.people_Array = people_Array;
     }
 
-    public static int getNumberproject() {
-        return numberproject;
+    public int getNumberproject() {
+        return this.numberproject;
     }
 
-    public static void setNumberproject(int numberproject) {
-        Window.numberproject = numberproject;
+    public void setNumberproject(int numberproject) {
+        this.numberproject = numberproject;
     }
 
     public People getCurrent_people() {

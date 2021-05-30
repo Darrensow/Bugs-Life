@@ -46,6 +46,7 @@
   "priority" : 4,
   "status" : "In Progress",
   "timestamp" : "07/08/2019 23:44:00 GMT+08:00",
+  "current_people" : null,
   "project_belongsTo" : null,
   "id" : 7,
   "numbercomment" : 0

@@ -534,6 +534,7 @@ public class Project implements Serializable {
         this.name = temp.name;
         this.owner = temp.owner;
         this.issue = temp.issue;
+        this.numissue = temp.numissue;
     }
 
     // -- Getter methods --

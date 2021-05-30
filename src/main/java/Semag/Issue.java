@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-@JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
+@JsonIgnoreProperties(value = {"changelog", "sc", "current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable {
 
     private ArrayList<String> changelog;
@@ -525,6 +525,7 @@ public class Issue implements Serializable {
         return sb.toString();
     }
 
+    //Test today
     /**
      * Delete this Issue object
      */
@@ -628,6 +629,7 @@ public class Issue implements Serializable {
         this.tag = temp.tag;
         this.priority = temp.priority;
         this.status = temp.status;
+        this.project_belongsTo = temp.project_belongsTo;
     }
 
     /*

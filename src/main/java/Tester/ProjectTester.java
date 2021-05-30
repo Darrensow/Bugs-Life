@@ -25,6 +25,9 @@ public class ProjectTester {
         Issue isu = new Issue();
         isu.loadData();
         isu.print();
+        isu.setID(7);
+        isu.saveData();
+
 
 //        Project prj = new Project();
 //        prj.loadData();

@@ -1,0 +1,27 @@
+{
+  "list" : [ {
+    "password" : "password",
+    "name" : "jhoe",
+    "assigned" : 2,
+    "number_solved" : 0,
+    "id" : 1
+  }, {
+    "password" : "password",
+    "name" : "btan",
+    "assigned" : 2,
+    "number_solved" : 0,
+    "id" : 2
+  }, {
+    "password" : "password",
+    "name" : "liew",
+    "assigned" : 0,
+    "number_solved" : 0,
+    "id" : 3
+  }, {
+    "password" : "password",
+    "name" : "ang",
+    "assigned" : 1,
+    "number_solved" : 0,
+    "id" : 4
+  } ]
+}
