@@ -5,16 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 @JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable {
 
-    private ArrayList<Issue> changelog;
+    private ArrayList<String> changelog;
     private Integer ID;
     private String title;
     private String descriptionText;
@@ -55,55 +54,68 @@ public class Issue implements Serializable {
     //add comment
     public void issuewindow_owner() {
         boolean quit = false;
-        while (quit == false) {
-            print();
-            System.out.println("action? \n1)add comment \n2)react on comment \n3)delete issue \n4)quit");
-            int input1 = sc.nextInt();
-            switch (input1) {
-                case 1:
-                    addComment();
-                    changelog();
-                    break;
-                case 2:
-                    react();
-                    changelog();
-                    break;
-                case 3:
-                    deleteThisIssue();
-                    changelog();
-                    break;
-                case 4:
-                    quit = true;
-                    break;
-                default:
-                    System.out.println("wrong input");
-                    break;
+        while (!quit) {
+            try {
+                print();
+                System.out.print("1)Add a Comment 2)React on a Comment 3)Delete This Issue 4)Change Properties 5)Quit \nInput: ");
+                int input1 = sc.nextInt();
+                switch (input1) {
+                    case 1:
+                        addComment();
+//                    changelog();
+                        break;
+                    case 2:
+                        react();
+//                    changelog();
+                        break;
+                    case 3:
+                        deleteThisIssue();
+//                    changelog();
+                        break;
+                    case 4:
+                        changeProperties();
+                        break;
+                    case 5:
+                        quit = true;
+                        break;
+                    default:
+                        System.out.println("Invalid input. Please enter a value between 1-5");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a value between 1-5");
+                sc.nextLine();
             }
         }
     }
 
     public void issuewindow() {
         boolean quit = false;
-        while (quit == false) {
-            print();
-            System.out.println("action? \n1)add comment \n2)react on comment \n3)quit");
-            int input1 = sc.nextInt();
-            switch (input1) {
-                case 1:
-                    addComment();
-                    changelog();
-                    break;
-                case 2:
-                    react();
-                    changelog();
-                    break;
-                case 3:
-                    quit = true;
-                    break;
-                default:
-                    System.out.println("wrong input");
-                    break;
+        while (!quit) {
+            try {
+                print();
+                System.out.print("1)Add comment 2)React on comment 3)Quit \nInput: ");
+                int input1 = sc.nextInt();
+                switch (input1) {
+                    case 1:
+                        addComment();
+//                    changelog();
+                        break;
+                    case 2:
+                        react();
+//                    changelog();
+                        break;
+                    case 3:
+                        quit = true;
+                        break;
+                    default:                        //catch int other than 1-3
+                        System.out.println("Invalid Input. Please input a value between 1-3");
+                        break;
+                }
+            } catch (InputMismatchException e) {    //catch type error (String/double/char/etc)
+                System.out.println("Invalid Input. Please input a value between 1-3");
             }
+
         }
     }
 
@@ -114,61 +126,6 @@ public class Issue implements Serializable {
         } else {
             this.current_people = current_people;
             issuewindow();
-        }
-    }
-
-    /**
-     * This method check current status and allow the associated operation
-     *
-     * @param status the current status
-     */
-    public void updateStatus(String status) {
-        if (status.equalsIgnoreCase("open")) {
-            System.out.println("Set a status(1)In Progress 2)Resolved 3)Closed): ");
-            switch (sc.nextInt()) {
-                case 1:
-                    status = "In Progress";
-                    break;
-                case 2:
-                    status = "Resolved";
-                    break;
-                case 3:
-                    status = "Closed";
-                    current_people.addResolved();
-                    break;
-            }
-        } else if (status.equalsIgnoreCase("in progress")) {
-            System.out.println("Set a status(1)Closed 2)Resolved): ");
-            switch (sc.nextInt()) {
-                case 1:
-                    status = "Closed";
-                    current_people.addResolved();
-                    break;
-                case 2:
-                    status = "Resolved";
-                    break;
-            }
-        } else if (status.equalsIgnoreCase("resolved")) {
-            System.out.println("Set a status(1)Closed 2)Reopen): ");
-            switch (sc.nextInt()) {
-                case 1:
-                    status = "Closed";
-                    current_people.addResolved();
-                    break;
-                case 2:
-                    status = "Open";
-                    break;
-            }
-        } else if (status.equalsIgnoreCase("closed")) {
-            System.out.println("Set a status(1)Reopen): ");
-            switch (sc.nextInt()) {
-                case 1:
-                    status = "Open";
-                    current_people.reduceResolved();
-                    break;
-                default:
-                    break;
-            }
         }
     }
 
@@ -184,8 +141,289 @@ public class Issue implements Serializable {
         }
     }
 
-    public void changelog() {
-        changelog.add(this);
+    /**
+     * Method to modify properties
+     * Only modifiable properties are status, tag, priority and Description text
+     */
+    private void changeProperties() {
+        boolean exit = false;
+        while (!exit) {
+            try {
+                System.out.print("Changes: 1)Status 2)Tag 3)Priority 4)Description Text 5)Quit \nInput: ");
+                switch (sc.nextInt()) {
+                    case 1:
+                        String statusUpdate = updateStatus();
+                        if (!statusUpdate.equals("")) { //will not add if value of String is ""
+                            if (addChangeLog(statusUpdate)) {
+                                System.out.println("Status changed successfully!");;
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (addChangeLog(updateTag())) {
+                            System.out.println("Tags changed successfully!");
+                        }
+                        break;
+                    case 3:
+                        String priorityUpdate = updatePriority();
+                        if (!priorityUpdate.equals("")) {
+                            if (addChangeLog(priorityUpdate)) {
+                                System.out.println("Priority changed successfully!");
+                            }
+                        }
+                        break;
+                    case 4:
+                        String descUpdate = updateDescriptionText();
+                        if (!descUpdate.equals("")) {
+                            if (addChangeLog(descUpdate)) {
+                                System.out.println("Description changed successfully!");;
+                            }
+                        }
+                        break;
+                    case 5:
+                        exit = true;
+                        break;
+                    default:                            //Used to catch values other than 1-5
+                        System.out.println("Invalid input, please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {        //Used to catch other inputs (String/char/double)
+                System.out.println("Invalid input. Please enter a value from 1 to 5");
+            }
+        }
+    }
+
+    /**
+     * Method to update tags
+     * @return A message that will be added to the change log regarding the change of tags
+     *
+     */
+    private String updateTag() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(current_people.getName()).append(" updated the tags at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  //append original tags
+
+        System.out.println("Please input the tags you want to update. (Format: 'Tag1 Tag2 Tag3 ... TagN'");
+        String input = sc.nextLine();
+        String[] tagsArray = input.split(" ");      //might have logic error if user give "abcabcabc" or "", might not be a problem
+        this.tag = tagsArray;
+
+        sb.append("Edited: ").append(showAllTags(tagsArray)).append("\n");   //append new tags
+
+        return sb.toString();
+    }
+
+    //helper method to return String representation of all the tags
+    private String showAllTags(String[] tagsArray) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]).append("]");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Method to update priority
+     * @return A message that will be added to the change log regarding the change of priority
+     *
+     */
+    private String updatePriority() {
+        StringBuilder sb = new StringBuilder();
+        int originalPriority = this.priority;
+
+        int input = -2;
+        while (true) {
+            try {
+                System.out.println("Please input the new priority for the Issue. (Value is 0-9). Enter '-1' to quit if you don't want to change priority");
+                input = sc.nextInt();
+                if (input > 0 && input <= 10) {
+                    this.priority = input;
+                    break;
+                } else if (input == -1) {
+                    return "";          //empty String signalling no change to be made
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a value from 0 to 9 : ");
+                sc.nextLine();
+            }
+        }
+
+        sb.append(current_people.getName()).append(" updated the priority to ").append(this.priority).append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+        return sb.toString();
+    }
+
+
+    /**
+     * This method check current status and allow the associated operation
+     * @return A String representation of the updates made to the tag. The String will be added to the changeLog.
+     */
+    private String updateStatus() {
+        StringBuilder sb = new StringBuilder();
+        String originalStatus = this.getStatus();
+        boolean exit = false;
+
+        if (status.equalsIgnoreCase("open")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)In Progress 2)Resolved 3)Closed 4)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "In Progress";
+                            exit = true;
+                        }
+                        case 2 -> {
+                            status = "Resolved";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 4 -> {
+                            return "";      //return empty String, if .equals(""), then won't add to changeLog
+                        }
+                        default -> System.out.println("Invalid input. Please enter a value from 1-4");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a value from 1-4");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("in progress")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Closed 2)Resolved) 3)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 2 -> {
+                            status = "Resolved";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            return "";
+                        }
+                        default -> System.out.println("Invalid input. Please enter either 1 or 3");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 3");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("resolved")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Closed 2)Reopen 3)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 2 -> {
+                            status = "Open";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            return "";
+                        }
+                        default -> System.out.println("Invalid input. Please enter either 1 or 3.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 3");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("closed")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Reopen (2)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Open";
+                            exit = true;
+                            current_people.reduceResolved();
+                        }
+                        case 2 -> {
+                            return "";
+                        }
+                        default -> {
+                            System.out.println("Invalid input. Please enter either 1 or 2.");
+                        }
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 2.");
+                    sc.nextLine();
+                }
+            }
+        }
+
+        sb.append(current_people.getName()).append(" updated the status from '").append(originalStatus).append("' to '").append(this.getStatus());
+        sb.append("' at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+
+        return sb.toString();
+    }
+
+    private String updateDescriptionText() {
+        System.out.println("Enter new Issue description. ('Enter' to register a new line, '#undo' to undo a line, '#redo' to redo a line and '#quit' to finish.");
+        String text = sc.nextLine();
+        Text<String> text_obj = new Text<>();       //main stack to store all lines enterred by user
+        Text<String> temp_text = new Text<>();      //temp stack for redo and und function
+        while (!text.equals("#quit")) {
+            if (text.equals("#undo")) {
+                if (text_obj.getSize() < 0) {
+                    return "";
+                }
+                temp_text.push(text_obj.pop());
+            } else if (text.equals("#redo")) {
+                if (temp_text.getSize() < 0) {
+                    return "";
+                }
+                text_obj.push(temp_text.pop());
+            } else {
+                text_obj.push(text);
+                temp_text.clear();
+            }
+            text = sc.nextLine();
+        }
+        text = text_obj.getString();
+        this.descriptionText = text;
+
+        return this.current_people.getName() + "changed to description at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000)) + "\n";
+    }
+
+    /**
+     * Add the change description to the changeLog ArrayList
+     * @param changedDescription The description detailing the changes made. If the String is "", then it will not be added.
+     * @return True if successfully added to the changeLog, false otherwise.
+     */
+    private boolean addChangeLog(String changedDescription) {
+        if (!changedDescription.equals("")) {
+            this.changelog.add(changedDescription);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * A method that returns the String representation of the change log
+     * @return String representation of the change log
+     */
+    public String returnChangeLog() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : this.changelog) {
+            sb.append(s).append("\n");
+        }
+        return sb.toString();
     }
 
     /**
@@ -396,11 +634,11 @@ public class Issue implements Serializable {
         -- Getter and setter methods --
      */
 
-    public ArrayList<Issue> getChangelog() {
+    public ArrayList<String> getChangelog() {
         return changelog;
     }
 
-    public void setChangelog(ArrayList<Issue> changelog) {
+    public void setChangelog(ArrayList<String> changelog) {
         this.changelog = changelog;
     }
 
