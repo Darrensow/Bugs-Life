@@ -162,7 +162,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //                    changelog();
                         break;
                     case 2:
-                        react();
 //                    changelog();
                         break;
                     case 3:
@@ -199,7 +198,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //                    changelog();
                         break;
                     case 2:
-                        react();
 //                    changelog();
                         break;
                     case 3:
@@ -226,16 +224,13 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         }
     }
 
-    public void react() {
-        System.out.println("enter comment ID that you want to react");
-        int index = sc.nextInt();
-        System.out.println("Enter 'h' or happy , 'a' for angry.");
-        char reaction = sc.next().charAt(0);
-        if (reaction == 'h') {
-//            comments.get(index).happy();
-        } else {
-//            comments.get(index).angry();
-        }
+    /**
+     * Method to react to a comment
+     * @param commentID Comment ID that was reacted on
+     * @param reacton ("happy", "angry", "like", "dislike"}
+     */
+    public void reactComment(int commentID, String reacton) {
+        this.comments.get(commentID).addReaction(reacton);
     }
 
     /**
@@ -312,6 +307,43 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         return sb.toString();
     }
 
+    /**
+     * Method to return a String of the tags in '#Tag1#Tag2#Tag3' format for GUI implementation
+     * @return String of the tags array
+     */
+    private String returnTagsGUI() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.tag.length; i++) {
+            sb.append("#").append(this.tag[i]);
+        }
+        return sb.toString();
+    }
+
+    /*
+        The method below is to update the variables returned by the GUI
+     */
+
+    /**
+     * Method to assign the new edited tags value to the String[] tags
+     * @param fromGUI String representation to be parsed and added to this.tags
+     */
+    private void updateTagsGUI(String fromGUI) {
+        String[] strings = fromGUI.substring(1).split("#");
+        this.tag = strings;
+    }
+
+    private void updatePriorityGUI(int fromGUI) {
+        this.priority = fromGUI;
+    }
+
+    private void updateStatusGUI(String fromGUI) {
+        this.status = fromGUI;
+    }
+
+    private void updateTextGUI(String fromGUI) {
+        this.descriptionText = fromGUI;
+    }
+
     //helper method to return String representation of all the tags
     private String showAllTags(String[] tagsArray) {
         StringBuilder sb = new StringBuilder();
@@ -363,13 +395,17 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         ArrayList<String> option_state = new ArrayList<>();
         option_state.add(originalStatus);
         if (originalStatus.equals("open")) {
-
+            option_state.add("In Progress");
+            option_state.add("Resolved");
+            option_state.add("Closed");
         } else if (originalStatus.equals("in progress")) {
-
+            option_state.add("Closed");
+            option_state.add("Resolved");
         } else if (originalStatus.equals("resolved")) {
-
+            option_state.add("Closed");
+            option_state.add("Open");
         } else if (originalStatus.equals("closed")) {
-
+            option_state.add("Open");
         }
         set_status(option_state);
     }
@@ -1118,10 +1154,20 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             System.out.println("submit");
             edit_panel.setVisible(false);
             issue_scroll.setVisible(true);
-            System.out.println("priority : " + edit_priop.getSelectedIndex());
-            System.out.println("tags  : " + edit_tags.getText());
-            System.out.println("descrip : " + edit_descrip.getText());
-            System.out.println("status : " + edit_status.getSelectedItem()); // will return the states choose
+
+            int updatedPriority = edit_priop.getSelectedIndex();
+            String updatedTags = edit_tags.getText();
+            String updatedDescription = edit_descrip.getText();
+            String updatedStatus = edit_status.getSelectedItem() + "";
+            updatePriorityGUI(updatedPriority);
+            updateTagsGUI(updatedTags);
+            updateTextGUI(updatedDescription);
+            updateStatusGUI(updatedStatus);
+
+//            System.out.println("priority : " + edit_priop.getSelectedIndex());
+//            System.out.println("tags  : " + edit_tags.getText());
+//            System.out.println("descrip : " + edit_descrip.getText());
+//            System.out.println("status : " + edit_status.getSelectedItem()); // will return the states choose
         }
         if (e.getSource() == undo) {
             if (!text_undo.isEmpty()) {
@@ -1161,7 +1207,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             issue_scroll.setVisible(false);
             return_option(); //set the option
             edit_descrip.setText(this.getDescriptionText()); //set descrip text
-            set_tags(Arrays.toString(this.getTag())); //set tags 
+            set_tags(this.returnTagsGUI()); //set tags
         }
 
     }
