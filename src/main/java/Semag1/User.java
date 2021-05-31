@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.awt.Color;
@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -195,9 +196,9 @@ public class User implements Serializable, ActionListener {
     public void window_setup() {
         //setup frame
 
-        ImageIcon konoha = new ImageIcon("D:\\Download\\doge_image.jpg");
+        ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
-        frame.setTitle("Doge");
+        frame.setTitle("login_register");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
@@ -206,7 +207,7 @@ public class User implements Serializable, ActionListener {
         frame.setVisible(true);
 
         //set up back groud picture
-        ImageIcon image = new ImageIcon("D:\\Download\\register backgroud.jpg");
+        ImageIcon image = new ImageIcon("register backgroud.jpg");
         JLabel label = new JLabel(image);
         label.setBounds(0, 0, 1350, 690);
         label.setVisible(true);
@@ -406,19 +407,16 @@ public class User implements Serializable, ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == register) {
-            System.out.println("register");
             register.setVisible(false);
             login.setVisible(false);
             register_panel.setVisible(true);
         }
         if (e.getSource() == login) {
-            System.out.println("login");
             login.setVisible(false);
             register.setVisible(false);
             login_panel.setVisible(true);
         }
         if (e.getSource() == login_in) {
-            System.out.println("login_in");
             String name = login_username.getText();
             String password = new String(login_pass_text.getPassword());
             int b = getindex(name);
@@ -428,7 +426,6 @@ public class User implements Serializable, ActionListener {
                 login_pass_text.setText("");
             } else {
                 if (people_array.get(b).getPassword().equals(password)) {
-//                    System.out.println("Welcome. " + people_array.get(b).getName());
                     people_obj = people_array.get(b);
                     can_return = true;
                     login_panel.setVisible(false);
@@ -473,7 +470,7 @@ public class User implements Serializable, ActionListener {
             String name = register_username_text.getText();
             String password = new String(register_pass_text.getPassword());
             String confirm_pass = new String(reg_confirm_pass_text.getPassword());
-            if (people_array.contains(name)) {
+            if (people_array.contain(name) == true) {
                 popwindow("user issue", "name used");
                 register_username_text.setText("Enter username");
             } else if (!password_obj.isValid(password)) {

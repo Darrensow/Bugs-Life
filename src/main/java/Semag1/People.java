@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -119,10 +119,6 @@ public class People implements Serializable {
         return number_solved;
     }
 
-    public void setGmail(String gmail) {
-        this.gmail = gmail;
-    }
-
     //--Setter--
     public void setNewAssignedNotification(ArrayList<AssignedIssue> newAssignedNotification) {
         this.newAssignedNotification = newAssignedNotification;
@@ -152,7 +148,10 @@ public class People implements Serializable {
         return gmail;
     }
 
-
+    public void setGmail(String gmail) {
+        this.gmail = gmail;
+    }
+    
 }
 
 class AssignedIssue {
@@ -188,6 +187,4 @@ class AssignedIssue {
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
     }
-
-
 }

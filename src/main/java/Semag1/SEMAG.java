@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

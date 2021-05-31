@@ -1,18 +1,38 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.Serializable;
+import static java.lang.Thread.sleep;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 
 public class Project implements Serializable, ActionListener {
 
@@ -38,21 +58,16 @@ public class Project implements Serializable, ActionListener {
      * Project Owner, which is a People
      */
     private People owner;  // project owner
-
-    /**
-     * Current comparator in use
-     */
-    @JsonIgnore
     private Comparator<Issue> comparatorInUse; //ID, Title, Priority, Timestamp
 
     //gui
     JFrame frame = new JFrame();
-    ImageIcon backgroud_image = new ImageIcon("D:\\Download\\register backgroud.jpg");
+    ImageIcon backgroud_image = new ImageIcon("register backgroud.jpg");
     JLabel label = new JLabel(backgroud_image);
     JTextField search_issue = new JTextField();
     JButton add_issue = new JButton();
-    ImageIcon add_image = new ImageIcon("D:\\Download\\add.jpg");
-    ImageIcon delete_project_image = new ImageIcon("D:\\Download\\trash_icon.png");
+    ImageIcon add_image = new ImageIcon("add.jpg");
+    ImageIcon delete_project_image = new ImageIcon("trash_icon.png");
     JButton delete_project = new JButton();
     JComboBox sort_issue = new JComboBox();
     String[] setting_option = {"Changlog", "Quit"};
@@ -83,8 +98,8 @@ public class Project implements Serializable, ActionListener {
     JTextField tags_text = new JTextField("Enter tags");
     JTextArea descrip = new JTextArea();
     JScrollPane desc_sp = new JScrollPane(descrip);
-    ImageIcon undo_icon = new ImageIcon("D:\\Download\\undo.png");
-    ImageIcon redo_icon = new ImageIcon("D:\\Download\\redo.png");
+    ImageIcon undo_icon = new ImageIcon("undo.png");
+    ImageIcon redo_icon = new ImageIcon("redo.png");
     JButton undo = new JButton();
     JButton reundo = new JButton();
     String[] list_priority = {"1", "2", "3", "4", "5"};
@@ -237,7 +252,6 @@ public class Project implements Serializable, ActionListener {
         }
         setupwindow();
         sortIssueBased(0);
-
         ArrayList<String> status = new ArrayList<>(Arrays.asList(Issue.statusOption));
         include_and_exluded(Issue.tagsOption);
         include_and_exluded_state(status);
@@ -296,10 +310,10 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * check if the tags is registered, if not, add it to the tag option and return
-     * This method is only called in @{addIssue}
+     * check if the tags is registered, if not, add it to the tag option and
+     * return This method is only called in @{addIssue}
      */
-    public String [] addTag(String[] tag) {
+    public String[] addTag(String[] tag) {
         String[] toAdd = new String[tag.length];
         for (int i = 0; i < tag.length; i++) {
             for (int j = 0; j < Semag.Issue.tagsOption.size(); j++) {
@@ -315,8 +329,6 @@ public class Project implements Serializable, ActionListener {
         }
         return toAdd;
     }
-
-
 
     /**
      * @param input keyword search search issue
@@ -345,6 +357,8 @@ public class Project implements Serializable, ActionListener {
             entertheissue(Integer.parseInt(input.substring(1)));
         } else {
             printsearchResult(input, issue_arr);
+//            entertheissue(id);
+
         }
     }
 
@@ -389,15 +403,13 @@ public class Project implements Serializable, ActionListener {
             }
         }
 
-//        for (int i = 0; i < temp.size(); i++) {
-//            pq.add(temp.get(i));
-//        }
+        for (int i = 0; i < temp.size(); i++) {
+            pq.add(temp.get(i));
+        }
         ArrayList<Issue> issue_table = new ArrayList<>();
-//        for (int i = 0; i < temp.size(); i++) {
-//            issue_table.add(pq.poll());
-//        }
-
-        Collections.sort(temp,comparatorInUse);
+        for (int i = 0; i < temp.size(); i++) {
+            issue_table.add(pq.poll());
+        }
         reset_table(issue_table);
     }
 
@@ -432,7 +444,6 @@ public class Project implements Serializable, ActionListener {
                 }
             }
         }
-
         for (int i = 0; i < temp.size(); i++) {
             pq.add(temp.get(i));
         }
@@ -481,8 +492,11 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * This method will set column to sort, sort the Issues , and print it out
-     * @param choose is the attribute of the Issue, eg ID, Priority,Timestamp
+     * This method will sort the Issue with the column that the user wish, and
+     * str8 print it out
+     *
+     * @param choose is the attribute of the Issue, eg ID, Title, returned as
+     * int
      */
     public void sortIssueBased(int choose) {
         ArrayList<Issue> sortedIssueList = new ArrayList<>(issue);
@@ -497,7 +511,7 @@ public class Project implements Serializable, ActionListener {
                 comparatorInUse = Issue.timeComparator;
                 break;
         }
-        Collections.sort(sortedIssueList,comparatorInUse);
+        Collections.sort(sortedIssueList, comparatorInUse);
         reset_table(sortedIssueList);
     }
 
@@ -712,7 +726,8 @@ public class Project implements Serializable, ActionListener {
      * @param index issue index enter issue window
      */
     public void entertheissue(int index) {
-        issue.get(index).issuewindow(current_people,frame);
+        this.frame.setVisible(false);
+        issue.get(index).issuewindow(current_people, frame);
     }
 
     public int issue_Arraysize() {
@@ -761,9 +776,9 @@ public class Project implements Serializable, ActionListener {
     public void setupwindow() {
 
         //build window
-        ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
+        ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
-        frame.setTitle("firstPage");
+        frame.setTitle("Doge");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
@@ -820,9 +835,8 @@ public class Project implements Serializable, ActionListener {
         sort_issue.setVisible(true);
         sort_issue.addActionListener(this);
 
-        setting_button.removeAllItems();
-
         //add the setting button or quit
+        setting_button.removeAllItems();
         for (int i = 0; i < setting_option.length; i++) {
             setting_button.addItem(setting_option[i]);
         }
@@ -835,14 +849,21 @@ public class Project implements Serializable, ActionListener {
 
         // build the included title and button
         //title
-        include_text.setText("Include");
+        include_text.setText("Include Tags");
         include_text.setBackground(Color.black);
         include_text.setOpaque(true);
         include_text.setVisible(true);
         include_text.setForeground(Color.YELLOW);
         include_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
-        include_text.setBounds(0, 0, 100, 35);
+        include_text.setBounds(0, 0, 160, 35);
         include_text.setBorder(BorderFactory.createEmptyBorder());
+//        //button
+//        include_go.setText("Go");
+//        include_go.setVisible(true);
+//        include_go.setBounds(280, 0, 50, 35);
+//        include_go.addActionListener(this);
+//        include_go.setFocusable(true);
+//        include_go.setFont(new Font("TimesRoman", Font.PLAIN, 12));
 
         //title panel
         include_title = new JPanel();
@@ -850,35 +871,43 @@ public class Project implements Serializable, ActionListener {
         include_title.setOpaque(true);
         include_title.setVisible(true);
         include_title.setLayout(null);
-        include_title.setBounds(1000, 100, 330, 50);
+        include_title.setBounds(1000, 100, 160, 50);
         include_title.add(include_text);
+//        include_title.add(include_go);
 
         //build exclude title and button
-        exclude_text.setText("Enclude");
+        exclude_text.setText("Enclude Tags");
         exclude_text.setBackground(Color.black);
         exclude_text.setOpaque(true);
         exclude_text.setVisible(true);
         exclude_text.setForeground(Color.YELLOW);
         exclude_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
-        exclude_text.setBounds(0, 0, 100, 35);
+        exclude_text.setBounds(0, 0, 160, 35);
         exclude_text.setBorder(BorderFactory.createEmptyBorder());
-
+//        //button
+//        exclude_go.setText("Go");
+//        exclude_go.setVisible(true);
+//        exclude_go.setBounds(280, 0, 50, 35);
+//        exclude_go.addActionListener(this);
+//        exclude_go.setFocusable(true);
+//        exclude_go.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         //title panel
         exluded_title = new JPanel();
         exluded_title.setBackground(Color.black);
         exluded_title.setOpaque(true);
         exluded_title.setVisible(true);
         exluded_title.setLayout(null);
-        exluded_title.setBounds(1000, 400, 330, 50);
+        exluded_title.setBounds(1160, 100, 160, 50);
         exluded_title.add(exclude_text);
+//        exluded_title.add(exclude_go);
         //build the right_up black panel
         //build panel
         black_panel_up.setBackground(Color.black);
-        black_panel_up.setPreferredSize(new Dimension(300, 2000));
+        black_panel_up.setPreferredSize(new Dimension(160, 2000));
         black_panel_up.setLayout(new FlowLayout());
         black_panel_up.setVisible(true);
         //build scroll
-        black_ps_up.setBounds(1000, 150, 330, 250);
+        black_ps_up.setBounds(1000, 150, 160, 250);
         black_ps_up.getVerticalScrollBar().setPreferredSize(new Dimension(1, 0));
         black_ps_up.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 1));
         black_ps_up.setVisible(true);
@@ -886,14 +915,16 @@ public class Project implements Serializable, ActionListener {
         //build the right_down black panel
         //build panel
         black_panel_down.setBackground(Color.black);
-        black_panel_down.setPreferredSize(new Dimension(300, 2000));
+        black_panel_down.setPreferredSize(new Dimension(160, 2000));
         black_panel_down.setLayout(new FlowLayout());
         black_panel_down.setVisible(true);
         //build scroll
-        black_ps_down.setBounds(1000, 450, 330, 250);
+        black_ps_down.setBounds(1160, 150, 160, 250);
         black_ps_down.getVerticalScrollBar().setPreferredSize(new Dimension(1, 0));
         black_ps_down.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 1));
         black_ps_down.setVisible(true);
+
+        ///
         include_state_text.setText("Include State");
         include_state_text.setBackground(Color.GREEN);
         include_state_text.setOpaque(true);
@@ -959,9 +990,8 @@ public class Project implements Serializable, ActionListener {
         sreach.addActionListener(this);
         sreach.setFocusable(true);
 
-        tableModel.setColumnCount(0);
-
         //build table
+        tableModel.setColumnCount(0);
         for (int i = 0; i < column.length; i++) {
             tableModel.addColumn(column[i]);
         }
@@ -978,8 +1008,8 @@ public class Project implements Serializable, ActionListener {
             public void mouseClicked(MouseEvent evt) {
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
-
-                System.out.println("row : " + row + " col : " + col);
+                int value = Integer.parseInt(table.getValueAt(row, 0).toString());
+                entertheissue(value);
             }
         });
         //set table scroll
@@ -1248,7 +1278,7 @@ public class Project implements Serializable, ActionListener {
             }
             if (sort_issue.getSelectedIndex() == 2) {
                 sortIssueBased(2);
-                System.out.println("sort based on Timestamp selected");
+                System.out.println("sort based on Timestemp selected");
             }
         }
         if (e.getSource() == setting_button) {
@@ -1288,8 +1318,7 @@ public class Project implements Serializable, ActionListener {
             table_scroll.setVisible(true);
             String issue_name = name_text.getText();
             String tags = tags_text.getText();
-            String[] issue_tags_array = tags.substring(1).split("#");
-
+            String[] issue_tags_array = tags.split("#");
             String description = descrip.getText();
             int priop = priority.getSelectedIndex() + 1;
             String assignee = assignee_text.getText();
@@ -1307,7 +1336,7 @@ public class Project implements Serializable, ActionListener {
             }
         }
         if (e.getSource() == sreach) {
-            System.out.println("search");
+            System.out.println("sreach");
             search_situation();
         }
     }

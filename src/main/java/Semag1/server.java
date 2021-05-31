@@ -1,9 +1,9 @@
-package Semag1;/*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package Semag;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -45,9 +45,9 @@ public class server implements Serializable {
                 while (code_list.contains(code)) {
                     code = new Random().nextInt(999999 - 100000 + 1) + 100000;
                 }
-                mtch = new clienthander(s, "#" + name, dis, dos, code, "owner");
+                mtch = new clienthander(s, "->" + name, dis, dos, code, "owner");
             } else {
-                mtch = new clienthander(s, "#" + name, dis, dos, code, "member");
+                mtch = new clienthander(s, "->" + name, dis, dos, code, "member");
             }
 //            System.out.println(code);
 

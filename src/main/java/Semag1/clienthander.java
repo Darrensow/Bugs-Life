@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Semag1;
+package Semag;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -49,7 +49,7 @@ public class clienthander implements Runnable, Serializable {
         boolean readname = false;
         try {
             if (position.equals("owner")) {
-                this.dos.writeUTF("you " + this.name + " are entered group. This  is the group code: " + this.code);
+                this.dos.writeUTF("HI " + this.name + " are entered group. This  is the group code: " + this.code);
             } else {
                 this.dos.writeUTF("you " + this.name + " are entered group.");
             }

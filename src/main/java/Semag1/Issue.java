@@ -1,21 +1,44 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
 
-import javax.swing.*;
+import java.io.Serializable;
+import static java.lang.Thread.sleep;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 @JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable, ActionListener, MouseListener {
@@ -34,7 +57,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     private String timestamp;
     transient Scanner sc = new Scanner(System.in);
     private People current_people;
-
+    private File image_file;
     /**
      * Tags option
      */
@@ -45,17 +68,14 @@ public class Issue implements Serializable, ActionListener, MouseListener {
      */
     public static final String[] statusOption = {"open", "in progress", "solved", "closed"};
 
-
-
-
     private Project project_belongsTo;      //for the delete function
 
     //gui
     JFrame frame = new JFrame();
-    ImageIcon backgroud_image = new ImageIcon("D:\\Download\\register backgroud.jpg");
+    ImageIcon backgroud_image = new ImageIcon("register backgroud.jpg");
     JLabel label = new JLabel(backgroud_image);
     JButton add_comment = new JButton();
-    ImageIcon add_image = new ImageIcon("D:\\Download\\add.jpg");
+    ImageIcon add_image = new ImageIcon("add.jpg");
     JPanel add_comment_panel = new JPanel();
     JLabel add_comment_title = new JLabel();
     JButton add_comment_submit = new JButton();
@@ -63,9 +83,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     JScrollPane add_comment_sp = new JScrollPane(add_comment_text);
     JButton undo = new JButton();
     JButton redo = new JButton();
-    ImageIcon undo_icon = new ImageIcon("D:\\Download\\undo.png");
-    ImageIcon redo_icon = new ImageIcon("D:\\Download\\redo.png");
-    ImageIcon delete_issue_image = new ImageIcon("D:\\Download\\trash_icon.png");
+    ImageIcon undo_icon = new ImageIcon("undo.png");
+    ImageIcon redo_icon = new ImageIcon("redo.png");
+    ImageIcon delete_issue_image = new ImageIcon("trash_icon.png");
     JButton delete_issue = new JButton();
     JComboBox setting_button = new JComboBox();
     String[] setting_option = {"Changlog", "Quit"};
@@ -78,10 +98,10 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     ArrayList<JButton> dislike = new ArrayList<>();
     ArrayList<JButton> happy = new ArrayList<>();
     ArrayList<JButton> angry = new ArrayList<>();
-    ImageIcon happy_icon = new ImageIcon("D:\\Download\\happy_icon.png");
-    ImageIcon angry_icon = new ImageIcon("D:\\Download\\angry_icon.png");
-    ImageIcon like_image = new ImageIcon("D:\\Download\\like_icon.png");
-    ImageIcon dislike_image = new ImageIcon("D:\\Download\\dislike_icon.png");
+    ImageIcon happy_icon = new ImageIcon("happy_icon.png");
+    ImageIcon angry_icon = new ImageIcon("angry_icon.png");
+    ImageIcon like_image = new ImageIcon("like_icon.png");
+    ImageIcon dislike_image = new ImageIcon("dislike_icon.png");
     ArrayList<JTextPane> comment = new ArrayList<>();
     JScrollPane issue_scroll = new JScrollPane(mid_panel);
     ArrayList<JScrollPane> comment_sr = new ArrayList<>();
@@ -101,7 +121,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     JButton insert_image_button = new JButton("Insert image");
     String insert_image_path;
     ImageIcon insert_image;
-    ImageIcon edit = new ImageIcon("D:\\Download\\edit_icon.png");
+    ImageIcon edit = new ImageIcon("edit_icon.png");
     JButton edit_issue = new JButton();
     JLabel image = new JLabel();
     boolean undo_pressed = false;
@@ -152,9 +172,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                         break;
                     case 3:
                         deleteThisIssue();
-
-                        quit = true;
-//                      changelog();
+//                    changelog();
                         break;
                     case 4:
                         changeProperties();
@@ -206,6 +224,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     public void issuewindow(People current_people, JFrame frame) {
         checkowner(current_people);
         setupwindow();
+        set_comment(comments);
     }
 
     public void checkowner(People current_people) {
@@ -728,7 +747,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     };
 
     /**
-     * Comparator for sorting the list by ID
+     * Comparator for sorting the list by Project ID
      */
     public static Comparator<Issue> IDComparator = new Comparator<Issue>() {
         @Override
@@ -1019,7 +1038,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         frame.repaint();
     }
 
-    public void set_comment(String[] com) {
+    public void set_comment(ArrayList<Comment> com) {
 //        comment_sr = new JScrollPane[com.length];
 //        comment = new JTextPane[com.length];
 //        like = new JButton[com.length];
@@ -1027,7 +1046,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //        happy = new JButton[com.length];
 //        angry = new JButton[com.length];
 //        comment_panel = new JPanel[com.length];
-        for (int i = 0; i < com.length; i++) {
+        for (int i = 0; i < com.size(); i++) {
             //build small panel
             comment_panel.add(new JPanel());
             comment_panel.get(i).setLayout(null);
@@ -1037,7 +1056,10 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             comment_panel.get(i).setVisible(true);
             //build comment
             comment.add(new JTextPane());
-            comment.get(i).setText(com[i]);
+            comment.get(i).setText(com.get(i).getText());
+            if (com.get(i).getImage_file() != null) {
+                comment.get(i).insertIcon(new ImageIcon(com.get(i).getImage_file().toString()));
+            }
             comment.get(i).setVisible(true);
             comment.get(i).setPreferredSize(new Dimension(900, 20000));
             comment.get(i).setEditable(false);
@@ -1100,7 +1122,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             add_comment_panel.setVisible(false);
             issue_scroll.setVisible(true);
             numberOfComments++;
-            comments.add(new Comment(current_people, add_comment_text.getText(), numberOfComments));
+            comments.add(new Comment(current_people, add_comment_text.getText(), numberOfComments, image_file));
             add_comment_text.setText("Enter comment there");
         }
         if (e.getSource() == delete_issue) {
@@ -1197,8 +1219,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             choose.setCurrentDirectory(new File("."));  // select where the file window start 
             int res = choose.showOpenDialog(null);  // select file to open
             if (res == JFileChooser.APPROVE_OPTION) {
-                File file = new File(choose.getSelectedFile().getAbsolutePath());
-                insert_image = new ImageIcon(file.toString());
+                image_file = new File(choose.getSelectedFile().getAbsolutePath());
+                insert_image = new ImageIcon(image_file.toString());
                 insert_image_topanel();
             }
         }

@@ -1,7 +1,8 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.File;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class Comment implements Serializable {
     private String text;
     private String timestamp;
     private String user;
+    private File image_file;
 
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
     private static transient Scanner sc = new Scanner(System.in);
@@ -26,11 +28,13 @@ public class Comment implements Serializable {
     /**
      * This is a Hashmap that links the reaction and its count
      */
-    private HashMap<String, Integer> counter = new HashMap<String, Integer>() {{
-        for (int i = 0; i < reaction.length; i++) {
-            put(reaction[i], 0);
+    private HashMap<String, Integer> counter = new HashMap<String, Integer>() {
+        {
+            for (int i = 0; i < reaction.length; i++) {
+                put(reaction[i], 0);
+            }
         }
-    }};
+    };
 
     //empty constructor
     public Comment() {
@@ -40,27 +44,36 @@ public class Comment implements Serializable {
      * Constructor with three parameters
      *
      * @param createdBy The person who commented
-     * @param text      His comment
-     * @param ID        Comment number
+     * @param text His comment
+     * @param ID Comment number
      */
-    public Comment(People createdBy, String text, int ID) {
+    public Comment(People createdBy, String text, int ID, File image_file) {
         if (createdBy == null) {
             throw new NullPointerException("Person cannot be anonymous");
         }
         this.ID = ID;
         this.createdBy = createdBy;
         this.text = text;
-        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
+        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
 
     /**
      * This method will add reaction count through Hashmap
-     * @param reaction is the reaction in String, option is like, dislike, happy and angry
+     *
+     * @param reaction is the reaction in String, option is like, dislike, happy
+     * and angry
      */
     public void addReaction(String reaction) {
         counter.replace(reaction, counter.get(reaction) + 1);
     }
 
+    public void setImage_file(File image_file) {
+        this.image_file = image_file;
+    }
+
+    public File getImage_file() {
+        return image_file;
+    }
 
     public String getText() {
         return this.text;
@@ -79,7 +92,7 @@ public class Comment implements Serializable {
     }
 
     //helper method for toString(), returns a String representation of all the reactions
-    private String reactionsToString(){
+    private String reactionsToString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n$$ Reactions: ");
         sb.append("happy: " + counter.get("happy"));
@@ -88,7 +101,6 @@ public class Comment implements Serializable {
         sb.append(" | dislikes: " + counter.get("dislikes"));
         return sb.toString();
     }
-
 
     //methods that may be used for GUI implementation - KIV first
 //    public String displayLikes()
@@ -120,7 +132,6 @@ public class Comment implements Serializable {
     /*
         --- Mutator methods ---
      */
-
     public static void setNumber(int number) {
         Comment.number = number;
     }
@@ -128,7 +139,6 @@ public class Comment implements Serializable {
     public void setID(int ID) {
         this.ID = ID;
     }
-
 
     public void setCreatedBy(People createdBy) {
         this.createdBy = createdBy;
@@ -141,6 +151,7 @@ public class Comment implements Serializable {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
     /*
         --- Accessor methods ---
      */
@@ -153,11 +164,9 @@ public class Comment implements Serializable {
         return ID;
     }
 
-
     public People getCreatedBy() {
         return createdBy;
     }
-
 
     public String getTimestamp() {
         return timestamp;

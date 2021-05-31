@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -37,7 +37,7 @@ public class PeopleADT implements Serializable {
         return false;
     }
 
-    public boolean contains(String name) {
+    public boolean contain(String name) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getName().equals(name)) {
                 return true;
@@ -53,7 +53,7 @@ public class PeopleADT implements Serializable {
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
-    public void saveData(){
+    public void saveData() {
         dm.writeData(this);
     }
 

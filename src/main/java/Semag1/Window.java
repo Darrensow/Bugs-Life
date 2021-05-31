@@ -1,12 +1,12 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,14 +17,18 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 public class Window implements Serializable, ActionListener {
 
     /**
      * Project List
      */
-    private ArrayList<Project> project_Array = new ArrayList<>();
+    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
+    /**
+     * List of registered User
+     */
     /**
      * List of registered User
      */
@@ -34,12 +38,8 @@ public class Window implements Serializable, ActionListener {
     /**
      * Replica non-static people_Array
      */
-    private PeopleADT people_Array_replica = new PeopleADT();
-
-
-    /**
-     * List of registered User
-     */
+    private PeopleADT people_Array_replica = new PeopleADT();                   // store people
+    //    private ArrayList<people> people_Array = new ArrayList<>();
     private ArrayList<String> tagsOption_replica = new ArrayList<>();
 
     /**
@@ -53,7 +53,6 @@ public class Window implements Serializable, ActionListener {
     @JsonIgnore
     private Comparator<Project> comparatorInUse;    //ID, Name, IssueCount
 
-
     private static int numberproject = 0;    // to keep track of project id
     transient Scanner sc = new Scanner(System.in);
 
@@ -65,7 +64,7 @@ public class Window implements Serializable, ActionListener {
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     User user_obj = new User();
-    //gui
+//gui
     String column[] = {"ID", "Project Name", "Issue"};
     ArrayList<String> notification = new ArrayList<>();
     JTextField text1 = new JTextField();
@@ -75,8 +74,8 @@ public class Window implements Serializable, ActionListener {
     JButton button3 = new JButton();
     JPanel panel1 = new JPanel();
     JTextField text2 = new JTextField();
-    ImageIcon have_noti = new ImageIcon("D:\\Download\\notification with red.jpg");
-    ImageIcon no_noti = new ImageIcon("D:\\Download\\notification without red.jpg");
+    ImageIcon have_noti = new ImageIcon("notification with red.jpg");
+    ImageIcon no_noti = new ImageIcon("notification without red.jpg");
 
     ImageIcon call_image;
     DefaultTableModel tableModel = new DefaultTableModel() {
@@ -102,7 +101,7 @@ public class Window implements Serializable, ActionListener {
     }
 
     /**
-     * @param
+     * @param ac
      * @return true if action success , false if false.
      */
     public void ac() throws InterruptedException {
@@ -179,12 +178,12 @@ public class Window implements Serializable, ActionListener {
             }
         }
         if (temp.size() > 0) {
-            Collections.sort(temp,comparatorInUse);
+            Collections.sort(temp, comparatorInUse);
             for (int i = 0; i < temp.size(); i++) {
                 print(temp);
             }
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -221,7 +220,7 @@ public class Window implements Serializable, ActionListener {
      * str8 print it out
      *
      * @param option is the attribute of the project, eg ID, Project Name,
-     *               returned as int
+     * returned as int
      */
     public void sortBased(int option) {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
@@ -236,7 +235,7 @@ public class Window implements Serializable, ActionListener {
                 comparatorInUse = Project.IssueCountComparator;
                 break;
         }
-        Collections.sort(sortedProjectList,comparatorInUse);
+        Collections.sort(sortedProjectList, comparatorInUse);
         reset_table(sortedProjectList);
     }
 
@@ -247,7 +246,6 @@ public class Window implements Serializable, ActionListener {
 //        project_Array.remove(project_obj);
 //        numberproject--;
 //    }
-
     /**
      * @param index project index enter project window
      */
@@ -486,20 +484,20 @@ public class Window implements Serializable, ActionListener {
     public void setupwindow() {
         // make it not visible first
         panel_notification.setVisible(false);
-        ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
+        ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
-        frame.setTitle("firstPage");
+        frame.setTitle("Doge");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);
-        ImageIcon image = new ImageIcon("D:\\Download\\register backgroud.jpg");
+        ImageIcon image = new ImageIcon("register backgroud.jpg");
         JLabel label = new JLabel(image);
         label.setBounds(0, 0, 1350, 690);
         label.setVisible(true);
-        ImageIcon image2 = new ImageIcon("D:\\Download\\add.jpg");
+        ImageIcon image2 = new ImageIcon("add.jpg");
         button1.setIcon(image2);
         button1.setBounds(1180, 0, 50, 50);
         button1.setVisible(true);
@@ -515,8 +513,9 @@ public class Window implements Serializable, ActionListener {
             public void mouseClicked(MouseEvent evt) {
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
+                int value = Integer.parseInt(table.getValueAt(row, 0).toString());
                 frame.setVisible(false);
-                entertheprojext(row);
+                entertheprojext(value);
             }
         });
 //set collum width
@@ -591,7 +590,7 @@ public class Window implements Serializable, ActionListener {
 
         //build call button
         call = new JButton();
-        call_image = new ImageIcon("D:\\Download\\whatapps icon.jpg");
+        call_image = new ImageIcon("whatapps icon.jpg");
         call.setIcon(call_image);
         call.setBounds(1280, 0, 50, 50);
         call.setVisible(true);
@@ -725,9 +724,8 @@ public class Window implements Serializable, ActionListener {
             }
             if (option_button1.getSelectedIndex() == 1) {
                 sortBased(2);
-                System.out.println("sort based on id selected");
+                System.out.println("sort based on id sselected");
             }
-            //I added IssueCount option
             if (option_button1.getSelectedIndex() == 3) {
                 sortBased(3);
                 System.out.println("sort based on Issue Count selected");
@@ -788,6 +786,11 @@ public class Window implements Serializable, ActionListener {
             }
         }
         if (e.getSource() == call) {
+            try {
+                new client(current_people);
+            } catch (IOException ex) {
+                Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.out.println("calling");
         }
         if (e.getSource() == setting_option_button) {
@@ -820,9 +823,16 @@ public class Window implements Serializable, ActionListener {
                 }
                 System.out.println("csv report printing");
                 break;
-                case 3:
-                    System.out.println("json file printing");
-                    break;
+                case 3: {
+                    try {
+                        sendfile(new File("Window.json"));
+                    } catch (IOException ex) {
+                        Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                System.out.println("json file printing");
+                break;
+
                 case 4:
                     System.out.println("user quiting ");
                     break;
@@ -830,6 +840,23 @@ public class Window implements Serializable, ActionListener {
         }
     }
 
+    public void sendfile(File file) throws IOException {
+        gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi" + current_people.getName() + " this is the json file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
+        File[] file_send = {file};
+        gmail_obj.sendattachment(file_send);
+        //open the file
+        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
+        {
+            System.out.println("not supported");
+        } else {
+            Desktop desktop = Desktop.getDesktop();
+            if (file.exists()) //checks file exists or not  
+            {
+                desktop.open(file);              //opens the specified file  
+
+            }
+        }
+    }
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
@@ -848,7 +875,7 @@ public class Window implements Serializable, ActionListener {
         this.people_Array = temp.people_Array;
         this.numberproject = temp.numberproject;
         this.people_Array_replica = people_Array_replica;
-        this.tagsOption_replica= tagsOption_replica;
+        this.tagsOption_replica = tagsOption_replica;
         NonStaticToStatic();
     }
 
