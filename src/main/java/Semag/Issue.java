@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 @JsonIgnoreProperties(value = {"changelog", "sc", "current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable {
@@ -21,6 +18,7 @@ public class Issue implements Serializable {
     private People assignee;
     private ArrayList<Comment> comments = new ArrayList<>();
     private int numberOfComments;
+
     private String[] tag;
     private Integer priority;
     private String status;
@@ -28,7 +26,27 @@ public class Issue implements Serializable {
     transient Scanner sc = new Scanner(System.in);
     private People current_people;
 
+    @JsonIgnore
     private Project project_belongsTo;      //for the delete function
+
+    /**
+     * Tags available
+     */
+    @JsonIgnore
+    public  static ArrayList<String> tagsOption = new ArrayList<String>(){{
+        add("frontend");
+        add("backend");
+        add("cmty:bug-report");
+    }};
+
+    public ArrayList<String> tagsOption_replica = new ArrayList<String>();
+
+
+
+    /**
+     * Tags available
+     */
+    private static final String[] statusOption = {"open", "in progress", "solved", "closed"};
 
     public Issue() {
     }
@@ -37,7 +55,7 @@ public class Issue implements Serializable {
         return assignee;
     }
 
-    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop,Project project_belongsTo) {
+    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop, Project project_belongsTo) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
@@ -48,7 +66,7 @@ public class Issue implements Serializable {
         this.priority = priop;
         this.tag = tag;
         this.project_belongsTo = project_belongsTo;
-        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000));
+        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
 
     //add comment
@@ -155,7 +173,8 @@ public class Issue implements Serializable {
                         String statusUpdate = updateStatus();
                         if (!statusUpdate.equals("")) { //will not add if value of String is ""
                             if (addChangeLog(statusUpdate)) {
-                                System.out.println("Status changed successfully!");;
+                                System.out.println("Status changed successfully!");
+                                ;
                             }
                         }
                         break;
@@ -176,7 +195,8 @@ public class Issue implements Serializable {
                         String descUpdate = updateDescriptionText();
                         if (!descUpdate.equals("")) {
                             if (addChangeLog(descUpdate)) {
-                                System.out.println("Description changed successfully!");;
+                                System.out.println("Description changed successfully!");
+                                ;
                             }
                         }
                         break;
@@ -195,12 +215,12 @@ public class Issue implements Serializable {
 
     /**
      * Method to update tags
-     * @return A message that will be added to the change log regarding the change of tags
      *
+     * @return A message that will be added to the change log regarding the change of tags
      */
     private String updateTag() {
         StringBuilder sb = new StringBuilder();
-        sb.append(current_people.getName()).append(" updated the tags at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the tags at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
         sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  //append original tags
 
         System.out.println("Please input the tags you want to update. (Format: 'Tag1 Tag2 Tag3 ... TagN'");
@@ -229,8 +249,8 @@ public class Issue implements Serializable {
 
     /**
      * Method to update priority
-     * @return A message that will be added to the change log regarding the change of priority
      *
+     * @return A message that will be added to the change log regarding the change of priority
      */
     private String updatePriority() {
         StringBuilder sb = new StringBuilder();
@@ -253,13 +273,14 @@ public class Issue implements Serializable {
             }
         }
 
-        sb.append(current_people.getName()).append(" updated the priority to ").append(this.priority).append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the priority to ").append(this.priority).append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
         return sb.toString();
     }
 
 
     /**
      * This method check current status and allow the associated operation
+     *
      * @return A String representation of the updates made to the tag. The String will be added to the changeLog.
      */
     private String updateStatus() {
@@ -368,7 +389,7 @@ public class Issue implements Serializable {
         }
 
         sb.append(current_people.getName()).append(" updated the status from '").append(originalStatus).append("' to '").append(this.getStatus());
-        sb.append("' at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000))).append("\n");
+        sb.append("' at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
 
         return sb.toString();
     }
@@ -398,11 +419,12 @@ public class Issue implements Serializable {
         text = text_obj.getString();
         this.descriptionText = text;
 
-        return this.current_people.getName() + "changed to description at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date (Instant.now().getEpochSecond()*1000)) + "\n";
+        return this.current_people.getName() + "changed to description at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)) + "\n";
     }
 
     /**
      * Add the change description to the changeLog ArrayList
+     *
      * @param changedDescription The description detailing the changes made. If the String is "", then it will not be added.
      * @return True if successfully added to the changeLog, false otherwise.
      */
@@ -416,6 +438,7 @@ public class Issue implements Serializable {
 
     /**
      * A method that returns the String representation of the change log
+     *
      * @return String representation of the change log
      */
     public String returnChangeLog() {
@@ -489,7 +512,7 @@ public class Issue implements Serializable {
     }
 
     /**
-     * Show full Issue page details
+     * Show full Issue page details, this is an overloading method
      */
     public void print(Issue o) {
         StringBuilder sb = new StringBuilder();
@@ -526,6 +549,7 @@ public class Issue implements Serializable {
     }
 
     //Test today
+
     /**
      * Delete this Issue object
      */

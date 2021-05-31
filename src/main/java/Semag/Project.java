@@ -7,14 +7,10 @@ import java.util.*;
 
 public class Project implements Serializable {
 
+    /**
+     * Issue List of each Project
+     */
     private ArrayList<Issue> issue = new ArrayList<>();  // store issue
-    PeopleADT people_Array;   // store people
-    transient Scanner sc = new Scanner(System.in);
-    private int numissue = 0;  // issue id
-
-    @JsonIgnore
-    private People current_people;  //current log in people
-
 
     /**
      * Project ID
@@ -31,6 +27,17 @@ public class Project implements Serializable {
      */
     private People owner;  // project owner
 
+
+    PeopleADT people_Array;   // store people
+    transient Scanner sc = new Scanner(System.in);
+    private int numissue = 0;  // issue id
+
+    @JsonIgnore
+    private People current_people;  //current log in people
+
+    @JsonIgnore
+    private Window window_belongsTo;
+
     public Project() {
     }
 
@@ -39,10 +46,11 @@ public class Project implements Serializable {
      * @param ID
      * @param owner create project
      */
-    public Project(String name, int ID, People owner) {
+    public Project(String name, int ID, People owner, Window belongsTo) {
         this.ID = ID;
         this.name = name;
         this.owner = owner;
+        window_belongsTo = belongsTo;
     }
 
     /**
@@ -75,7 +83,7 @@ public class Project implements Serializable {
                     filterout(tags_out, states_out);
                     break;
                 case 4:
-                    addissue();
+                    addIssue();
                     break;
                 case 5:
                     System.out.println("enter search project keyword or #ID");
@@ -84,6 +92,8 @@ public class Project implements Serializable {
                     break;
                 case 6:
                     deleteThisProject();
+                    quit = true;
+                    return;
                 case 7:
                     quit = true;
                     return;
@@ -124,7 +134,7 @@ public class Project implements Serializable {
                     filterout(tags_out, states_out);
                     break;
                 case 4:
-                    addissue();
+                    addIssue();
                     break;
                 case 5:
                     System.out.println("enter search project keyword or #ID");
@@ -150,20 +160,22 @@ public class Project implements Serializable {
             projectwindow_owner();
         } else {
             this.current_people = current_people;
-            projectwindow();
+            projectwindow_owner();
+//            projectwindow();
         }
     }
 
 
     /**
-     * add issue
+     * add Issue
      */
-    public void addissue() {
+    public void addIssue() {
         System.out.println("Enter issue name");
         String issue_name = sc.next();
         System.out.println("enter tags with spacing in between");
         String issue_tags = sc.nextLine();
         String[] issue_tags_array = issue_tags.split(" ");
+        issue_tags_array = addTag(issue_tags_array);    //get the correct tags
         System.out.println("Enter priority");
         int priority = sc.nextInt();
         People assignee_obj;
@@ -199,12 +211,33 @@ public class Project implements Serializable {
         }
         text = text_obj.getString();
 
-        //To push notification to assignee_obj
-
-        Issue iss = new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority,this);
+        Issue iss = new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority, this);
+        ///Create the Issue
         issue.add(iss);
-        assignee_obj.addAssigned(this.ID,this.name,numissue,issue_name,current_people.getName());
+        //To push notification to assignee_obj
+        assignee_obj.addAssigned(this.ID, this.name, numissue, issue_name, current_people.getName());
         numissue++;
+    }
+
+    /**
+     * check if the tags is registered, if not, add it to the tag option and return
+     * This method is only called in @{addIssue}
+     */
+    public String [] addTag(String[] tag) {
+        String[] toAdd = new String[tag.length];
+        for (int i = 0; i < tag.length; i++) {
+            for (int j = 0; j < Issue.tagsOption.size(); j++) {
+                //check if the tag is available, if yes, copy and break
+                if (Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
+                    toAdd[i] = Issue.tagsOption.get(j);
+                    break;
+                }
+            }
+            //if no, add the tag option and copy
+            Issue.tagsOption.add(tag[i]);
+            toAdd[i] = tag[i];
+        }
+        return toAdd;
     }
 
     /**
@@ -228,7 +261,7 @@ public class Project implements Serializable {
 
     /**
      * @param seachkeyword print issue
-     * @return true if have isseu
+     * @return true if have issue
      */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Issue> temp = new ArrayList<>();
@@ -272,7 +305,7 @@ public class Project implements Serializable {
     }
 
     /**
-     * @param arr comment arraylist
+     * @param arr   comment arraylist
      * @param token keyword check a wword in the comment
      * @return
      */
@@ -330,18 +363,19 @@ public class Project implements Serializable {
 
 
     /**
-         * Delete current project
-         * Update, this remove project we move it to Window
+     * Delete current project
+     * Update, this remove project we move it to Window
      */
     public void deleteThisProject() {
         for (int i = 0; i < issue.size(); i++) {
             removeIssue(issue.get(i));
         }
-//        Window.removeProject(this);
+        window_belongsTo.removeProject(this);
     }
 
     /**
      * This is a method to just remove one issue from issue dashboard, called by Issue class
+     *
      * @param issue_obj issue to be removed
      */
     public void removeIssue(Issue issue_obj) {
@@ -373,16 +407,16 @@ public class Project implements Serializable {
      * This method return string representation of one Issue in the Issue Dashboard,
      * this method is called by {@code print(ArrayList<Issue> toPrint)}
      */
-    public String printOneIssue(Issue o){
+    public String printOneIssue(Issue o) {
         StringBuilder str = new StringBuilder();
-        str.append(String.format(" %3d",o.getID()));
-        str.append(String.format(" %-30s",o.getTitle()));
-        str.append(String.format(" %-15s",o.getStatus()));
-        str.append(String.format(" %-15s",o.getTag()));
-        str.append(String.format(" %10d",o.getPriority()));
+        str.append(String.format(" %3d", o.getID()));
+        str.append(String.format(" %-30s", o.getTitle()));
+        str.append(String.format(" %-15s", o.getStatus()));
+        str.append(String.format(" %-15s", o.getTag()));
+        str.append(String.format(" %10d", o.getPriority()));
         str.append(String.format(" %-30s", o.getTimestamp()));
-        str.append(String.format(" %-20s",o.getAssignee().getName()));
-        str.append(String.format(" %-20s" ,o.getCreator().getName()));
+        str.append(String.format(" %-20s", o.getAssignee().getName()));
+        str.append(String.format(" %-20s", o.getCreator().getName()));
         return str.toString();
     }
 
@@ -395,7 +429,7 @@ public class Project implements Serializable {
         String[] tags = tag.split("#");
         String[] states = state.split("#");
         for (int i = 0; i < issue.size(); i++) {
-            label :
+            label:
             {
                 /*
                     note to Sam, my IDE says that the two if statements are always false.
@@ -429,7 +463,7 @@ public class Project implements Serializable {
         String[] tags = tag.split("#");
         String[] states = state.split("#");
         for (int i = 0; i < issue.size(); i++) {
-            label :
+            label:
             {
                 /*
                     note to Sam, my IDE says that the two if statements are always false.
@@ -467,7 +501,7 @@ public class Project implements Serializable {
     /**
      * @param index issue index enter issue window
      */
-    public void entertheissue(int index){
+    public void entertheissue(int index) {
         issue.get(index).issuewindow(current_people);
     }
 
@@ -515,7 +549,6 @@ public class Project implements Serializable {
     };
 
 
-
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
@@ -523,7 +556,7 @@ public class Project implements Serializable {
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
-    public void saveData(){
+    public void saveData() {
         dm.writeData(this);
     }
 
@@ -541,6 +574,7 @@ public class Project implements Serializable {
     public ArrayList<Issue> getIssue() {
         return issue;
     }
+
     public int getID() {
         return ID;
     }

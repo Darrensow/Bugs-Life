@@ -1,38 +1,18 @@
 package Semag1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.Serializable;
-import static java.lang.Thread.sleep;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 
 public class Project implements Serializable, ActionListener {
 
@@ -58,6 +38,12 @@ public class Project implements Serializable, ActionListener {
      * Project Owner, which is a People
      */
     private People owner;  // project owner
+
+    /**
+     * Current comparator in use
+     */
+    @JsonIgnore
+    private Comparator<Issue> comparatorInUse; //ID, Title, Priority, Timestamp
 
     //gui
     JFrame frame = new JFrame();
@@ -251,12 +237,10 @@ public class Project implements Serializable, ActionListener {
         }
         setupwindow();
         sortIssueBased(0);
-        ArrayList<String> state = new ArrayList<>();
-        state.add("no have state");
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("no have tags");
-        include_and_exluded(tags);
-        include_and_exluded_state(state);
+
+        ArrayList<String> status = new ArrayList<>(Arrays.asList(Issue.statusOption));
+        include_and_exluded(Issue.tagsOption);
+        include_and_exluded_state(status);
     }
 
     /**
@@ -268,6 +252,7 @@ public class Project implements Serializable, ActionListener {
         System.out.println("enter tags with , in between");
         String issue_tags = sc.nextLine();
         String[] issue_tags_array = issue_tags.split(",");
+        issue_tags_array = addTag(issue_tags_array);    //get the correct tags
         System.out.println("Enter priority");
         int priority = sc.nextInt();
         People assignee_obj;
@@ -311,6 +296,29 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
+     * check if the tags is registered, if not, add it to the tag option and return
+     * This method is only called in @{addIssue}
+     */
+    public String [] addTag(String[] tag) {
+        String[] toAdd = new String[tag.length];
+        for (int i = 0; i < tag.length; i++) {
+            for (int j = 0; j < Semag.Issue.tagsOption.size(); j++) {
+                //check if the tag is available, if yes, copy and break
+                if (Semag.Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
+                    toAdd[i] = Semag.Issue.tagsOption.get(j);
+                    break;
+                }
+            }
+            //if no, add the tag option and copy
+            Semag.Issue.tagsOption.add(tag[i]);
+            toAdd[i] = tag[i];
+        }
+        return toAdd;
+    }
+
+
+
+    /**
      * @param input keyword search search issue
      */
     public void search(String input) { //  only input number will directly assume as ID
@@ -337,8 +345,6 @@ public class Project implements Serializable, ActionListener {
             entertheissue(Integer.parseInt(input.substring(1)));
         } else {
             printsearchResult(input, issue_arr);
-//            entertheissue(id);
-
         }
     }
 
@@ -383,13 +389,15 @@ public class Project implements Serializable, ActionListener {
             }
         }
 
-        for (int i = 0; i < temp.size(); i++) {
-            pq.add(temp.get(i));
-        }
+//        for (int i = 0; i < temp.size(); i++) {
+//            pq.add(temp.get(i));
+//        }
         ArrayList<Issue> issue_table = new ArrayList<>();
-        for (int i = 0; i < temp.size(); i++) {
-            issue_table.add(pq.poll());
-        }
+//        for (int i = 0; i < temp.size(); i++) {
+//            issue_table.add(pq.poll());
+//        }
+
+        Collections.sort(temp,comparatorInUse);
         reset_table(issue_table);
     }
 
@@ -473,28 +481,23 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * This method will sort the Issue with the column that the user wish, and
-     * str8 print it out
-     *
-     * @param choose is the attribute of the Issue, eg ID, Title, returned as
-     * int
+     * This method will set column to sort, sort the Issues , and print it out
+     * @param choose is the attribute of the Issue, eg ID, Priority,Timestamp
      */
     public void sortIssueBased(int choose) {
         ArrayList<Issue> sortedIssueList = new ArrayList<>(issue);
         switch (choose) {
             case 0: //0 is the first option, ID
-                Collections.sort(sortedIssueList, Issue.IDComparator);
+                comparatorInUse = Issue.IDComparator;
                 break;
             case 1: //1 is the sec option, Priority
-                Collections.sort(sortedIssueList, Issue.priorityComparator);
+                comparatorInUse = Issue.priorityComparator;
                 break;
-            case 2: //2 is the third option, IssueCount
-                Collections.sort(sortedIssueList, Issue.timeComparator);
-                break;
-            default:
+            case 2: //2 is the third option, Timestamp
+                comparatorInUse = Issue.timeComparator;
                 break;
         }
-//        print(sortedIssueList);
+        Collections.sort(sortedIssueList,comparatorInUse);
         reset_table(sortedIssueList);
     }
 
@@ -1237,11 +1240,11 @@ public class Project implements Serializable, ActionListener {
             }
             if (sort_issue.getSelectedIndex() == 1) {
                 sortIssueBased(1);
-                System.out.println("sort based on Priority sselected");
+                System.out.println("sort based on Priority selected");
             }
             if (sort_issue.getSelectedIndex() == 2) {
                 sortIssueBased(2);
-                System.out.println("sort based on IssueCount sselected");
+                System.out.println("sort based on Timestamp selected");
             }
         }
         if (e.getSource() == setting_button) {
@@ -1281,7 +1284,8 @@ public class Project implements Serializable, ActionListener {
             table_scroll.setVisible(true);
             String issue_name = name_text.getText();
             String tags = tags_text.getText();
-            String[] issue_tags_array = tags.split(",");
+            String[] issue_tags_array = tags.substring(1).split("#");
+
             String description = descrip.getText();
             int priop = priority.getSelectedIndex() + 1;
             String assignee = assignee_text.getText();
@@ -1299,7 +1303,7 @@ public class Project implements Serializable, ActionListener {
             }
         }
         if (e.getSource() == sreach) {
-            System.out.println("sreach");
+            System.out.println("search");
             search_situation();
         }
     }

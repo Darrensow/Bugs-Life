@@ -1,12 +1,12 @@
 package Semag1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,24 +17,46 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 public class Window implements Serializable, ActionListener {
 
     /**
      * Project List
      */
-    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
+    private ArrayList<Project> project_Array = new ArrayList<>();
 
     /**
      * List of registered User
      */
-    PeopleADT people_Array = new PeopleADT();                           // store people
-    //    private ArrayList<people> people_Array = new ArrayList<>();
+    @JsonIgnore
+    public static PeopleADT people_Array = new PeopleADT();
+
+    /**
+     * Replica non-static people_Array
+     */
+    private PeopleADT people_Array_replica = new PeopleADT();
+
+
+    /**
+     * List of registered User
+     */
+    private ArrayList<String> tagsOption_replica = new ArrayList<>();
+
+    /**
+     * Replica non-static Tags Option
+     */
+    public ArrayList<String> tagsOption = new ArrayList<String>();
+
+    /**
+     * Current comparator in use
+     */
+    @JsonIgnore
+    private Comparator<Project> comparatorInUse;    //ID, Name, IssueCount
+
 
     private static int numberproject = 0;    // to keep track of project id
     transient Scanner sc = new Scanner(System.in);
-    
+
     @JsonIgnore //ignore as don't want to override user logged in
     private People current_people; // current user logged
 
@@ -43,7 +65,7 @@ public class Window implements Serializable, ActionListener {
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     User user_obj = new User();
-//gui
+    //gui
     String column[] = {"ID", "Project Name", "Issue"};
     ArrayList<String> notification = new ArrayList<>();
     JTextField text1 = new JTextField();
@@ -55,7 +77,7 @@ public class Window implements Serializable, ActionListener {
     JTextField text2 = new JTextField();
     ImageIcon have_noti = new ImageIcon("D:\\Download\\notification with red.jpg");
     ImageIcon no_noti = new ImageIcon("D:\\Download\\notification without red.jpg");
-    
+
     ImageIcon call_image;
     DefaultTableModel tableModel = new DefaultTableModel() {
         @Override
@@ -75,12 +97,12 @@ public class Window implements Serializable, ActionListener {
     JButton call;
     JComboBox setting_option_button = new JComboBox();
     String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file", "Quit"};
-    
+
     public Window() {
     }
 
     /**
-     * @param ac
+     * @param
      * @return true if action success , false if false.
      */
     public void ac() throws InterruptedException {
@@ -137,7 +159,7 @@ public class Window implements Serializable, ActionListener {
      */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Project> temp = new ArrayList<>();
-        PriorityQueue<Project> pq = new PriorityQueue<>();
+//        PriorityQueue<Project> pq = new PriorityQueue<>();
         String[] token = seachkeyword.split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < token.length; j++) {
@@ -153,15 +175,13 @@ public class Window implements Serializable, ActionListener {
                 }
             }
         }
-        for (int i = 0; i < temp.size(); i++) {
-            pq.add(temp.get(i));
-        }
-        for (int i = 0; i < temp.size(); i++) {
-            System.out.println(pq.poll());
-        }
         if (temp.size() > 0) {
+            Collections.sort(temp,comparatorInUse);
+            for (int i = 0; i < temp.size(); i++) {
+                print(temp);
+            }
             return true;
-        } else {
+        }else {
             return false;
         }
     }
@@ -198,20 +218,23 @@ public class Window implements Serializable, ActionListener {
      * str8 print it out
      *
      * @param option is the attribute of the project, eg ID, Project Name,
-     * returned as int
+     *               returned as int
      */
     public void sortBased(int option) {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
         switch (option) {
             case 0: //0 is the first option, ID
-                Collections.sort(sortedProjectList, Project.IDComparator);
+                comparatorInUse = Project.IDComparator;
+                break;
             case 1: //1 is the sec option, Name
-                Collections.sort(sortedProjectList, Project.NameComparator);
+                comparatorInUse = Project.NameComparator;
+                break;
             case 2: //2 is the third option, IssueCount
-                Collections.sort(sortedProjectList, Project.IssueCountComparator);
+                comparatorInUse = Project.IssueCountComparator;
+                break;
         }
+        Collections.sort(sortedProjectList,comparatorInUse);
         reset_table(sortedProjectList);
-//        print(sortedProjectList);
     }
 
     /**
@@ -221,11 +244,12 @@ public class Window implements Serializable, ActionListener {
 //        project_Array.remove(project_obj);
 //        numberproject--;
 //    }
+
     /**
      * @param index project index enter project window
      */
     public void entertheprojext(int index) {
-        frame.setVisible(false); 
+        frame.setVisible(false);
         project_Array.get(index).projectwindow(current_people, frame, people_Array);
     }
 
@@ -279,14 +303,14 @@ public class Window implements Serializable, ActionListener {
         } else if (num == 3) {
             choose.setSelectedFile(new File("report.pdf"));
         }
-        
+
         int res = choose.showSaveDialog(choose);     // select file to save
         if (res == JFileChooser.APPROVE_OPTION) {
             File file = new File(choose.getSelectedFile().getAbsolutePath());
             createtextfile(file, num);
         }
     }
-    
+
     public void createtextfile(File file_name, int num) throws IOException {
         int resolved = 0;
         int unresolved = 0;
@@ -385,9 +409,9 @@ public class Window implements Serializable, ActionListener {
 
             }
         }
-        
+
     }
-    
+
     public void createpdf(File filename, ArrayList<String> text) {
         try {
             Document document = new Document();
@@ -400,35 +424,35 @@ public class Window implements Serializable, ActionListener {
             e.printStackTrace();
         }
     }
-    
+
     private static void addTitlePage(Document document) throws DocumentException {
         Paragraph preface = new Paragraph();
         // We add one empty line
         addEmptyLine(preface, 1);
         // Lets write a big header
         preface.add(new Paragraph("Report of Doge Buys life", catFont));
-        
+
         addEmptyLine(preface, 1);
         // Will create: Report generated by: _name, _date
         preface.add(new Paragraph("Report generated by: " + System.getProperty("user.name") + ", " + new Date(), smallBold));
         addEmptyLine(preface, 3);
         preface.add(new Paragraph("This document describes provide by team Doge.", smallBold));
-        
+
         addEmptyLine(preface, 8);
-        
+
         preface.add(new Paragraph("This document is for education purpose only.", redFont));
-        
+
         document.add(preface);
         // Start a new page
         document.newPage();
     }
-    
+
     private static void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
         }
     }
-    
+
     private static void addContent(Document document, ArrayList<String> text) throws DocumentException {
         Anchor anchor = new Anchor("Content", catFont); // change text beside the text
         anchor.setName("Content");
@@ -496,14 +520,14 @@ public class Window implements Serializable, ActionListener {
         table.getColumnModel().getColumn(0).setPreferredWidth(1);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(1);
-        
+
         table.setFocusable(true);
         table.setRowSelectionAllowed(true);
 
         //set table scroll
         table_scroll.setBounds(100, 100, 1100, 550);
         table_scroll.setVisible(true);
-        
+
         text1.setBounds(0, 0, 200, 50);
         text1.setText("search");
         text1.addMouseListener(new MouseAdapter() {
@@ -524,7 +548,7 @@ public class Window implements Serializable, ActionListener {
         text1.addActionListener(action1);
         text1.setVisible(true);
         text1.setEditable(true);
-        
+
         option_button1.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
         option_button1.addItem("Sort based on name");
         option_button1.addItem("sort based on ID");
@@ -550,12 +574,12 @@ public class Window implements Serializable, ActionListener {
                 System.out.println("enter key pressed" + text2.getText());
             }
         };
-        
+
         text2.addActionListener(action);
         text2.setVisible(true);
         text2.setEditable(true);
         text2.setBounds(100, 100, 300, 50);
-        
+
         button2.setBounds(400, 400, 100, 50);
         button2.setText("Add");
         button2.setVisible(true);
@@ -588,7 +612,7 @@ public class Window implements Serializable, ActionListener {
         button3.setFocusable(true);
         button3.addActionListener(this);
         check_icon(notification.size());
-        
+
         panel1.add(text2);
         panel1.add(button2);
         frame.add(setting_option_button);
@@ -602,9 +626,9 @@ public class Window implements Serializable, ActionListener {
         frame.add(button1);
         frame.add(label);
         frame.repaint();
-        
+
     }
-    
+
     public void check_icon(int array_size) {
         if (array_size > 0) {
             button3.setIcon(have_noti);
@@ -612,7 +636,7 @@ public class Window implements Serializable, ActionListener {
             button3.setIcon(no_noti);
         }
     }
-    
+
     public void checknotification(ArrayList<String> arr) {
 
         // the notication panel 
@@ -626,7 +650,7 @@ public class Window implements Serializable, ActionListener {
         sp_notification.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         sp_notification.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
         sp_notification.setVisible(true);
-        
+
         for (int i = 0; i < arr.size(); i++) {
             //set acccept button
             accept_a.add(new JButton());
@@ -662,14 +686,14 @@ public class Window implements Serializable, ActionListener {
             each_notification_panel_a.get(i).add(notification_textarea.get(i));
             panel_notification.add(each_notification_panel_a.get(i));
         }
-        
+
     }
-    
+
     public void setNotification(ArrayList<String> notification) {
         this.notification = notification;
         check_icon(this.notification.size());
     }
-    
+
     public void reset_table(String[][] data) {
         tableModel.setRowCount(0);
         for (int i = 0; i < data.length; i++) {
@@ -677,7 +701,7 @@ public class Window implements Serializable, ActionListener {
         }
         frame.repaint();
     }
-    
+
     public void reset_table(ArrayList<Project> data) {
         tableModel.setRowCount(0);
         for (int i = 0; i < data.size(); i++) {
@@ -689,7 +713,7 @@ public class Window implements Serializable, ActionListener {
         }
         frame.repaint();
     }
-    
+
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == option_button1) {
             if (option_button1.getSelectedIndex() == 0) {
@@ -698,7 +722,12 @@ public class Window implements Serializable, ActionListener {
             }
             if (option_button1.getSelectedIndex() == 1) {
                 sortBased(2);
-                System.out.println("sort based on id sselected");
+                System.out.println("sort based on id selected");
+            }
+            //I added IssueCount option
+            if (option_button1.getSelectedIndex() == 3) {
+                sortBased(3);
+                System.out.println("sort based on Issue Count selected");
             }
         }
         if (e.getSource() == button1) {
@@ -723,7 +752,7 @@ public class Window implements Serializable, ActionListener {
                 table_scroll.setVisible(false);
                 System.out.println("button3 pressed");
             }
-            
+
         }
         if (!accept_a.isEmpty()) {
             for (int i = 0; i < accept_a.size(); i++) {
@@ -769,7 +798,7 @@ public class Window implements Serializable, ActionListener {
                 }
                 System.out.println("PDF report printing");
                 break;
-                
+
                 case 1: {
                     try {
                         selectfile(1);
@@ -797,6 +826,7 @@ public class Window implements Serializable, ActionListener {
             }
         }
     }
+
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
@@ -805,49 +835,71 @@ public class Window implements Serializable, ActionListener {
      * Method to save data, calls the writeData method in DataManagement Class
      */
     public void saveData() {
+        StaticToNonStatic();
         dm.writeData(this);
     }
-    
+
     public void loadData() {
         Window temp = dm.readWindowData();
         this.project_Array = temp.project_Array;
         this.people_Array = temp.people_Array;
         this.numberproject = temp.numberproject;
+        this.people_Array_replica = people_Array_replica;
+        this.tagsOption_replica= tagsOption_replica;
+        NonStaticToStatic();
+    }
+
+    //Convert static to non-static to save into database
+    private void StaticToNonStatic() {
+        people_Array_replica = Window.people_Array;
+        tagsOption_replica = Issue.tagsOption;
+    }
+
+    //Convert from non-static from database to load into static
+    private void NonStaticToStatic() {
+
+        //read一次
+        for (int i = 0; i < this.people_Array_replica.size(); i++) {
+            Window.people_Array.add(people_Array_replica.get(i));
+        }
+        for (int i = 0; i < tagsOption_replica.size(); i++) {
+            Issue.tagsOption.add(tagsOption_replica.get(i));
+        }
     }
 
     // -- Getter and setter methods --
     public ArrayList<Project> getProject_Array() {
         return this.project_Array;
     }
-    
+
     public void setProject_Array(ArrayList<Project> project_Array) {
         this.project_Array = project_Array;
     }
-    
+
     public PeopleADT getPeople_Array() {
         return people_Array;
     }
-    
+
     public void setPeople_Array(PeopleADT people_Array) {
         this.people_Array = people_Array;
     }
-    
+
     public static int getNumberproject() {
         return numberproject;
     }
-    
+
     public static void setNumberproject(int numberproject) {
         Window.numberproject = numberproject;
     }
-    
+
     public People getCurrent_people() {
         return current_people;
     }
-    
+
     public void setCurrent_people(People current_people) {
         this.current_people = current_people;
     }
-    
+
     public static void main(String[] args) {
         Window obj = new Window();
         obj.setupwindow();

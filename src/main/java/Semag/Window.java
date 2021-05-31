@@ -2,7 +2,6 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -24,9 +23,14 @@ public class Window implements Serializable {
      * List of registered User
      */
     PeopleADT people_Array = new PeopleADT();                           // store people
-    //    private ArrayList<people> people_Array = new ArrayList<>();
 
-    private int numberproject = 0;    // to keep track of project id
+    /**
+     * Current comparator in use
+     */
+    @JsonIgnore
+    private Comparator<Project> comparatorInUse;    //ID, Name, IssueCount
+
+    private int numberproject = 1;    // to keep track of project id
     transient Scanner sc = new Scanner(System.in);
 
     private People current_people; // current user logged
@@ -63,12 +67,12 @@ public class Window implements Serializable {
      * open window project dashboard
      */
     public void userwindow() throws IOException { // display project original window
-//        current_people.displayNewAssigned();
+        current_people.displayNewAssigned();
 
         sortBased(1);
         boolean quit = false;
         while (quit == false) {
-            System.out.println("action? \n1)sort \n2)add project 3)search project 4)generate report 5)quit");
+            System.out.println("action? \n1)sort \n2)add project 3)search project 4)generate report 5)Save 6)quit");
             int input1 = sc.nextInt();
             switch (input1) {
                 case 1:
@@ -92,6 +96,9 @@ public class Window implements Serializable {
                     selectfile(num);
                     break;
                 case 5:
+                    saveData();
+                    return;
+                case 6:
                     quit = true;
                     return;
                 default:
@@ -126,7 +133,7 @@ public class Window implements Serializable {
      */
     public boolean printsearchResult(String seachkeyword) {
         ArrayList<Project> temp = new ArrayList<>();
-        PriorityQueue<Project> pq = new PriorityQueue<>();
+//        PriorityQueue<Project> pq = new PriorityQueue<>();
         String[] token = seachkeyword.split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < token.length; j++) {
@@ -142,13 +149,19 @@ public class Window implements Serializable {
                 }
             }
         }
-        for (int i = 0; i < temp.size(); i++) {
-            pq.add(temp.get(i));
-        }
-        for (int i = 0; i < temp.size(); i++) {
-            System.out.println(pq.poll());
-        }
+
+//        for (int i = 0; i < temp.size(); i++) {
+//            pq.add(temp.get(i));
+//        }
+//        for (int i = 0; i < temp.size(); i++) {
+//            System.out.println(pq.poll());
+//        }
+
         if (temp.size() > 0) {
+            Collections.sort(temp,comparatorInUse);
+            for (int i = 0; i < temp.size(); i++) {
+                print(temp);
+            }
             return true;
         } else {
             return false;
@@ -178,37 +191,30 @@ public class Window implements Serializable {
      * @param name project name add project
      */
     public void addproject(String name) {
-        project_Array.add(new Project(name, numberproject, current_people));
+        project_Array.add(new Project(name, numberproject, current_people, this));
         numberproject++;
     }
 
     /**
-     * This method will sort the project with the column that the user wish, and
-     * str8 print it out
-     *
+     * This method will set column to sort, sort the project , and print it out
      * @param option is the attribute of the project, eg ID, Project Name,
-     * returned as int
      */
     public void sortBased(int option) {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
         switch (option) {
             case 0: //0 is the first option, ID
-                Collections.sort(sortedProjectList, Project.IDComparator);
+                comparatorInUse = Project.IDComparator;
+                break;
             case 1: //1 is the sec option, Name
-                Collections.sort(sortedProjectList, Project.NameComparator);
+                comparatorInUse = Project.NameComparator;
+                break;
             case 2: //2 is the third option, IssueCount
-                Collections.sort(sortedProjectList, Project.IssueCountComparator);
+                comparatorInUse = Project.IssueCountComparator;
+                break;
         }
+        Collections.sort(sortedProjectList,comparatorInUse);
         print(sortedProjectList);
     }
-
-    /**
-     * @param project_obj want to remove
-     */
-//    public void removeProject(Project project_obj) {
-//        project_Array.remove(project_obj);
-//        numberproject--;
-//    }
 
     /**
      * @param index project index enter project window
@@ -218,14 +224,14 @@ public class Window implements Serializable {
     }
 
     /**
-     * print Project list, this method is an overloading method
+     * print Project list
      */
     public void print() {
         this.print(project_Array);
     }
 
     /**
-     * print selected list
+     * print selected list, this is an overloading method
      */
     public void print(ArrayList<Project> toPrint) {
         System.out.println(String.format("%-3s %-30s %-15s ", "ID", "Name", "Issue Count"));
@@ -236,8 +242,7 @@ public class Window implements Serializable {
 
     /**
      * This method return string representation of one Project in the Project
-     * Dashboard, this method is called by
-     * {@code print(ArrayList<Project> toPrint)}
+     * Dashboard, this method is called by {@code print(ArrayList<Project> toPrint)}
      */
     public String printOneProject(Project o) {
         StringBuilder str = new StringBuilder();
@@ -246,6 +251,12 @@ public class Window implements Serializable {
         str.append(String.format(" %-15d", o.getIssue().size()));
         return str.toString();
     }
+
+    //Called only in Window class
+    public void removeProject(Project o) {
+        project_Array.remove(o);
+    }
+
 
     // 1 = txt , 2 = csv
     public void selectfile(int num) throws IOException {  //select file location and set file name
