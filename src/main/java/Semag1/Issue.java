@@ -1,0 +1,1405 @@
+package Semag;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+
+import java.io.Serializable;
+import static java.lang.Thread.sleep;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+
+@JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
+public class Issue implements Serializable, ActionListener, MouseListener {
+
+    private ArrayList<String> changelog;
+    private Integer ID;
+    private String title;
+    private String descriptionText;
+    private People creator;
+    private People assignee;
+    private ArrayList<Comment> comments = new ArrayList<>();
+    private int numberOfComments;
+    private String[] tag;
+    private Integer priority;
+    private String status;
+    private String timestamp;
+    transient Scanner sc = new Scanner(System.in);
+    private People current_people;
+
+    private Project project_belongsTo;      //for the delete function
+
+    //gui
+    JFrame frame = new JFrame();
+    ImageIcon backgroud_image = new ImageIcon("D:\\Download\\register backgroud.jpg");
+    JLabel label = new JLabel(backgroud_image);
+    JButton add_comment = new JButton();
+    ImageIcon add_image = new ImageIcon("D:\\Download\\add.jpg");
+    JPanel add_comment_panel = new JPanel();
+    JLabel add_comment_title = new JLabel();
+    JButton add_comment_submit = new JButton();
+    JTextPane add_comment_text = new JTextPane();
+    JScrollPane add_comment_sp = new JScrollPane(add_comment_text);
+    JButton undo = new JButton();
+    JButton redo = new JButton();
+    ImageIcon undo_icon = new ImageIcon("D:\\Download\\undo.png");
+    ImageIcon redo_icon = new ImageIcon("D:\\Download\\redo.png");
+    ImageIcon delete_issue_image = new ImageIcon("D:\\Download\\trash_icon.png");
+    JButton delete_issue = new JButton();
+    JComboBox setting_button = new JComboBox();
+    String[] setting_option = {"Changlog", "Quit"};
+    JPanel mid_panel = new JPanel();
+    JPanel issue_des_panel = new JPanel();
+    JTextArea issue_descrip = new JTextArea();
+    JScrollPane issue_descrip_sp = new JScrollPane(issue_descrip);
+    ArrayList<JPanel> comment_panel = new ArrayList<>();
+    ArrayList<JButton> like = new ArrayList<>();
+    ArrayList<JButton> dislike = new ArrayList<>();
+    ArrayList<JButton> happy = new ArrayList<>();
+    ArrayList<JButton> angry = new ArrayList<>();
+    ImageIcon happy_icon = new ImageIcon("D:\\Download\\happy_icon.png");
+    ImageIcon angry_icon = new ImageIcon("D:\\Download\\angry_icon.png");
+    ImageIcon like_image = new ImageIcon("D:\\Download\\like_icon.png");
+    ImageIcon dislike_image = new ImageIcon("D:\\Download\\dislike_icon.png");
+    ArrayList<JTextPane> comment = new ArrayList<>();
+    JScrollPane issue_scroll = new JScrollPane(mid_panel);
+    ArrayList<JScrollPane> comment_sr = new ArrayList<>();
+    JPanel edit_panel = new JPanel();
+    JLabel edit_priop_title = new JLabel();
+    JComboBox edit_priop = new JComboBox();
+    JComboBox edit_status = new JComboBox();
+    JTextField edit_tags = new JTextField();
+    JTextArea edit_descrip = new JTextArea();
+    JScrollPane edit_descrip_scroll = new JScrollPane(edit_descrip);
+    
+    JLabel edit_change_image = new JLabel();cv
+    ImageIcon edit_insert_image;
+    JButton edit_image_button = new JButton("Change image");
+
+    JButton done_edit = new JButton();
+    JButton insert_image_button = new JButton("Insert image");
+    String insert_image_path;
+    ImageIcon insert_image;
+    ImageIcon edit = new ImageIcon("D:\\Download\\edit_icon.png");
+    ArrayList<JButton> edit_comment = new ArrayList<>();
+    JButton edit_issue = new JButton();
+    JLabel image = new JLabel();
+    boolean undo_pressed = false;
+    boolean redo_pressed = false;
+    boolean exit = false;
+    Text<String> text_undo = new Text<>();
+    Text<String> text_redo = new Text<>();
+
+    boolean undo_edit_issue_pressed = false;
+    boolean redo_edit_issue_pressed = false;
+    boolean exit_edit_issue = false;
+    Text<String> text_undo_edit_issue = new Text<>();
+    Text<String> text_redo_edit_issue = new Text<>();
+
+    public Issue() {
+    }
+
+    public People getAssignee() {
+        return assignee;
+    }
+
+    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop, Project project_belongsTo) {
+        changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
+        this.ID = ID;
+        this.title = title;
+        this.creator = creator;
+        this.assignee = assignee;
+        this.descriptionText = text;
+        this.status = "open";
+        this.priority = priop;
+        this.tag = tag;
+        this.project_belongsTo = project_belongsTo;
+        this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
+    }
+
+    //add comment
+    public void issuewindow_owner() {
+        boolean quit = false;
+        while (!quit) {
+            try {
+                print();
+                System.out.print("1)Add a Comment 2)React on a Comment 3)Delete This Issue 4)Change Properties 5)Quit \nInput: ");
+                int input1 = sc.nextInt();
+                switch (input1) {
+                    case 1:
+                        addComment();
+//                    changelog();
+                        break;
+                    case 2:
+                        react();
+//                    changelog();
+                        break;
+                    case 3:
+                        deleteThisIssue();
+//                    changelog();
+                        break;
+                    case 4:
+                        changeProperties();
+                        break;
+                    case 5:
+                        quit = true;
+                        break;
+                    default:
+                        System.out.println("Invalid input. Please enter a value between 1-5");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a value between 1-5");
+                sc.nextLine();
+            }
+        }
+    }
+
+    public void issuewindow() {
+        boolean quit = false;
+        while (!quit) {
+            try {
+                print();
+                System.out.print("1)Add comment 2)React on comment 3)Quit \nInput: ");
+                int input1 = sc.nextInt();
+                switch (input1) {
+                    case 1:
+                        addComment();
+//                    changelog();
+                        break;
+                    case 2:
+                        react();
+//                    changelog();
+                        break;
+                    case 3:
+                        quit = true;
+                        break;
+                    default:                        //catch int other than 1-3
+                        System.out.println("Invalid Input. Please input a value between 1-3");
+                        break;
+                }
+            } catch (InputMismatchException e) {    //catch type error (String/double/char/etc)
+                System.out.println("Invalid Input. Please input a value between 1-3");
+            }
+
+        }
+    }
+
+    public void issuewindow(People current_people) {
+        if (current_people == creator) {
+            this.current_people = current_people;
+            issuewindow_owner();
+        } else {
+            this.current_people = current_people;
+            issuewindow();
+        }
+    }
+
+    public void react() {
+        System.out.println("enter comment ID that you want to react");
+        int index = sc.nextInt();
+        System.out.println("Enter 'h' or happy , 'a' for angry.");
+        char reaction = sc.next().charAt(0);
+        if (reaction == 'h') {
+//            comments.get(index).happy();
+        } else {
+//            comments.get(index).angry();
+        }
+    }
+
+    /**
+     * Method to modify properties Only modifiable properties are status, tag,
+     * priority and Description text
+     */
+    private void changeProperties() {
+        boolean exit = false;
+        while (!exit) {
+            try {
+                System.out.print("Changes: 1)Status 2)Tag 3)Priority 4)Description Text 5)Quit \nInput: ");
+                switch (sc.nextInt()) {
+                    case 1:
+                        String statusUpdate = updateStatus();
+                        if (!statusUpdate.equals("")) { //will not add if value of String is ""
+                            if (addChangeLog(statusUpdate)) {
+                                System.out.println("Status changed successfully!");;
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (addChangeLog(updateTag())) {
+                            System.out.println("Tags changed successfully!");
+                        }
+                        break;
+                    case 3:
+                        String priorityUpdate = updatePriority();
+                        if (!priorityUpdate.equals("")) {
+                            if (addChangeLog(priorityUpdate)) {
+                                System.out.println("Priority changed successfully!");
+                            }
+                        }
+                        break;
+                    case 4:
+                        String descUpdate = updateDescriptionText();
+                        if (!descUpdate.equals("")) {
+                            if (addChangeLog(descUpdate)) {
+                                System.out.println("Description changed successfully!");;
+                            }
+                        }
+                        break;
+                    case 5:
+                        exit = true;
+                        break;
+                    default:                            //Used to catch values other than 1-5
+                        System.out.println("Invalid input, please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {        //Used to catch other inputs (String/char/double)
+                System.out.println("Invalid input. Please enter a value from 1 to 5");
+            }
+        }
+    }
+
+    /**
+     * Method to update tags
+     *
+     * @return A message that will be added to the change log regarding the
+     * change of tags
+     *
+     */
+    private String updateTag() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(current_people.getName()).append(" updated the tags at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  //append original tags
+
+        System.out.println("Please input the tags you want to update. (Format: 'Tag1 Tag2 Tag3 ... TagN'");
+        String input = sc.nextLine();
+        String[] tagsArray = input.split(" ");      //might have logic error if user give "abcabcabc" or "", might not be a problem
+        this.tag = tagsArray;
+
+        sb.append("Edited: ").append(showAllTags(tagsArray)).append("\n");   //append new tags
+
+        return sb.toString();
+    }
+
+    //helper method to return String representation of all the tags
+    private String showAllTags(String[] tagsArray) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]).append("]");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Method to update priority
+     *
+     * @return A message that will be added to the change log regarding the
+     * change of priority
+     *
+     */
+    private String updatePriority() {
+        StringBuilder sb = new StringBuilder();
+        int originalPriority = this.priority;
+
+        int input = -2;
+        while (true) {
+            try {
+                System.out.println("Please input the new priority for the Issue. (Value is 0-9). Enter '-1' to quit if you don't want to change priority");
+                input = sc.nextInt();
+                if (input > 0 && input <= 10) {
+                    this.priority = input;
+                    break;
+                } else if (input == -1) {
+                    return "";          //empty String signalling no change to be made
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a value from 0 to 9 : ");
+                sc.nextLine();
+            }
+        }
+
+        sb.append(current_people.getName()).append(" updated the priority to ").append(this.priority).append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        return sb.toString();
+    }
+
+    public void return_option() {
+        String originalStatus = this.getStatus();
+        ArrayList<String> option_state = new ArrayList<>();
+        option_state.add(originalStatus);
+        if (originalStatus.equals("open")) {
+
+        } else if (originalStatus.equals("in progress")) {
+
+        } else if (originalStatus.equals("resolved")) {
+
+        } else if (originalStatus.equals("closed")) {
+
+        }
+        set_status(option_state);
+    }
+
+    /**
+     * This method check current status and allow the associated operation
+     *
+     * @return A String representation of the updates made to the tag. The
+     * String will be added to the changeLog.
+     */
+    private String updateStatus() {
+        StringBuilder sb = new StringBuilder();
+        String originalStatus = this.getStatus();
+        boolean exit = false;
+
+        if (status.equalsIgnoreCase("open")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)In Progress 2)Resolved 3)Closed 4)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "In Progress";
+                            exit = true;
+                        }
+                        case 2 -> {
+                            status = "Resolved";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 4 -> {
+                            return "";      //return empty String, if .equals(""), then won't add to changeLog
+                        }
+                        default ->
+                            System.out.println("Invalid input. Please enter a value from 1-4");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a value from 1-4");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("in progress")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Closed 2)Resolved) 3)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 2 -> {
+                            status = "Resolved";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            return "";
+                        }
+                        default ->
+                            System.out.println("Invalid input. Please enter either 1 or 3");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 3");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("resolved")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Closed 2)Reopen 3)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Closed";
+                            exit = true;
+                            current_people.addResolved();
+                        }
+                        case 2 -> {
+                            status = "Open";
+                            exit = true;
+                        }
+                        case 3 -> {
+                            return "";
+                        }
+                        default ->
+                            System.out.println("Invalid input. Please enter either 1 or 3.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 3");
+                    sc.nextLine();
+                }
+            }
+        } else if (status.equalsIgnoreCase("closed")) {
+            while (!exit) {
+                try {
+                    System.out.print("Set a status -> (1)Reopen (2)Quit : ");
+                    switch (sc.nextInt()) {
+                        case 1 -> {
+                            status = "Open";
+                            exit = true;
+                            current_people.reduceResolved();
+                        }
+                        case 2 -> {
+                            return "";
+                        }
+                        default -> {
+                            System.out.println("Invalid input. Please enter either 1 or 2.");
+                        }
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter either 1 or 2.");
+                    sc.nextLine();
+                }
+            }
+        }
+
+        sb.append(current_people.getName()).append(" updated the status from '").append(originalStatus).append("' to '").append(this.getStatus());
+        sb.append("' at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+
+        return sb.toString();
+    }
+
+    private String updateDescriptionText() {
+        System.out.println("Enter new Issue description. ('Enter' to register a new line, '#undo' to undo a line, '#redo' to redo a line and '#quit' to finish.");
+        String text = sc.nextLine();
+        Text<String> text_obj = new Text<>();       //main stack to store all lines enterred by user
+        Text<String> temp_text = new Text<>();      //temp stack for redo and und function
+        while (!text.equals("#quit")) {
+            if (text.equals("#undo")) {
+                if (text_obj.getSize() < 0) {
+                    return "";
+                }
+                temp_text.push(text_obj.pop());
+            } else if (text.equals("#redo")) {
+                if (temp_text.getSize() < 0) {
+                    return "";
+                }
+                text_obj.push(temp_text.pop());
+            } else {
+                text_obj.push(text);
+                temp_text.clear();
+            }
+            text = sc.nextLine();
+        }
+        text = text_obj.getString();
+        this.descriptionText = text;
+
+        return this.current_people.getName() + "changed to description at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)) + "\n";
+    }
+
+    /**
+     * Add the change description to the changeLog ArrayList
+     *
+     * @param changedDescription The description detailing the changes made. If
+     * the String is "", then it will not be added.
+     * @return True if successfully added to the changeLog, false otherwise.
+     */
+    private boolean addChangeLog(String changedDescription) {
+        if (!changedDescription.equals("")) {
+            this.changelog.add(changedDescription);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * A method that returns the String representation of the change log
+     *
+     * @return String representation of the change log
+     */
+    public String returnChangeLog() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : this.changelog) {
+            sb.append(s).append("\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * A window to show the changelog
+     */
+    public void viewChangelog() {
+        print();
+    }
+
+    public void addComment() {
+//        System.out.println("enter comment");
+//        String text = sc.nextLine();
+//        Text<String> text_obj = new Text<>();
+//        Text<String> temp_text = new Text<>();
+//        while (!text.equals("#quit")) {
+//            if (text.equals("#undo")) {
+//                if (text_obj.getSize() < 0) {
+//                    break;
+//                }
+//                temp_text.push(text_obj.pop());
+//            } else if (text.equals("#redo")) {
+//                if (temp_text.getSize() < 0) {
+//                    break;
+//                }
+//                text_obj.push(temp_text.pop());
+//            } else {
+//                text_obj.push(text);
+//                temp_text.clear();
+//            }
+//            text = sc.nextLine();
+//        }
+//        text = text_obj.getString();
+//        comments.add(new Comment(current_people, text, numberOfComments));
+//        numberOfComments++;
+    }
+
+    /**
+     * This method is overloading.
+     *
+     * @return String representation of the whole comment section.
+     */
+    public String displayCommentsSection() {
+        return displayCommentsSection(this);
+    }
+
+    /**
+     * Displays the whole comment section. Regarding the wrapping of the text,
+     * have to modify the toString() in Comment class
+     *
+     * @return String representation of the whole comment section.
+     */
+    public String displayCommentsSection(Issue o) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Comments\n-----------\n");
+        for (Comment value : comments) {
+            sb.append(value).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void print() {
+        print(this);
+    }
+
+    /**
+     * Show full Issue page details
+     */
+    public void print(Issue o) {
+        StringBuilder sb = new StringBuilder();
+
+        String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n"
+                + "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n"
+                + "Title: %-40s\n"
+                + "Assigned to: %-20sCreated by: %-20s\n\n",
+                o.getID(), o.getStatus(),
+                o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
+                o.getTitle(),
+                o.getAssignee().getName(), o.getCreator().getName());
+        sb.append(issueInfo);
+        sb.append("Issue Description\n-----------");
+        sb.append("\n" + o.getDescriptionText());
+        sb.append("\n\n").append(displayCommentsSection(o));
+
+        System.out.println(sb.toString());
+    }
+
+    //Helper method to print(Issue o), returns all the tags in String format
+    private String returnAllTags(Issue o) {
+        StringBuilder sb = new StringBuilder();
+        String[] tagsArray = o.getTag();
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]);
+
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Delete this Issue object
+     */
+    public void deleteThisIssue() {
+        project_belongsTo.removeIssue(this);
+    }
+
+
+    /*
+        -- Comparator Object --
+     */
+    /**
+     * Comparator for sorting the list by Priority
+     */
+    public static Comparator<Issue> priorityComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for descending order
+            return o2.getPriority() - o1.getPriority();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Time
+     */
+    public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getTimestamp().compareTo(o2.getTimestamp());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Project ID
+     */
+    public static Comparator<Issue> IDComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getID() - o2.getID();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Title
+     */
+    public Comparator<Issue> TitleComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getTitle().compareTo(o2.getTitle());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Status Alphabetical
+     */
+    public Comparator<Issue> statusComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getStatus().compareTo(o2.getStatus());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Tag
+     */
+    public Comparator<Issue> tagComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getStatus().compareTo(o2.getStatus());
+        }
+    };
+
+    //gui method
+    public void setupwindow() {
+        //build window
+        ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
+        frame.setLayout(null);
+        frame.setTitle("firstPage");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(konoha.getImage());
+        frame.setResizable(true);
+        frame.setSize(1350, 730);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        //set backgroud picture
+        label.setBounds(0, 0, 1350, 690);
+        label.setVisible(true);
+
+        //add comment button
+        add_comment.setIcon(add_image);
+        add_comment.setBounds(1180, 0, 50, 50);
+        add_comment.setVisible(true);
+        add_comment.setFocusable(true);
+        add_comment.addActionListener(this);
+        //build add comment panel
+        add_comment_panel.setBackground(Color.blue);
+        add_comment_panel.setOpaque(true);
+        add_comment_panel.setVisible(false);
+        add_comment_panel.setBounds(100, 100, 1000, 600);
+        add_comment_panel.setLayout(null);
+
+        //build add comment title
+        add_comment_title.setText("Add Comment");
+        add_comment_title.setFont(new Font("MV Boli", Font.PLAIN, 24));
+        add_comment_title.setBounds(400, 0, 200, 50);
+        add_comment_title.setVisible(true);
+        add_comment_title.setBackground(Color.blue);
+        add_comment_title.setOpaque(true);
+        //build add comment text
+        add_comment_text.setVisible(true);
+        add_comment_text.setPreferredSize(new Dimension(900, 100000));
+        add_comment_text.setEditable(true);
+        add_comment_text.setText("Enter comment there");
+        add_comment_text.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) { //after mouse click 
+                if (add_comment_text.getText().equals("Enter comment there")) {
+                    add_comment_text.setText("");
+                }
+                if (undo_pressed == true || redo_pressed == true) {
+                    undo_pressed = false;
+                    redo_pressed = false;
+                    text_undo.clear();
+                    text_redo.clear();
+                    exit = false;
+                    handle_thread();
+                }
+            }
+        });
+        //build submit button
+        add_comment_submit.setBounds(900, 550, 100, 50);
+        add_comment_submit.setText("Submit");
+        add_comment_submit.setVisible(true);
+        add_comment_submit.setFocusable(true);
+        add_comment_submit.addActionListener(this);
+        //add undo buttomn
+        undo.setBounds(900, 0, 50, 50);
+        undo.setIcon(undo_icon);
+        undo.setVisible(true);
+        undo.setFocusable(true);
+        undo.addActionListener(this);
+        //build redo button
+        redo.setBounds(950, 0, 50, 50);
+        redo.setVisible(true);
+        redo.setIcon(redo_icon);
+        redo.setFocusable(true);
+        redo.addActionListener(this);
+        //build insert image button
+        insert_image_button.setVisible(true);
+        insert_image_button.setBounds(650, 0, 100, 50);
+        insert_image_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        insert_image_button.addActionListener(this);
+        insert_image_button.setFocusable(true);
+        //build label image 
+        image.setVisible(true);
+        image.setBounds(750, 0, 100, 50);
+        image.setFocusable(true);
+        image.addMouseListener(this);
+        image.setBackground(Color.red);
+        image.setOpaque(true);
+
+        //build add comment scroll
+        add_comment_sp.setBounds(50, 50, 900, 500);
+        add_comment_sp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        add_comment_sp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+        add_comment_sp.setVisible(true);
+
+        //add componet to add comment panel
+        add_comment_panel.add(image);
+        add_comment_panel.add(insert_image_button);
+        add_comment_panel.add(add_comment_title);
+        add_comment_panel.add(add_comment_sp);
+        add_comment_panel.add(undo);
+        add_comment_panel.add(redo);
+        add_comment_panel.add(add_comment_submit);
+
+        //build delete issue button 
+        delete_issue.setIcon(delete_issue_image);
+        delete_issue.setBounds(1230, 0, 50, 50);
+        delete_issue.setVisible(true);
+        delete_issue.setFocusable(true);
+        delete_issue.addActionListener(this);
+        //build delete issue button 
+        edit_issue.setIcon(edit);
+        edit_issue.setBounds(1280, 0, 50, 50);
+        edit_issue.setVisible(true);
+        edit_issue.setFocusable(true);
+        edit_issue.addActionListener(this);
+        //build setting button / quit
+        for (int i = 0; i < setting_option.length; i++) {
+            setting_button.addItem(setting_option[i]);
+        }
+        setting_button.setVisible(true);
+        setting_button.setBounds(1000, 35, 150, 35);
+        setting_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        setting_button.addActionListener(this);
+        setting_button.setBackground(Color.CYAN);
+        setting_button.setOpaque(true);
+        //build issue show text
+        mid_panel.setVisible(true);
+        mid_panel.setPreferredSize(new Dimension(1000, 1000000));
+        mid_panel.setBackground(Color.CYAN);
+        mid_panel.setOpaque(true);
+        mid_panel.setLayout(new FlowLayout());
+        //builf issue scroll
+        issue_scroll.setBounds(0, 100, 1000, 550);
+        issue_scroll.setVisible(true);
+        issue_scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        issue_scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+
+        //build issue  descrip
+        issue_descrip.setPreferredSize(new Dimension(900, 200000));
+        issue_descrip.setVisible(true);
+        issue_descrip.setEditable(false);
+
+        //build issue scroll
+        issue_descrip_sp.setBounds(0, 100, 900, 200);
+        issue_descrip_sp.setVisible(true);
+        issue_descrip_sp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        issue_descrip_sp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+
+        //build issue descrp panel
+        issue_des_panel.setVisible(true);
+        issue_des_panel.setPreferredSize(new Dimension(900, 300));
+        issue_des_panel.setLayout(null);
+        issue_des_panel.setBackground(Color.red);
+        issue_des_panel.setOpaque(true);
+        // add scroll to panel
+        issue_des_panel.add(issue_descrip_sp);
+        //add component to issue panel
+        mid_panel.add(issue_des_panel);
+        //build edit panel
+        edit_panel.setBounds(0, 80, 1000, 600);
+        edit_panel.setBackground(Color.yellow);
+        edit_panel.setOpaque(true);
+        edit_panel.setLayout(null);
+        edit_panel.setVisible(false);
+        //build edit tags
+        edit_tags.setBounds(0, 0, 300, 50);
+        edit_tags.setVisible(true);
+        edit_tags.setEditable(true);
+        edit_tags.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        //build prior button 
+        edit_priop.addItem("1");
+        edit_priop.addItem("2");
+        edit_priop.addItem("3");
+        edit_priop.addItem("4");
+        edit_priop.addItem("5");
+        edit_priop.setBounds(900, 0, 100, 50);
+        edit_priop.setVisible(true);
+        edit_priop.addActionListener(this);
+        edit_priop.setFocusable(true);
+        edit_priop.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        //build prior title
+        edit_priop_title.setText("Priority");
+        edit_priop_title.setVisible(true);
+        edit_priop_title.setBounds(800, 0, 100, 50);
+        edit_priop_title.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        edit_priop_title.setBackground(Color.yellow);
+        edit_priop_title.setOpaque(true);
+        //build status
+        edit_status.setBounds(900, 100, 100, 50);
+        edit_status.setVisible(true);
+        edit_status.addActionListener(this);
+        edit_status.setFocusable(true);
+        edit_status.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        //build description text
+        edit_descrip.setVisible(true);
+        edit_descrip.setEditable(true);
+        edit_descrip.setPreferredSize(new Dimension(900, 10000));
+        //build descriptionn text srcoll
+        edit_descrip_scroll.setBounds(0, 100, 900, 500);
+        edit_descrip_scroll.setVisible(true);
+        edit_descrip_scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        edit_descrip_scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+        //build submit button
+        done_edit.setVisible(true);
+        done_edit.setText("Submit");
+        done_edit.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        done_edit.setFocusable(true);
+        done_edit.addActionListener(this);
+        done_edit.setBounds(900, 550, 100, 50);
+
+        //add component to edit panle
+        edit_panel.add(edit_tags);
+        edit_panel.add(edit_priop);
+        edit_panel.add(edit_priop_title);
+        edit_panel.add(edit_status);
+        edit_panel.add(edit_descrip_scroll);
+        edit_panel.add(done_edit);
+        //add component to frame
+        frame.add(edit_issue);
+        frame.add(edit_panel);
+        frame.add(add_comment);
+        frame.add(add_comment_panel);
+        frame.add(delete_issue);
+        frame.add(setting_button);
+        frame.add(issue_scroll);
+        frame.add(label);
+        frame.repaint();
+
+    }
+
+    public void set_status(ArrayList<String> status) {
+        edit_status.removeAllItems();
+        for (int i = 0; i < status.size(); i++) {
+            edit_status.addItem(status.get(i));
+        }
+    }
+
+    public void set_tags(String tags) {
+        edit_tags.setText(tags);
+    }
+
+    public void edit_descrip(String descrip) {
+        edit_descrip.setText(descrip);
+    }
+
+    public void setissue_desrip(String str) {
+        issue_descrip.setText(str);
+        frame.repaint();
+    }
+
+    public void set_comment(String[] com) {
+//        comment_sr = new JScrollPane[com.length];
+//        comment = new JTextPane[com.length];
+//        like = new JButton[com.length];
+//        dislike = new JButton[com.length];
+//        happy = new JButton[com.length];
+//        angry = new JButton[com.length];
+//        comment_panel = new JPanel[com.length];
+        for (int i = 0; i < com.length; i++) {
+            //build small panel
+            comment_panel.add(new JPanel());
+            comment_panel.get(i).setLayout(null);
+            comment_panel.get(i).setPreferredSize(new Dimension(900, 300));
+            comment_panel.get(i).setBackground(Color.YELLOW);
+            comment_panel.get(i).setOpaque(true);
+            comment_panel.get(i).setVisible(true);
+            //build comment
+            comment.add(new JTextPane());
+            comment.get(i).setText(com[i]);
+            comment.get(i).setVisible(true);
+            comment.get(i).setPreferredSize(new Dimension(900, 20000));
+            comment.get(i).setEditable(false);
+            comment_sr.add(new JScrollPane(comment.get(i)));
+            comment_sr.get(i).setBounds(0, 0, 900, 200);
+            comment_sr.get(i).setVisible(true);
+            comment_sr.get(i).getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+            comment_sr.get(i).getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+            // build like button
+            like.add(new JButton());
+            like.get(i).setIcon(like_image);
+            like.get(i).addActionListener(this);
+            like.get(i).setFocusable(true);
+            like.get(i).setBounds(800, 200, 50, 50);
+            like.get(i).setVisible(true);
+            //build dislike button
+            dislike.add(new JButton());
+            dislike.get(i).setIcon(dislike_image);
+            dislike.get(i).addActionListener(this);
+            dislike.get(i).setFocusable(true);
+            dislike.get(i).setBounds(850, 200, 50, 50);
+            dislike.get(i).setVisible(true);
+            //build happy button
+            happy.add(new JButton());
+            happy.get(i).setIcon(happy_icon);
+            happy.get(i).addActionListener(this);
+            happy.get(i).setFocusable(true);
+            happy.get(i).setBounds(750, 200, 50, 50);
+            happy.get(i).setVisible(true);
+            //build angry button
+            angry.add(new JButton());
+            angry.get(i).setIcon(angry_icon);
+            angry.get(i).addActionListener(this);
+            angry.get(i).setFocusable(true);
+            angry.get(i).setBounds(700, 200, 50, 50);
+            angry.get(i).setVisible(true);
+            //build edit comment button
+            edit_comment.add(new JButton());
+            edit_comment.get(i).setIcon(edit);
+            edit_comment.get(i).addActionListener(this);
+            edit_comment.get(i).setFocusable(true);
+            edit_comment.get(i).setBounds(650, 200, 50, 50);
+            edit_comment.get(i).setVisible(true);
+            //add component to small panel
+            comment_panel.get(i).add(happy.get(i));
+            comment_panel.get(i).add(angry.get(i));
+            comment_panel.get(i).add(like.get(i));
+            comment_panel.get(i).add(dislike.get(i));
+            comment_panel.get(i).add(edit_comment.get(i));
+            comment_panel.get(i).add(comment_sr.get(i));
+            //add component to mid_panel
+            mid_panel.add(comment_panel.get(i));
+        }
+        frame.repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == add_comment) {
+            System.out.println("adding comment");
+            add_comment_panel.setVisible(true);
+            issue_scroll.setVisible(false);
+        }
+        if (e.getSource() == add_comment_submit) {
+            exit = true;
+            text_undo.clear();
+            text_redo.clear();
+            add_comment_panel.setVisible(false);
+            issue_scroll.setVisible(true);
+            numberOfComments++;
+            comments.add(new Comment(current_people, add_comment_text.getText(), numberOfComments));
+            add_comment_text.setText("Enter comment there");
+        }
+        if (e.getSource() == delete_issue) {
+            project_belongsTo.removeIssue(this);
+        }
+        if (like != null) {
+            for (int i = 0; i < like.size(); i++) {
+                if (e.getSource() == like.get(i)) {
+                    System.out.println("like the comment " + i);
+                }
+            }
+        }
+        if (dislike != null) {
+            for (int i = 0; i < dislike.size(); i++) {
+                if (e.getSource() == dislike.get(i)) {
+                    System.out.println("dislike the comment " + i);
+                }
+            }
+        }
+        if (happy != null) {
+            for (int i = 0; i < happy.size(); i++) {
+                if (e.getSource() == happy.get(i)) {
+                    System.out.println("happy the comment " + i);
+                }
+            }
+        }
+        if (edit_comment != null) {
+            for (int i = 0; i < edit_comment.size(); i++) {
+                if (e.getSource() == edit_comment.get(i)) {
+                    System.out.println("edit_comment the comment " + i);
+                }
+            }
+        }
+        if (angry != null) {
+            for (int i = 0; i < angry.size(); i++) {
+                if (e.getSource() == angry.get(i)) {
+                    System.out.println("angry the comment " + i);
+                }
+            }
+        }
+        if (e.getSource() == setting_button) {
+            switch (setting_button.getSelectedIndex()) {
+                case 0:
+                    System.out.println("changlog");
+                    break;
+                case 1:
+                    System.out.println("quit");
+                    break;
+
+            }
+        }
+        if (e.getSource() == done_edit) {
+            System.out.println("submit");
+            edit_panel.setVisible(false);
+            issue_scroll.setVisible(true);
+            System.out.println("priority : " + edit_priop.getSelectedIndex());
+            System.out.println("tags  : " + edit_tags.getText());
+            System.out.println("descrip : " + edit_descrip.getText());
+            System.out.println("status : " + edit_status.getSelectedItem()); // will return the states choose
+        }
+        if (e.getSource() == undo) {
+            if (!text_undo.isEmpty()) {
+                exit = true;
+                undo_pressed = true;
+                exit = true;
+                text_redo.push(text_undo.peek());
+                add_comment_text.setText(text_undo.pop());
+                System.out.println("undo");
+            }
+        }
+        if (e.getSource() == redo) {
+            if (!text_redo.isEmpty()) {
+                exit = true;
+                redo_pressed = true;
+                exit = true;
+                text_undo.push(text_redo.peek());
+                add_comment_text.setText(text_redo.pop());
+                System.out.println("reundo");
+            }
+        }
+        if (e.getSource() == insert_image_button) {
+            insert_image_button.setEnabled(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF Images", "jpg", "gif", "png", "jpeg");
+            JFileChooser choose = new JFileChooser();
+            choose.setFileFilter(filter);
+            choose.setCurrentDirectory(new File("."));  // select where the file window start 
+            int res = choose.showOpenDialog(null);  // select file to open
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = new File(choose.getSelectedFile().getAbsolutePath());
+                insert_image = new ImageIcon(file.toString());
+                insert_image_topanel();
+            }
+        }
+        if (e.getSource() == edit_issue) {
+            edit_panel.setVisible(true);
+            issue_scroll.setVisible(false);
+            return_option(); //set the option
+            edit_descrip.setText(this.getDescriptionText()); //set descrip text
+            set_tags(Arrays.toString(this.getTag())); //set tags 
+        }
+
+    }
+
+    public void append(String s) {
+        try {
+            Document doc = add_comment_text.getDocument();
+            doc.insertString(doc.getLength(), s, null);
+        } catch (BadLocationException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    public void insert_image_topanel() {
+        image.setIcon(insert_image);
+//        add_comment_text.insertIcon(insert_image);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        image.setBounds(0, 0, 1000, 600);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        image.setBounds(750, 0, 100, 50);
+    }
+
+    public void handle_thread() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (exit == false) {
+                    text_undo.push(add_comment_text.getText());
+                    try {
+                        sleep(5000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+    }
+
+    /*
+        -- Save and read data -- Jackson -- JSON --
+     */
+    @JsonIgnore
+    private static DataManagement dm = new DataManagement();
+
+    /**
+     * Method to save data, calls the writeData method in DataManagement Class
+     */
+    public void saveData() {
+        dm.writeData(this);
+    }
+
+    public void loadData() {
+        Issue temp = dm.readIssueData();
+        this.ID = temp.ID;
+        this.title = temp.title;
+        this.descriptionText = temp.descriptionText;
+        this.creator = temp.creator;
+        this.assignee = temp.assignee;
+        this.comments = temp.comments;
+        this.timestamp = temp.timestamp;
+        this.tag = temp.tag;
+        this.priority = temp.priority;
+        this.status = temp.status;
+    }
+
+    /*
+        -- Getter and setter methods --
+     */
+    public ArrayList<String> getChangelog() {
+        return changelog;
+    }
+
+    public void setChangelog(ArrayList<String> changelog) {
+        this.changelog = changelog;
+    }
+
+    public Integer getID() {
+        return this.ID;
+    }
+
+    public void setID(Integer ID) {
+        this.ID = ID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescriptionText() {
+        return descriptionText;
+    }
+
+    public void setDescriptionText(String descriptionText) {
+        this.descriptionText = descriptionText;
+    }
+
+    public People getCreator() {
+        return creator;
+    }
+
+    public void setCreator(People creator) {
+        this.creator = creator;
+    }
+
+    public void setAssignee(People assignee) {
+        this.assignee = assignee;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public int getNumbercomment() {
+        return this.numberOfComments;
+    }
+
+    public void setNumbercomment(int numbercomment) {
+        this.numberOfComments = numbercomment;
+    }
+
+    public String[] getTag() {
+        return tag;
+    }
+
+    public void setTag(String[] tag) {
+        this.tag = tag;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public People getCurrent_people() {
+        return current_people;
+    }
+
+    public void setCurrent_people(People current_people) {
+        this.current_people = current_people;
+    }
+
+    public Project getProject_belongsTo() {
+        return project_belongsTo;
+    }
+
+    public void setProject_belongsTo(Project project_belongsTo) {
+        this.project_belongsTo = project_belongsTo;
+    }
+
+    public static Comparator<Issue> getPriorityComparator() {
+        return priorityComparator;
+    }
+
+    public static void setPriorityComparator(Comparator<Issue> priorityComparator) {
+        Issue.priorityComparator = priorityComparator;
+    }
+
+    public static Comparator<Issue> getTimeComparator() {
+        return timeComparator;
+    }
+
+    public static void setTimeComparator(Comparator<Issue> timeComparator) {
+        Issue.timeComparator = timeComparator;
+    }
+
+    public static Comparator<Issue> getIDComparator() {
+        return IDComparator;
+    }
+
+    public static void setIDComparator(Comparator<Issue> IDComparator) {
+        Issue.IDComparator = IDComparator;
+    }
+
+    public Comparator<Issue> getTitleComparator() {
+        return TitleComparator;
+    }
+
+    public void setTitleComparator(Comparator<Issue> titleComparator) {
+        TitleComparator = titleComparator;
+    }
+
+    public Comparator<Issue> getStatusComparator() {
+        return statusComparator;
+    }
+
+    public void setStatusComparator(Comparator<Issue> statusComparator) {
+        this.statusComparator = statusComparator;
+    }
+
+    public Comparator<Issue> getTagComparator() {
+        return tagComparator;
+    }
+
+    public void setTagComparator(Comparator<Issue> tagComparator) {
+        this.tagComparator = tagComparator;
+    }
+}
