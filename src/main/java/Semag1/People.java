@@ -119,6 +119,10 @@ public class People implements Serializable {
         return number_solved;
     }
 
+    public void setGmail(String gmail) {
+        this.gmail = gmail;
+    }
+
     //--Setter--
     public void setNewAssignedNotification(ArrayList<AssignedIssue> newAssignedNotification) {
         this.newAssignedNotification = newAssignedNotification;
@@ -183,4 +187,6 @@ class AssignedIssue {
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
     }
+
+
 }
