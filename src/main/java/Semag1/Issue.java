@@ -1,4 +1,4 @@
-package Semag;
+package Semag1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -103,7 +103,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     JTextArea edit_descrip = new JTextArea();
     JScrollPane edit_descrip_scroll = new JScrollPane(edit_descrip);
     
-    JLabel edit_change_image = new JLabel();cv
+    JLabel edit_change_image = new JLabel();
     ImageIcon edit_insert_image;
     JButton edit_image_button = new JButton("Change image");
 
