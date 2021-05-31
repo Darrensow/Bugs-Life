@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

@@ -35,7 +35,6 @@ public class SEMAG implements Serializable {
 //        ps.executeUpdate();
 //        ps.close();
 //    }
-
 //    public static void serializeJavaObjectToDB(Connection conn, Object objectToSerialize) throws SQLException {
 //        PreparedStatement ps = conn.prepareStatement(createTable);
 //        ps.executeUpdate();
@@ -76,12 +75,17 @@ public class SEMAG implements Serializable {
 //        }
 //        return new SEMAG();
 //    }
-
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-
+        //load json
+        
         SEMAG o = new SEMAG();
+        o.obj.loadData();
 //        o = (SEMAG) deSerializeJavaObjectFromDB(connection, 1);
         o.obj.ac();
+        o.obj.saveData();
+
+        //save json
+        
 ////        serializeJavaObjectToDB(connection, o);
 //        connection.close();
     }

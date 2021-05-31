@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.awt.Color;
@@ -709,7 +709,7 @@ public class Project implements Serializable, ActionListener {
      * @param index issue index enter issue window
      */
     public void entertheissue(int index) {
-        issue.get(index).issuewindow(current_people);
+        issue.get(index).issuewindow(current_people,frame);
     }
 
     public int issue_Arraysize() {

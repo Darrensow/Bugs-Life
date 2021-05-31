@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.awt.Color;
@@ -196,7 +196,7 @@ public class User implements Serializable, ActionListener {
     public void window_setup() {
         //setup frame
 
-        ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
+        ImageIcon konoha = new ImageIcon("D:\\Download\\doge_image.jpg");
         frame.setLayout(null);
         frame.setTitle("Doge");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

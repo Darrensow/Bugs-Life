@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -735,6 +735,7 @@ public class Window implements Serializable, ActionListener {
                     accept_a.remove(i);
                     ignore_a.remove(i);
                     frame.repaint();
+                    //need to add index
                     System.out.println("accept " + i);
                 }
             }
@@ -749,6 +750,7 @@ public class Window implements Serializable, ActionListener {
                     accept_a.remove(i);
                     ignore_a.remove(i);
                     frame.repaint();
+                    //need to add index
                     System.out.println("ignore " + i);
                 }
             }

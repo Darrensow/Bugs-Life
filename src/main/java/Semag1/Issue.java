@@ -1,4 +1,4 @@
-package Semag1;
+package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -102,7 +102,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     JTextField edit_tags = new JTextField();
     JTextArea edit_descrip = new JTextArea();
     JScrollPane edit_descrip_scroll = new JScrollPane(edit_descrip);
-    
+
     JLabel edit_change_image = new JLabel();
     ImageIcon edit_insert_image;
     JButton edit_image_button = new JButton("Change image");
@@ -112,7 +112,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     String insert_image_path;
     ImageIcon insert_image;
     ImageIcon edit = new ImageIcon("D:\\Download\\edit_icon.png");
-    ArrayList<JButton> edit_comment = new ArrayList<>();
     JButton edit_issue = new JButton();
     JLabel image = new JLabel();
     boolean undo_pressed = false;
@@ -121,11 +120,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     Text<String> text_undo = new Text<>();
     Text<String> text_redo = new Text<>();
 
-    boolean undo_edit_issue_pressed = false;
-    boolean redo_edit_issue_pressed = false;
-    boolean exit_edit_issue = false;
-    Text<String> text_undo_edit_issue = new Text<>();
-    Text<String> text_redo_edit_issue = new Text<>();
+    JFrame project_frame;
 
     public Issue() {
     }
@@ -147,8 +142,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         this.project_belongsTo = project_belongsTo;
         this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
+//add comment  // change properties //react done //quit //
 
-    //add comment
     public void issuewindow_owner() {
         boolean quit = false;
         while (!quit) {
@@ -162,6 +157,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //                    changelog();
                         break;
                     case 2:
+//                        react();
 //                    changelog();
                         break;
                     case 3:
@@ -198,6 +194,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //                    changelog();
                         break;
                     case 2:
+//                        react();
 //                    changelog();
                         break;
                     case 3:
@@ -214,23 +211,37 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         }
     }
 
-    public void issuewindow(People current_people) {
-        if (current_people == creator) {
-            this.current_people = current_people;
-            issuewindow_owner();
+    public void issuewindow(People current_people, JFrame frame) {
+        checkowner(current_people);
+        setupwindow();
+    }
+
+    public void checkowner(People current_people) {
+        if (this.current_people == current_people) {
+            delete_issue.setVisible(true);
+            edit_issue.setVisible(true);
         } else {
-            this.current_people = current_people;
-            issuewindow();
+            delete_issue.setVisible(false);
+            edit_issue.setVisible(false);
         }
     }
 
-    /**
-     * Method to react to a comment
-     * @param commentID Comment ID that was reacted on
-     * @param reacton ("happy", "angry", "like", "dislike"}
-     */
+    //darren upload later
     public void reactComment(int commentID, String reacton) {
         this.comments.get(commentID).addReaction(reacton);
+    }
+
+    public void react(String a, int ID) {
+        // angry happy like dislike , ID = 
+        System.out.println("enter comment ID that you want to react");
+        int index = sc.nextInt();
+        System.out.println("Enter 'h' or happy , 'a' for angry.");
+        char reaction = sc.next().charAt(0);
+        if (reaction == 'h') {
+//            comments.get(index).happy();
+        } else {
+//            comments.get(index).angry();
+        }
     }
 
     /**
@@ -307,43 +318,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         return sb.toString();
     }
 
-    /**
-     * Method to return a String of the tags in '#Tag1#Tag2#Tag3' format for GUI implementation
-     * @return String of the tags array
-     */
-    private String returnTagsGUI() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < this.tag.length; i++) {
-            sb.append("#").append(this.tag[i]);
-        }
-        return sb.toString();
-    }
-
-    /*
-        The method below is to update the variables returned by the GUI
-     */
-
-    /**
-     * Method to assign the new edited tags value to the String[] tags
-     * @param fromGUI String representation to be parsed and added to this.tags
-     */
-    private void updateTagsGUI(String fromGUI) {
-        String[] strings = fromGUI.substring(1).split("#");
-        this.tag = strings;
-    }
-
-    private void updatePriorityGUI(int fromGUI) {
-        this.priority = fromGUI;
-    }
-
-    private void updateStatusGUI(String fromGUI) {
-        this.status = fromGUI;
-    }
-
-    private void updateTextGUI(String fromGUI) {
-        this.descriptionText = fromGUI;
-    }
-
     //helper method to return String representation of all the tags
     private String showAllTags(String[] tagsArray) {
         StringBuilder sb = new StringBuilder();
@@ -390,6 +364,45 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         return sb.toString();
     }
 
+    /**
+     * Method to return a String of the tags in '#Tag1#Tag2#Tag3' format for GUI
+     * implementation
+     *
+     * @return String of the tags array
+     */
+    private String returnTagsGUI() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.tag.length; i++) {
+            sb.append("#").append(this.tag[i]);
+        }
+        return sb.toString();
+    }
+
+    /*
+        The method below is to update the variables returned by the GUI
+     */
+    /**
+     * Method to assign the new edited tags value to the String[] tags
+     *
+     * @param fromGUI String representation to be parsed and added to this.tags
+     */
+    private void updateTagsGUI(String fromGUI) {
+        String[] strings = fromGUI.substring(1).split("#");
+        this.tag = strings;
+    }
+
+    private void updatePriorityGUI(int fromGUI) {
+        this.priority = fromGUI;
+    }
+
+    private void updateStatusGUI(String fromGUI) {
+        this.status = fromGUI;
+    }
+
+    private void updateTextGUI(String fromGUI) {
+        this.descriptionText = fromGUI;
+    }
+
     public void return_option() {
         String originalStatus = this.getStatus();
         ArrayList<String> option_state = new ArrayList<>();
@@ -410,6 +423,11 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         set_status(option_state);
     }
 
+//     private String updateStatus(String change){
+//         StringBuilder sb = new StringBuilder();
+//        String originalStatus = this.getStatus(); 
+//        originalStatus.equals(change);
+//     }
     /**
      * This method check current status and allow the associated operation
      *
@@ -1064,19 +1082,11 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             angry.get(i).setFocusable(true);
             angry.get(i).setBounds(700, 200, 50, 50);
             angry.get(i).setVisible(true);
-            //build edit comment button
-            edit_comment.add(new JButton());
-            edit_comment.get(i).setIcon(edit);
-            edit_comment.get(i).addActionListener(this);
-            edit_comment.get(i).setFocusable(true);
-            edit_comment.get(i).setBounds(650, 200, 50, 50);
-            edit_comment.get(i).setVisible(true);
             //add component to small panel
             comment_panel.get(i).add(happy.get(i));
             comment_panel.get(i).add(angry.get(i));
             comment_panel.get(i).add(like.get(i));
             comment_panel.get(i).add(dislike.get(i));
-            comment_panel.get(i).add(edit_comment.get(i));
             comment_panel.get(i).add(comment_sr.get(i));
             //add component to mid_panel
             mid_panel.add(comment_panel.get(i));
@@ -1102,40 +1112,36 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             add_comment_text.setText("Enter comment there");
         }
         if (e.getSource() == delete_issue) {
-            project_belongsTo.removeIssue(this);
+            frame.setVisible(false);
+            deleteThisIssue();
+            project_frame.setVisible(true);
+
         }
         if (like != null) {
             for (int i = 0; i < like.size(); i++) {
                 if (e.getSource() == like.get(i)) {
-                    System.out.println("like the comment " + i);
+                    reactComment(i, "like");
                 }
             }
         }
         if (dislike != null) {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
-                    System.out.println("dislike the comment " + i);
+                    reactComment(i, "dislike");
                 }
             }
         }
         if (happy != null) {
             for (int i = 0; i < happy.size(); i++) {
                 if (e.getSource() == happy.get(i)) {
-                    System.out.println("happy the comment " + i);
-                }
-            }
-        }
-        if (edit_comment != null) {
-            for (int i = 0; i < edit_comment.size(); i++) {
-                if (e.getSource() == edit_comment.get(i)) {
-                    System.out.println("edit_comment the comment " + i);
+                    reactComment(i, "happy");
                 }
             }
         }
         if (angry != null) {
             for (int i = 0; i < angry.size(); i++) {
                 if (e.getSource() == angry.get(i)) {
-                    System.out.println("angry the comment " + i);
+                    reactComment(i, "angry");
                 }
             }
         }
@@ -1145,6 +1151,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                     System.out.println("changlog");
                     break;
                 case 1:
+                    frame.setVisible(false);
+                    project_frame.setVisible(true);
                     System.out.println("quit");
                     break;
 
