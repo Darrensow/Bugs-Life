@@ -1,7 +1,7 @@
 {
   "project_Array" : [ {
     "name" : "Nuxtjs",
-    "id" : 1,
+    "id" : 0,
     "numissue": 2,
     "issue" : [ {
       "title" : "Can't display the table",
@@ -114,7 +114,7 @@
     } ]
   }, {
     "name" : "Vuejs",
-    "id" : 2,
+    "id" : 1,
     "numissue": 2,
     "issue" : [ {
       "title" : "Flash of unstyled content",
@@ -227,7 +227,7 @@
     } ]
   }, {
     "name" : "Reactjs",
-    "id" : 3,
+    "id" : 2,
     "numissue": 1,
     "issue" : [ {
       "title" : "Flash of unstyled content",
@@ -285,26 +285,30 @@
       "name" : "jhoe",
       "assigned" : 2,
       "number_solved" : 0,
+      "gmail": "xianpua2001.sim03@gmail.com",
       "id" : 1
     }, {
       "password" : "password",
       "name" : "btan",
       "assigned" : 2,
       "number_solved" : 0,
+      "gmail": "xianpua2001.sim03@gmail.com",
       "id" : 2
     }, {
       "password" : "password",
       "name" : "liew",
       "assigned" : 0,
       "number_solved" : 0,
+      "gmail": "xianpua2001.sim03@gmail.com",
       "id" : 3
     }, {
       "password" : "password",
       "name" : "ang",
       "assigned" : 1,
       "number_solved" : 0,
+      "gmail": "xianpua2001.sim03@gmail.com",
       "id" : 4
     } ]
   },
-  "numberproject": 3
+  "numberproject": 2
 }
