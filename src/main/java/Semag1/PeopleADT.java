@@ -28,7 +28,16 @@ public class PeopleADT implements Serializable {
         return list.size();
     }
 
-    public boolean contain(String name) {
+    public boolean contains(People obj) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(obj)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean contains(String name) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getName().equals(name)) {
                 return true;

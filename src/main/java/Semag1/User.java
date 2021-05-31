@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -407,16 +406,19 @@ public class User implements Serializable, ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == register) {
+            System.out.println("register");
             register.setVisible(false);
             login.setVisible(false);
             register_panel.setVisible(true);
         }
         if (e.getSource() == login) {
+            System.out.println("login");
             login.setVisible(false);
             register.setVisible(false);
             login_panel.setVisible(true);
         }
         if (e.getSource() == login_in) {
+            System.out.println("login_in");
             String name = login_username.getText();
             String password = new String(login_pass_text.getPassword());
             int b = getindex(name);
@@ -471,7 +473,7 @@ public class User implements Serializable, ActionListener {
             String name = register_username_text.getText();
             String password = new String(register_pass_text.getPassword());
             String confirm_pass = new String(reg_confirm_pass_text.getPassword());
-            if (people_array.contain(name) == true) {
+            if (people_array.contains(name)) {
                 popwindow("user issue", "name used");
                 register_username_text.setText("Enter username");
             } else if (!password_obj.isValid(password)) {

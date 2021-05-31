@@ -820,6 +820,8 @@ public class Project implements Serializable, ActionListener {
         sort_issue.setVisible(true);
         sort_issue.addActionListener(this);
 
+        setting_button.removeAllItems();
+
         //add the setting button or quit
         for (int i = 0; i < setting_option.length; i++) {
             setting_button.addItem(setting_option[i]);
@@ -956,6 +958,8 @@ public class Project implements Serializable, ActionListener {
         sreach.setBounds(200, 0, 100, 50);
         sreach.addActionListener(this);
         sreach.setFocusable(true);
+
+        tableModel.setColumnCount(0);
 
         //build table
         for (int i = 0; i < column.length; i++) {

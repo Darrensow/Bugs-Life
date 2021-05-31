@@ -106,9 +106,12 @@ public class Window implements Serializable, ActionListener {
      * @return true if action success , false if false.
      */
     public void ac() throws InterruptedException {
+        user_obj.setPeople_array(this.people_Array);
         current_people = user_obj.register();
         System.out.println("succes run");
-        people_Array.add(current_people);
+        if (!people_Array.contains(current_people)) {
+            people_Array.add(current_people);
+        }
         System.out.println(current_people.getName() + people_Array.get(0).getName());
         setupwindow();
         reset_table(project_Array);
