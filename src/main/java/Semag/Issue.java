@@ -157,7 +157,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
      *
      * @return A message that will be added to the change log regarding the
      * change of tags
-     *
      */
     private String updateTag() {
         StringBuilder sb = new StringBuilder();
@@ -205,6 +204,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     /*
         The method below is to update the variables returned by the GUI
      */
+
     /**
      * Method to assign the new edited tags value to the String[] tags
      *
@@ -252,11 +252,12 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 //        String originalStatus = this.getStatus();
 //        originalStatus.equals(change);
 //     }
+
     /**
      * Add the change description to the changeLog ArrayList
      *
      * @param changedDescription The description detailing the changes made. If
-     * the String is "", then it will not be added.
+     *                           the String is "", then it will not be added.
      * @return True if successfully added to the changeLog, false otherwise.
      */
     private boolean addChangeLog(String changedDescription) {
@@ -837,7 +838,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF Images", "jpg", "gif", "png", "jpeg");
             JFileChooser choose = new JFileChooser();
             choose.setFileFilter(filter);
-            choose.setCurrentDirectory(new File("."));  // select where the file window start 
+            choose.setCurrentDirectory(new File("."));  // select where the file window start
             int res = choose.showOpenDialog(null);  // select file to open
             if (res == JFileChooser.APPROVE_OPTION) {
                 image_file = new File(choose.getSelectedFile().getAbsolutePath());
@@ -1088,10 +1089,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         return tagComparator;
     }
 
-    public void setTagComparator(Comparator<Issue> tagComparator) {
-        this.tagComparator = tagComparator;
-    }
-
     public int getNumberOfComments() {
         return numberOfComments;
     }
@@ -1106,5 +1103,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
     public void setImage_file(File image_file) {
         this.image_file = image_file;
+    }
+
+    public void setTagComparator(Comparator<Issue> tagComparator) {
+        this.tagComparator = tagComparator;
     }
 }

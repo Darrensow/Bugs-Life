@@ -24,18 +24,16 @@ public class Window implements Serializable, ActionListener {
 
 
     private ArrayList<Project> project_Array = new ArrayList<>();       // store project
-
     //static variables for usage in classes
     public static PeopleADT people_Array = new PeopleADT();
     public static ArrayList<String> tagsOption = new ArrayList<String>();
-
-    private int numberOfUsers;
     private int numberproject;                                          // to keep track of project id
     private PeopleADT people_Array_replica = new PeopleADT();           // store people
     private ArrayList<String> tagsOption_replica = new ArrayList<>();   // store tags
-
+    private int numberOfUsers;
     //    private ArrayList<people> people_Array = new ArrayList<>();
 
+    //ignore as don't want to override user logged in
     private People current_people;                                      // current user logged
 
 
@@ -203,6 +201,7 @@ public class Window implements Serializable, ActionListener {
         for (int i = 0; i < project_Array.size(); i++) {
             if(project_Array.get(i).getName().equalsIgnoreCase(projectName)){
                 project_Array.remove(project_Array.get(i));
+                delete_project.removeItem(projectName);
             }
         }
         numberproject--;
@@ -507,7 +506,10 @@ public class Window implements Serializable, ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("enter key pressed for search" + text1.getText());
-                search(text1.getText());
+                String temp = text1.getText();
+                text1.setBounds(0, 0, 200, 50);
+                text1.setText("search");
+                search(temp);
             }
         };
         text1.addActionListener(action1);
@@ -518,6 +520,7 @@ public class Window implements Serializable, ActionListener {
         delete_project.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
         delete_project.setBounds(1000, 0, 150, 35);
         delete_project.setVisible(false);
+        delete_project.setEnabled(false);
         delete_project.addActionListener(this);
 
         delete_project_button.setBounds(1180, 50, 150, 50);
@@ -610,6 +613,7 @@ public class Window implements Serializable, ActionListener {
 
     public void add_delete_project(ArrayList<String> arr) {
         delete_project.removeAllItems();
+        delete_project.addItem("");
         for (int i = 0; i < arr.size(); i++) {
             delete_project.addItem(arr.get(i));
         }
@@ -790,6 +794,7 @@ public class Window implements Serializable, ActionListener {
         if (e.getSource() == delete_project_button) {
             add_delete_project(showProjectThatCanDelete());
             delete_project.setVisible(true);
+            delete_project.setEnabled(true);
         }
         if (e.getSource() == delete_project) {
             String name = (String) delete_project.getSelectedItem();
@@ -836,6 +841,7 @@ public class Window implements Serializable, ActionListener {
                 break;
 
                 case 4:
+                    frame.setVisible(false);
                     System.out.println("user quiting ");
                     break;
             }
@@ -847,14 +853,14 @@ public class Window implements Serializable, ActionListener {
         File[] file_send = {file};
         gmail_obj.sendattachment(file_send);
         //open the file
-        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
+        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not
         {
             System.out.println("not supported");
         } else {
             Desktop desktop = Desktop.getDesktop();
-            if (file.exists()) //checks file exists or not  
+            if (file.exists()) //checks file exists or not
             {
-                desktop.open(file);              //opens the specified file  
+                desktop.open(file);              //opens the specified file
 
             }
         }
@@ -917,12 +923,25 @@ public class Window implements Serializable, ActionListener {
         this.people_Array = people_Array;
     }
 
-    public int getNumberproject() {
-        return numberproject;
+    public  int getNumberproject() {
+        return this.numberproject;
     }
 
     public void setNumberproject(int numberproject) {
-        this.numberproject = numberproject;
+        this.numberproject=numberproject;
+    }
+
+    public People getCurrent_people() {
+        return current_people;
+    }
+
+    public void setCurrent_people(People current_people) {
+        this.current_people = current_people;
+    }
+
+    public static void main(String[] args) {
+        Window obj = new Window();
+        obj.setupwindow();
     }
 
     public PeopleADT getPeople_Array_replica() {
@@ -947,10 +966,5 @@ public class Window implements Serializable, ActionListener {
 
     public void setNumberOfUsers(int numberOfUsers) {
         this.numberOfUsers = numberOfUsers;
-    }
-
-    public static void main(String[] args) {
-        Window obj = new Window();
-        obj.setupwindow();
     }
 }

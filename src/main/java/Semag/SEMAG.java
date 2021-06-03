@@ -83,7 +83,6 @@ public class SEMAG implements Serializable {
 //        o = (SEMAG) deSerializeJavaObjectFromDB(connection, 1);
         o.obj.ac();
         o.obj.saveData();
-        System.exit(0);
 
         //save json
         

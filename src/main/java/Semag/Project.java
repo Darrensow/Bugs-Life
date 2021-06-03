@@ -3,17 +3,40 @@ package Semag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.Serializable;
+
+import static java.lang.Thread.sleep;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
 public class Project implements Serializable, ActionListener {
@@ -28,7 +51,6 @@ public class Project implements Serializable, ActionListener {
     private String name;                                    // project name
     private People owner;                                   // project owner
     private Comparator<Issue> comparatorInUse;              // ID, Title, Priority, Timestamp
-
 
     //gui
     JFrame frame = new JFrame();
@@ -65,7 +87,7 @@ public class Project implements Serializable, ActionListener {
     JTextField name_text = new JTextField("Enter issue name");
     JComboBox priority = new JComboBox();
     JLabel priop_text = new JLabel();
-    JTextField assignee_text = new JTextField("Enter  assignee");
+    JTextField assignee_text = new JTextField("Enter assignee");
     JTextField tags_text = new JTextField("Enter tags");
     JTextArea descrip = new JTextArea();
     JScrollPane desc_sp = new JScrollPane(descrip);
@@ -262,7 +284,7 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * @param arr comment arraylist
+     * @param arr   comment arraylist
      * @param token keyword check a wword in the comment
      * @return
      */
@@ -282,11 +304,15 @@ public class Project implements Serializable, ActionListener {
     //check whether is id or not
     private boolean isnumberic(String sen) {
         try {
-            if (sen.charAt(0) != '#') {
-                return false;
-            }
-            double d = Double.parseDouble(sen.substring(1));
-            if (d > issue.size()) {
+            if (sen.length() > 1) {
+                if (sen.charAt(0) != '#') {
+                    return false;
+                }
+                double d = Double.parseDouble(sen.substring(1));
+                if (d > issue.size()) {
+                    return false;
+                }
+            } else {
                 return false;
             }
         } catch (NumberFormatException nfe) {
@@ -300,7 +326,7 @@ public class Project implements Serializable, ActionListener {
      * str8 print it out
      *
      * @param choose is the attribute of the Issue, eg ID, Title, returned as
-     * int
+     *               int
      */
     public void sortIssueBased(int choose) {
         ArrayList<Issue> sortedIssueList = new ArrayList<>(issue);
@@ -319,21 +345,25 @@ public class Project implements Serializable, ActionListener {
         reset_table(sortedIssueList);
     }
 
-
+    /**
+     * Delete current project Update, this remove project we move it to Window
+     */
+    public void deleteThisProject() {
+        for (int i = 0; i < issue.size(); i++) {
+            removeIssue(issue.get(i));
+        }
+//        Window.removeProject(this);
+    }
 
     /**
      * This is a method to just remove one issue from issue dashboard, called by
      * Issue class
      *
-     * @param toDelete issue to be removed
+     * @param issue_obj issue to be removed
      */
-    public void deleteIssue(String toDelete) {
-
-        for (int i = 0; i < issue.size(); i++) {
-            if(issue.get(i).getTitle().equalsIgnoreCase(toDelete))
-                issue.get(i).getAssignee().reduceAssigned();
-            issue.remove(issue.get(i));
-        }
+    public void removeIssue(Issue issue_obj) {
+        issue_obj.getAssignee().reduceAssigned();
+        issue.remove(issue_obj);
         numissue--;
     }
 
@@ -363,9 +393,9 @@ public class Project implements Serializable, ActionListener {
         if (tag.equals("") && state.equals("")) {
             return issue_array;
         }
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
+        ArrayList<Issue> pq = new ArrayList<>();
         String[] tags = tag.split("#");
-        String[] states = state.split("#");
+        String[] states = state.substring(1).split("#");
         for (int i = 0; i < issue_array.size(); i++) {
             label:
             {
@@ -373,14 +403,14 @@ public class Project implements Serializable, ActionListener {
                     note to Sam, my IDE says that the two if statements are always false.
                     I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
                  */
-                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue_array.get(i).getStatus().equals(states[j])) {
+                for (int j = 0; j < Math.max(states.length, tags.length); j++) {
+                    if (j < states.length && issue_array.get(i).getStatus().equals(states[j])) {
                         pq.add(issue_array.get(i));
                         break label;
                     }
                     String[] tagsArray = issue_array.get(i).getTag();
                     for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
+                        if (tags.length > j && tagsArray[k].equals(tags[j])) {
                             pq.add(issue_array.get(i));
                             break label;
                         }
@@ -388,43 +418,32 @@ public class Project implements Serializable, ActionListener {
                 }
             }
         }
-        ArrayList<Issue> return_value = new ArrayList<>();
-        for (int i = 0; i < issue.size(); i++) {
-            return_value.add(pq.poll());
-        }
-        return return_value;
+        return pq;
     }
 
     private ArrayList<Issue> filterout_withreturn(String tag, String state) {
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
+        ArrayList<Issue> ay = new ArrayList<>();
         String[] tags = tag.split("#");
-        String[] states = state.split("#");
+        String[] states = state.substring(1).split("#");
         for (int i = 0; i < issue.size(); i++) {
             label:
             {
-                /*
-                    note to Sam, my IDE says that the two if statements are always false.
-                    I think its the states.length > j and tags.length > j problem, could you check it out further?
-                 */
-                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue.get(i).getStatus().equals(states[j])) {
+                for (int j = 0; j < Math.max(states.length, tags.length); j++) {
+                    if (j < states.length && issue.get(i).getStatus().equals(states[j])) {
                         break label;
                     }
                     String[] tagsArray = issue.get(i).getTag();
                     for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
+                        if (j < tags.length && tagsArray[k].equals(tags[j])) {
                             break label;
                         }
                     }
-                    pq.add(issue.get(i));
+                    ay.add(issue.get(i));
                 }
             }
+
         }
-        ArrayList<Issue> return_value = new ArrayList<>();
-        for (int i = 0; i < issue.size(); i++) {
-            return_value.add(pq.poll());
-        }
-        return return_value;
+        return ay;
     }
 
     private People searchpeople(String name) {
@@ -441,7 +460,7 @@ public class Project implements Serializable, ActionListener {
      */
     public void entertheissue(int index) {
         this.frame.setVisible(false);
-
+issue.get(index).issuewindow(current_people,frame);
     }
 
     private Issue getIssueOfID(int ID) {
@@ -786,7 +805,7 @@ public class Project implements Serializable, ActionListener {
         assignee_text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         assignee_text.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) { //after mouse click
-                if (assignee_text.getText().equals("Enter  assignee")) {
+                if (assignee_text.getText().equals("Enter assignee")) {
                     assignee_text.setBounds(0, 60, 300, 50);
                     assignee_text.setText("");
                 }
@@ -978,18 +997,6 @@ public class Project implements Serializable, ActionListener {
         }
     }
 
-    public ArrayList<String> showIssueThatCanDelete() {
-        ArrayList<String> temp = new ArrayList<>();
-        for (int i = 0; i < issue.size(); i++) {
-            if (issue.get(i).getCreator().equals(current_people)) {
-                temp.add(issue.get(i).getTitle());
-            }
-        }
-        return temp;
-    }
-
-
-
     public void handle_thread() {
         Thread thread = new Thread() {
             public void run() {
@@ -1004,6 +1011,33 @@ public class Project implements Serializable, ActionListener {
             }
         };
         thread.start();
+    }
+
+    /**
+     * This is a method to just remove one issue from issue dashboard, called by
+     * Issue class
+     *
+     * @param toDelete issue to be removed
+     */
+    public void deleteIssue(String toDelete) {
+
+        for (int i = 0; i < issue.size(); i++) {
+            if(issue.get(i).getTitle().equalsIgnoreCase(toDelete))
+                issue.get(i).getAssignee().reduceAssigned();
+            issue.remove(issue.get(i));
+        }
+        numissue--;
+    }
+
+
+    public ArrayList<String> showIssueThatCanDelete() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (int i = 0; i < issue.size(); i++) {
+            if (issue.get(i).getCreator().equals(current_people)) {
+                temp.add(issue.get(i).getTitle());
+            }
+        }
+        return temp;
     }
 //    name, tags ,priority, assignee
 
@@ -1083,6 +1117,9 @@ public class Project implements Serializable, ActionListener {
             String description = descrip.getText();
             int priop = priority.getSelectedIndex() + 1;
             String assignee = assignee_text.getText();
+            name_text.setBounds(0, 0, 150, 50);
+            tags_text.setBounds(0, 120, 150, 50);
+            assignee_text.setBounds(0, 60, 150, 50);
             name_text.setText("Enter issue name");
             tags_text.setText("Enter tags");
             descrip.setText("Add description there");
@@ -1114,6 +1151,9 @@ public class Project implements Serializable, ActionListener {
         String includestate = "";
         String excludestate = "";
         String keyword = search_issue.getText();
+        if (keyword.equals("search")) {
+            keyword = "";
+        }
         for (int i = 0; i < include.size(); i++) {
             if (include.get(i).isSelected()) {
                 include_tags += "#" + include.get(i).getText();
@@ -1185,10 +1225,6 @@ public class Project implements Serializable, ActionListener {
         return owner;
     }
 
-    public int getNumissue() {
-        return numissue;
-    }
-
     //Setter method
     public void setIssue(ArrayList<Issue> issue) {
         this.issue = issue;
@@ -1214,7 +1250,16 @@ public class Project implements Serializable, ActionListener {
         Project.dm = dm;
     }
 
+    public int getNumissue() {
+        return numissue;
+    }
+
     public void setNumissue(int numissue) {
         this.numissue = numissue;
+    }
+
+    public static void main(String[] args) {
+
+
     }
 }

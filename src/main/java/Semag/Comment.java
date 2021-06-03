@@ -2,6 +2,7 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.File;
 
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public class Comment implements Serializable {
             }
         }
     };
+
     //empty constructor
     public Comment() {
     }
@@ -40,8 +42,8 @@ public class Comment implements Serializable {
      * Constructor with three parameters
      *
      * @param createdBy The person who commented
-     * @param text His comment
-     * @param ID Comment number
+     * @param text      His comment
+     * @param ID        Comment number
      */
     public Comment(People createdBy, String text, int ID, File image_file) {
         if (createdBy == null) {
@@ -57,7 +59,7 @@ public class Comment implements Serializable {
      * This method will add reaction count through Hashmap
      *
      * @param reaction is the reaction in String, option is like, dislike, happy
-     * and angry
+     *                 and angry
      */
     public void addReaction(String reaction) {
         counter.replace(reaction, counter.get(reaction) + 1);
