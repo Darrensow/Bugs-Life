@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Project implements Serializable, ActionListener {
-
+    //ignore this linee
     private ArrayList<Issue> issue = new ArrayList<>();  // store issue
     PeopleADT people_Array; // store people
     transient Scanner sc = new Scanner(System.in);
