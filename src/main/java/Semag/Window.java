@@ -23,7 +23,7 @@ public class Window implements Serializable, ActionListener {
     /**
      * Project List
      */
-    private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
+    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
     /**
      * List of registered User
@@ -38,7 +38,7 @@ public class Window implements Serializable, ActionListener {
      * Replica non-static people_Array
      */
     private PeopleADT people_Array_replica = new PeopleADT();                   // store people
-    //    private ArrayList<people> people_Array = new ArrayList<>();
+
     private ArrayList<String> tagsOption_replica = new ArrayList<>();
 
     /**
