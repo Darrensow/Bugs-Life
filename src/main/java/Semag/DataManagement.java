@@ -145,7 +145,7 @@ public class DataManagement implements Serializable {
     public Window readWindowData() {
         Window returnObj = new Window();
         try {
-            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Window.class).readValue(new File("Window.json"));
+            returnObj = new ObjectMapper().readerFor(Window.class).readValue(new File("Window.json"));
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
