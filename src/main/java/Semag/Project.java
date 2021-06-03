@@ -1,38 +1,18 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.Serializable;
-import static java.lang.Thread.sleep;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 
 public class Project implements Serializable, ActionListener {
 
@@ -349,25 +329,21 @@ public class Project implements Serializable, ActionListener {
         reset_table(sortedIssueList);
     }
 
-    /**
-     * Delete current project Update, this remove project we move it to Window
-     */
-    public void deleteThisProject() {
-        for (int i = 0; i < issue.size(); i++) {
-            removeIssue(issue.get(i));
-        }
-        Window.removeProject(this);
-    }
+
 
     /**
      * This is a method to just remove one issue from issue dashboard, called by
      * Issue class
      *
-     * @param issue_obj issue to be removed
+     * @param toDelete issue to be removed
      */
-    public void removeIssue(Issue issue_obj) {
-        issue_obj.getAssignee().reduceAssigned();
-        issue.remove(issue_obj);
+    public void deleteIssue(String toDelete) {
+
+        for (int i = 0; i < issue.size(); i++) {
+            if(issue.get(i).getTitle().equalsIgnoreCase(toDelete))
+                issue.get(i).getAssignee().reduceAssigned();
+            issue.remove(issue.get(i));
+        }
         numissue--;
     }
 
@@ -1012,6 +988,18 @@ public class Project implements Serializable, ActionListener {
         }
     }
 
+    public ArrayList<String> showIssueThatCanDelete() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (int i = 0; i < issue.size(); i++) {
+            if (issue.get(i).getCreator().equals(current_people)) {
+                temp.add(issue.get(i).getTitle());
+            }
+        }
+        return temp;
+    }
+
+
+
     public void handle_thread() {
         Thread thread = new Thread() {
             public void run() {
@@ -1038,7 +1026,7 @@ public class Project implements Serializable, ActionListener {
             handle_thread();
         }
         if (e.getSource() == delete_project) {
-//            add_delete(ArrayList<String>);
+            add_delete(showIssueThatCanDelete());
             delete_project_combo.setVisible(true);
             System.out.println("delete project button pressed");
 //            deleteThisProject();
@@ -1047,7 +1035,7 @@ public class Project implements Serializable, ActionListener {
         }
         if (e.getSource() == delete_project_combo) {
             String issuename = (String) delete_project_combo.getSelectedItem();
-
+            deleteIssue(issuename);
 
         }
         if (e.getSource() == sort_issue) {  // this can short but left first

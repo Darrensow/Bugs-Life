@@ -1,12 +1,12 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +17,6 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 public class Window implements Serializable, ActionListener {
 
@@ -192,7 +191,7 @@ public class Window implements Serializable, ActionListener {
      * str8 print it out
      *
      * @param option is the attribute of the project, eg ID, Project Name,
-     * returned as int
+     *               returned as int
      */
     public void sortBased(int option) {
         ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
@@ -212,13 +211,16 @@ public class Window implements Serializable, ActionListener {
     }
 
     /**
-     * @param project_obj want to remove
+     * @param projectName want to remove
      */
-    public static void removeProject(Project project_obj) {
-        project_Array.remove(project_obj);
+    public void deleteProject(String projectName) {
+        for (int i = 0; i < project_Array.size(); i++) {
+            if(project_Array.get(i).getName().equalsIgnoreCase(projectName)){
+                project_Array.remove(project_Array.get(i));
+            }
+        }
         numberproject--;
         reset_table(project_Array);
-
     }
 
     /**
@@ -625,7 +627,16 @@ public class Window implements Serializable, ActionListener {
         for (int i = 0; i < arr.size(); i++) {
             delete_project.addItem(arr.get(i));
         }
+    }
 
+    public ArrayList<String> showProjectThatCanDelete() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (int i = 0; i < project_Array.size(); i++) {
+            if (project_Array.get(i).getOwner().equals(current_people)) {
+                temp.add(project_Array.get(i).getName());
+            }
+        }
+        return temp;
     }
 
     public void check_icon(int array_size) {
@@ -791,12 +802,12 @@ public class Window implements Serializable, ActionListener {
             System.out.println("calling");
         }
         if (e.getSource() == delete_project_button) {
-//            add_delete_project();
+            add_delete_project(showProjectThatCanDelete());
             delete_project.setVisible(true);
         }
         if (e.getSource() == delete_project) {
             String name = (String) delete_project.getSelectedItem();
-
+            deleteProject(name);
         }
         if (e.getSource() == setting_option_button) {
             switch (setting_option_button.getSelectedIndex()) {
@@ -862,6 +873,7 @@ public class Window implements Serializable, ActionListener {
             }
         }
     }
+
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();

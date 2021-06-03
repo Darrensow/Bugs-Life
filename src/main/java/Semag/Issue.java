@@ -2,43 +2,21 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
 
-import java.io.Serializable;
-import static java.lang.Thread.sleep;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable, ActionListener, MouseListener {
@@ -375,13 +353,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * Delete this Issue object
-     */
-    public void deleteThisIssue() {
-        project_belongsTo.removeIssue(this);
     }
 
 
@@ -787,7 +758,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         }
         if (e.getSource() == delete_issue) {
             frame.setVisible(false);
-            deleteThisIssue();
+//            deleteThisIssue();
             project_frame.setVisible(true);
 
         }
