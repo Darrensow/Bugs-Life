@@ -1,12 +1,12 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +17,6 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
 
 public class Window implements Serializable, ActionListener {
 
@@ -101,7 +100,7 @@ public class Window implements Serializable, ActionListener {
     }
 
     /**
-     * @param ac
+     * @param
      * @return true if action success , false if false.
      */
     public void ac() throws InterruptedException {
@@ -165,7 +164,10 @@ public class Window implements Serializable, ActionListener {
         String[] token = seachkeyword.split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-                if (project_Array.get(i).getName().contains(token[j] + " ")) {
+                if(project_Array.get(i).getName().contains(token[j])) {
+                    temp.add(project_Array.get(i));
+                    break;
+                } else if (project_Array.get(i).getName().contains(token[j] + " ")) {
                     temp.add(project_Array.get(i));
                     break;
                 } else if (project_Array.get(i).getName().contains(" " + token[j] + " ")) {
