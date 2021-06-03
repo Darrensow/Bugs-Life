@@ -18,7 +18,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
+@JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
 public class Issue implements Serializable, ActionListener, MouseListener {
 
     private ArrayList<String> changelog;
@@ -36,14 +36,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     transient Scanner sc = new Scanner(System.in);
     private People current_people;
     private File image_file;
-    /**
-     * Tags option
-     */
+
     public static ArrayList<String> tagsOption = new ArrayList<>();
 
-    /**
-     * Status option
-     */
     public static final String[] statusOption = {"open", "in progress", "solved", "closed"};
 
     private Project project_belongsTo;      //for the delete function
@@ -1095,5 +1090,21 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
     public void setTagComparator(Comparator<Issue> tagComparator) {
         this.tagComparator = tagComparator;
+    }
+
+    public int getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    public void setNumberOfComments(int numberOfComments) {
+        this.numberOfComments = numberOfComments;
+    }
+
+    public File getImage_file() {
+        return image_file;
+    }
+
+    public void setImage_file(File image_file) {
+        this.image_file = image_file;
     }
 }

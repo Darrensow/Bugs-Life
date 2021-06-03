@@ -23,10 +23,8 @@ import javax.swing.JTextField;
 public class User implements Serializable, ActionListener {
 
     private PeopleADT people_array = new PeopleADT();
-    @JsonIgnore
-    transient Scanner sc = new Scanner(System.in);
 
-    private static int ID = 0;
+    private int ID = 0;
 
     //gui part
     JPanel backgroud_panel = new JPanel();
@@ -185,12 +183,12 @@ public class User implements Serializable, ActionListener {
         this.people_array = people_array;
     }
 
-    public static int getID() {
+    public int getID() {
         return ID;
     }
 
-    public static void setID(int ID) {
-        User.ID = ID;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public void window_setup() {
@@ -483,8 +481,7 @@ public class User implements Serializable, ActionListener {
                 reg_confirm_pass_text.setText("");
             } else {
                 register_panel.setVisible(false);
-                people_obj = new People(password, name, ID, mail);
-                ID++;
+                people_obj = new People(password, name, ++ID, mail);
                 people_array.add(people_obj);
                 System.out.println("people added");
                 can_return = true;

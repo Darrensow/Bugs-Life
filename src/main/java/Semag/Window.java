@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -18,51 +19,33 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@JsonIgnoreProperties(value = {"people_Array", "comparatorInUse", "tagsOption", "current_people", "catFont", "redFont", "subFont", "smallBold", "user_obj"})
 public class Window implements Serializable, ActionListener {
 
-    /**
-     * Project List
-     */
-    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
-    /**
-     * List of registered User
-     */
-    /**
-     * List of registered User
-     */
-    @JsonIgnore
+    private ArrayList<Project> project_Array = new ArrayList<>();       // store project
+
+    //static variables for usage in classes
     public static PeopleADT people_Array = new PeopleADT();
+    public static ArrayList<String> tagsOption = new ArrayList<String>();
 
-    /**
-     * Replica non-static people_Array
-     */
-    private PeopleADT people_Array_replica = new PeopleADT();                   // store people
+    private int numberOfUsers;
+    private int numberproject;                                          // to keep track of project id
+    private PeopleADT people_Array_replica = new PeopleADT();           // store people
+    private ArrayList<String> tagsOption_replica = new ArrayList<>();   // store tags
 
-    private ArrayList<String> tagsOption_replica = new ArrayList<>();
+    //    private ArrayList<people> people_Array = new ArrayList<>();
 
-    /**
-     * Replica non-static Tags Option
-     */
-    public ArrayList<String> tagsOption = new ArrayList<String>();
+    private People current_people;                                      // current user logged
 
-    /**
-     * Current comparator in use
-     */
-    @JsonIgnore
-    private Comparator<Project> comparatorInUse;    //ID, Name, IssueCount
 
-    private static int numberproject = 0;    // to keep track of project id
-    transient Scanner sc = new Scanner(System.in);
-
-    @JsonIgnore //ignore as don't want to override user logged in
-    private People current_people; // current user logged
-
+    private Comparator<Project> comparatorInUse;                        // ID, Name, IssueCount
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     User user_obj = new User();
+
     //gui
     String column[] = {"ID", "Project Name", "Issue"};
     ArrayList<String> notification = new ArrayList<>();
@@ -106,15 +89,18 @@ public class Window implements Serializable, ActionListener {
      * @return true if action success , false if false.
      */
     public void ac() throws InterruptedException {
-        user_obj.setPeople_array(this.people_Array);
+        user_obj.setPeople_array(people_Array);    // set People array to check
+        user_obj.setID(this.numberOfUsers);             // set number of Users to check if new register
         current_people = user_obj.register();
         System.out.println("succes run");
-        if (!people_Array.contains(current_people)) {
-            people_Array.add(current_people);
+        if (numberOfUsers < people_Array.size()) {
+            numberOfUsers++;
+            System.out.println("numberofUsers = " + numberOfUsers);
         }
         System.out.println(current_people.getName() + people_Array.get(0).getName());
         setupwindow();
         reset_table(project_Array);
+        Thread.sleep(30000);
 //        setNotification(ArrayList of notification);
     }
 
@@ -889,10 +875,10 @@ public class Window implements Serializable, ActionListener {
     public void loadData() {
         Window temp = dm.readWindowData();
         this.project_Array = temp.project_Array;
-        this.people_Array = temp.people_Array;
         this.numberproject = temp.numberproject;
-        this.people_Array_replica = people_Array_replica;
-        this.tagsOption_replica = tagsOption_replica;
+        this.people_Array_replica = temp.people_Array_replica;
+        this.tagsOption_replica = temp.tagsOption_replica;
+        this.numberOfUsers = temp.numberOfUsers;
         NonStaticToStatic();
     }
 
@@ -931,20 +917,36 @@ public class Window implements Serializable, ActionListener {
         this.people_Array = people_Array;
     }
 
-    public static int getNumberproject() {
+    public int getNumberproject() {
         return numberproject;
     }
 
-    public static void setNumberproject(int numberproject) {
-        Window.numberproject = numberproject;
+    public void setNumberproject(int numberproject) {
+        this.numberproject = numberproject;
     }
 
-    public People getCurrent_people() {
-        return current_people;
+    public PeopleADT getPeople_Array_replica() {
+        return people_Array_replica;
     }
 
-    public void setCurrent_people(People current_people) {
-        this.current_people = current_people;
+    public void setPeople_Array_replica(PeopleADT people_Array_replica) {
+        this.people_Array_replica = people_Array_replica;
+    }
+
+    public ArrayList<String> getTagsOption_replica() {
+        return tagsOption_replica;
+    }
+
+    public void setTagsOption_replica(ArrayList<String> tagsOption_replica) {
+        this.tagsOption_replica = tagsOption_replica;
+    }
+
+    public int getNumberOfUsers() {
+        return numberOfUsers;
+    }
+
+    public void setNumberOfUsers(int numberOfUsers) {
+        this.numberOfUsers = numberOfUsers;
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,31 +15,20 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
 public class Project implements Serializable, ActionListener {
-    //ignore this linee
-    private ArrayList<Issue> issue = new ArrayList<>();  // store issue
-    PeopleADT people_Array; // store people
-    transient Scanner sc = new Scanner(System.in);
-    private int numissue = 0;  // issue id
+
+    private ArrayList<Issue> issue = new ArrayList<>();     // store issue
+    PeopleADT people_Array;                                 // store people
+    private int numissue = 0;                               // issue id
 
     @JsonIgnore
-    private People current_people;  //current log in people
+    private People current_people;                          // current log in people
+    private Integer ID;                                     // project id
+    private String name;                                    // project name
+    private People owner;                                   // project owner
+    private Comparator<Issue> comparatorInUse;              // ID, Title, Priority, Timestamp
 
-    /**
-     * Project ID
-     */
-    private Integer ID;  //project id
-
-    /**
-     * Project Name
-     */
-    private String name; //project name
-
-    /**
-     * Project Owner, which is a People
-     */
-    private People owner;  // project owner
-    private Comparator<Issue> comparatorInUse; //ID, Title, Priority, Timestamp
 
     //gui
     JFrame frame = new JFrame();
@@ -1195,6 +1185,10 @@ public class Project implements Serializable, ActionListener {
         return owner;
     }
 
+    public int getNumissue() {
+        return numissue;
+    }
+
     //Setter method
     public void setIssue(ArrayList<Issue> issue) {
         this.issue = issue;
@@ -1218,5 +1212,9 @@ public class Project implements Serializable, ActionListener {
 
     public static void setDm(DataManagement dm) {
         Project.dm = dm;
+    }
+
+    public void setNumissue(int numissue) {
+        this.numissue = numissue;
     }
 }

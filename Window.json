@@ -1,5 +1,4 @@
 {
-  "numberproject" : 3,
   "project_Array" : [ {
     "issue" : [ {
       "changelog" : null,
@@ -70,8 +69,8 @@
       "status" : "In Progress",
       "timestamp" : "07/08/2019 23:44:00 GMT+08:00",
       "image_file" : null,
-      "project_belongsTo" : null,
-      "id" : 0
+      "id" : 0,
+      "numbercomment" : 2
     }, {
       "changelog" : null,
       "title" : "Can't open file",
@@ -161,8 +160,8 @@
       "status" : "Open",
       "timestamp" : "08/08/2019 23:44:00 GMT+08:00",
       "image_file" : null,
-      "project_belongsTo" : null,
-      "id" : 1
+      "id" : 1,
+      "numbercomment" : 3
     } ],
     "people_Array" : {
       "list" : [ {
@@ -301,8 +300,8 @@
       "status" : "Open",
       "timestamp" : "01/10/2019 17:00:00 GMT+08:00",
       "image_file" : null,
-      "project_belongsTo" : null,
-      "id" : 0
+      "id" : 0,
+      "numbercomment" : 3
     }, {
       "changelog" : null,
       "title" : "User is \"trapped\" on 404 page",
@@ -372,8 +371,8 @@
       "status" : "Closed",
       "timestamp" : "08/10/2019 12:00:00 GMT+08:00",
       "image_file" : null,
-      "project_belongsTo" : null,
-      "id" : 1
+      "id" : 1,
+      "numbercomment" : 2
     } ],
     "people_Array" : {
       "list" : [ {
@@ -492,8 +491,8 @@
       "status" : "Open",
       "timestamp" : "01/09/2019 20:00:00 GMT+08:00",
       "image_file" : null,
-      "project_belongsTo" : null,
-      "id" : 0
+      "id" : 0,
+      "numbercomment" : 2
     } ],
     "people_Array" : {
       "list" : [ {
@@ -542,13 +541,120 @@
       "id" : 3
     },
     "id" : 2
+  }, {
+    "issue" : [ {
+      "changelog" : [ ],
+      "title" : "Issue with blocks ",
+      "descriptionText" : "head",
+      "creator" : {
+        "newAssignedNotification" : [ ],
+        "password" : "Letmein@1234",
+        "name" : "mandy",
+        "assigned" : 0,
+        "number_solved" : 0,
+        "gmail" : "mandysoo665@outlook.com",
+        "id" : 5
+      },
+      "assignee" : {
+        "newAssignedNotification" : [ {
+          "accepted" : false,
+          "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
+        } ],
+        "password" : "password",
+        "name" : "jhoe",
+        "assigned" : 3,
+        "number_solved" : 0,
+        "gmail" : "xianpua2001.sim03@gmail.com",
+        "id" : 1
+      },
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "tag" : [ "", "tough" ],
+      "priority" : 1,
+      "status" : "open",
+      "timestamp" : "04/06/2021 04:34:19 GMT+08:00",
+      "image_file" : null,
+      "id" : 0,
+      "numbercomment" : 0
+    } ],
+    "people_Array" : {
+      "list" : [ {
+        "newAssignedNotification" : [ {
+          "accepted" : false,
+          "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
+        } ],
+        "password" : "password",
+        "name" : "jhoe",
+        "assigned" : 3,
+        "number_solved" : 0,
+        "gmail" : "xianpua2001.sim03@gmail.com",
+        "id" : 1
+      }, {
+        "newAssignedNotification" : [ ],
+        "password" : "password",
+        "name" : "btan",
+        "assigned" : 2,
+        "number_solved" : 0,
+        "gmail" : "xianpua2001.sim03@gmail.com",
+        "id" : 2
+      }, {
+        "newAssignedNotification" : [ ],
+        "password" : "password",
+        "name" : "liew",
+        "assigned" : 0,
+        "number_solved" : 0,
+        "gmail" : "xianpua2001.sim03@gmail.com",
+        "id" : 3
+      }, {
+        "newAssignedNotification" : [ ],
+        "password" : "password",
+        "name" : "ang",
+        "assigned" : 1,
+        "number_solved" : 0,
+        "gmail" : "xianpua2001.sim03@gmail.com",
+        "id" : 4
+      }, {
+        "newAssignedNotification" : [ ],
+        "password" : "Letmein@1234",
+        "name" : "mandy",
+        "assigned" : 0,
+        "number_solved" : 0,
+        "gmail" : "mandysoo665@outlook.com",
+        "id" : 5
+      }, {
+        "newAssignedNotification" : [ ],
+        "password" : "Letmein@1234",
+        "name" : "ally",
+        "assigned" : 0,
+        "number_solved" : 0,
+        "gmail" : "mandysoo665@gmail.com",
+        "id" : 5
+      } ]
+    },
+    "numissue" : 1,
+    "name" : "Minecraft ",
+    "owner" : {
+      "newAssignedNotification" : [ ],
+      "password" : "Letmein@1234",
+      "name" : "mandy",
+      "assigned" : 0,
+      "number_solved" : 0,
+      "gmail" : "mandysoo665@outlook.com",
+      "id" : 5
+    },
+    "id" : 3
   } ],
+  "numberOfUsers" : 5,
+  "numberproject" : 4,
   "people_Array_replica" : {
     "list" : [ {
-      "newAssignedNotification" : [ ],
+      "newAssignedNotification" : [ {
+        "accepted" : false,
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
+      } ],
       "password" : "password",
       "name" : "jhoe",
-      "assigned" : 2,
+      "assigned" : 3,
       "number_solved" : 0,
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 1
@@ -576,7 +682,15 @@
       "number_solved" : 0,
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 4
+    }, {
+      "newAssignedNotification" : [ ],
+      "password" : "Letmein@1234",
+      "name" : "ally",
+      "assigned" : 0,
+      "number_solved" : 0,
+      "gmail" : "mandysoo665@gmail.com",
+      "id" : 5
     } ]
   },
-  "tagsOption_replica" : [ ]
+  "tagsOption_replica" : [ "", "tough" ]
 }

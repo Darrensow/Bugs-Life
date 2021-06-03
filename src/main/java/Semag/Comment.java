@@ -11,19 +11,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-@JsonIgnoreProperties(value = {"number", "reaction", "happy", "angry", "likes", "dislikes", "sc"})
+@JsonIgnoreProperties(value = {"reaction"})
 public class Comment implements Serializable {
 
-    private static int number = 0;
     private int ID;
     private People createdBy;
     private String text;
     private String timestamp;
-    private String user;
     private File image_file;
 
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
-    private static transient Scanner sc = new Scanner(System.in);
 
     /**
      * This is a Hashmap that links the reaction and its count
@@ -35,7 +32,6 @@ public class Comment implements Serializable {
             }
         }
     };
-
     //empty constructor
     public Comment() {
     }
@@ -85,7 +81,7 @@ public class Comment implements Serializable {
     @Override
     public String toString() {
         String str = "#" + this.ID;
-        str += "\t" + timestamp + " By : " + this.user;
+        str += "\t" + timestamp + " By : " + this.createdBy.getName();
         str += "\n" + this.text;
         str += reactionsToString();
         return str + "\n";
@@ -126,15 +122,11 @@ public class Comment implements Serializable {
         this.text = temp.text;
         this.counter = temp.counter;
         this.timestamp = temp.timestamp;
-        this.user = temp.user;
     }
 
     /*
         --- Mutator methods ---
      */
-    public static void setNumber(int number) {
-        Comment.number = number;
-    }
 
     public void setID(int ID) {
         this.ID = ID;
@@ -156,9 +148,6 @@ public class Comment implements Serializable {
         --- Accessor methods ---
      */
 
-    public static int getNumber() {
-        return number;
-    }
 
     public int getID() {
         return ID;
@@ -172,14 +161,6 @@ public class Comment implements Serializable {
         return timestamp;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     public HashMap<String, Integer> getCounter() {
         return counter;
     }
@@ -187,4 +168,6 @@ public class Comment implements Serializable {
     public void setCounter(HashMap<String, Integer> counter) {
         this.counter = counter;
     }
+
+
 }
