@@ -77,14 +77,15 @@ public class SEMAG implements Serializable {
 //    }
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         //load json
-
+        
         SEMAG o = new SEMAG();
-//        o.obj.loadData();
+        o.obj.loadData();
 //        o = (SEMAG) deSerializeJavaObjectFromDB(connection, 1);
-            o.obj.ac();
-//
-//        o.obj.saveData();
+        o.obj.ac();
+        o.obj.saveData();
+
         //save json
+        
 ////        serializeJavaObjectToDB(connection, o);
 //        connection.close();
     }
