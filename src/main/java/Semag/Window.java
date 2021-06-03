@@ -1,12 +1,12 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,13 +17,14 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 public class Window implements Serializable, ActionListener {
 
     /**
      * Project List
      */
-    private ArrayList<Project> project_Array = new ArrayList<>();  // store project
+    private static ArrayList<Project> project_Array = new ArrayList<>();  // store project
 
     /**
      * List of registered User
@@ -63,13 +64,15 @@ public class Window implements Serializable, ActionListener {
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     User user_obj = new User();
-//gui
+    //gui
     String column[] = {"ID", "Project Name", "Issue"};
     ArrayList<String> notification = new ArrayList<>();
     JTextField text1 = new JTextField();
     JComboBox option_button1 = new JComboBox();
+    JComboBox delete_project = new JComboBox();
     JButton button1 = new JButton();
     JButton button2 = new JButton();
+    JButton delete_project_button = new JButton("D Pro");
     JButton button3 = new JButton();
     JPanel panel1 = new JPanel();
     JTextField text2 = new JTextField();
@@ -77,7 +80,7 @@ public class Window implements Serializable, ActionListener {
     ImageIcon no_noti = new ImageIcon("notification without red.jpg");
 
     ImageIcon call_image;
-    DefaultTableModel tableModel = new DefaultTableModel() {
+    static DefaultTableModel tableModel = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -85,7 +88,7 @@ public class Window implements Serializable, ActionListener {
     };
     JTable table = new JTable(tableModel);
     JScrollPane table_scroll = new JScrollPane(table);
-    JFrame frame = new JFrame();
+    static JFrame frame = new JFrame();
     JPanel panel_notification = new JPanel();
     JScrollPane sp_notification = new JScrollPane(panel_notification);
     ArrayList<JTextArea> notification_textarea = new ArrayList<>();
@@ -116,41 +119,12 @@ public class Window implements Serializable, ActionListener {
 //        setNotification(ArrayList of notification);
     }
 
-    /**
-     * open window project dashboard
-     */
-    /**
-     * public void userwindow() throws IOException { // display project original
-     * window // current_people.displayNewAssigned();
-     *
-     * sortBased(1); boolean quit = false; while (quit == false) {
-     * System.out.println("action? \n1)sort \n2)add project 3)search project
-     * 4)generate report 5)quit"); int input1 = sc.nextInt(); switch (input1) {
-     * case 1: System.out.println("sort based on \n1)ID \n2)name"); int in2 =
-     * sc.nextInt(); sortBased(in2); break; case 2: System.out.println("Enter
-     * project name"); String in3 = sc.next(); addproject(in3); break; case 3:
-     * System.out.println("enter search project keyword or #ID"); String in4 =
-     * sc.next(); search(in4); break; case 4: System.out.println("Enter text
-     * want to generate 1)txt 2)csv 3)pdf"); int num = sc.nextInt();
-     * selectfile(num); break; case 5: quit = true; return; default:
-     * System.out.println("wrong input"); break; } } }
-     */
-    /**
-     * @param input keyword or ID of the project
-     */
     public void search(String input) {
         if (isnumberic(input)) {
             entertheprojext(Integer.parseInt(input.substring(1)));
         } else {
-            if (printsearchResult(input)) {
-                System.out.println("enter ID of project");
-                int id = sc.nextInt();
-                entertheprojext(id);
-            } else {
-                System.out.println("not result found. re-enter keyword");
-                String str = sc.nextLine();
-                search(str);
-            }
+            printsearchResult(input);
+
         }
     }
 
@@ -158,13 +132,12 @@ public class Window implements Serializable, ActionListener {
      * @param seachkeyword
      * @return true if have that project
      */
-    public boolean printsearchResult(String seachkeyword) {
+    public void printsearchResult(String seachkeyword) {
         ArrayList<Project> temp = new ArrayList<>();
-//        PriorityQueue<Project> pq = new PriorityQueue<>();
         String[] token = seachkeyword.split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-                if(project_Array.get(i).getName().contains(token[j])) {
+                if (project_Array.get(i).getName().contains(token[j])) {
                     temp.add(project_Array.get(i));
                     break;
                 } else if (project_Array.get(i).getName().contains(token[j] + " ")) {
@@ -184,9 +157,6 @@ public class Window implements Serializable, ActionListener {
             for (int i = 0; i < temp.size(); i++) {
                 print(temp);
             }
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -244,10 +214,13 @@ public class Window implements Serializable, ActionListener {
     /**
      * @param project_obj want to remove
      */
-//    public void removeProject(Project project_obj) {
-//        project_Array.remove(project_obj);
-//        numberproject--;
-//    }
+    public static void removeProject(Project project_obj) {
+        project_Array.remove(project_obj);
+        numberproject--;
+        reset_table(project_Array);
+
+    }
+
     /**
      * @param index project index enter project window
      */
@@ -401,14 +374,14 @@ public class Window implements Serializable, ActionListener {
         File[] file_send = {file_name};
         gmail_obj.sendattachment(file_send);
         //open the file
-        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
+        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not
         {
             System.out.println("not supported");
         } else {
             Desktop desktop = Desktop.getDesktop();
-            if (file_name.exists()) //checks file exists or not  
+            if (file_name.exists()) //checks file exists or not
             {
-                desktop.open(file_name);              //opens the specified file  
+                desktop.open(file_name);              //opens the specified file
 
             }
         }
@@ -506,7 +479,7 @@ public class Window implements Serializable, ActionListener {
         button1.setFocusable(true);
         button1.addActionListener(this);
 
-        //build table 
+        //build table
         for (int i = 0; i < column.length; i++) {
             tableModel.addColumn(column[i]);
         }
@@ -553,12 +526,24 @@ public class Window implements Serializable, ActionListener {
         text1.setVisible(true);
         text1.setEditable(true);
 
+        //add delete
+        delete_project.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
+        delete_project.setBounds(1000, 0, 150, 35);
+        delete_project.setVisible(false);
+        delete_project.addActionListener(this);
+
+        delete_project_button.setBounds(1180, 50, 150, 50);
+        delete_project_button.setVisible(true);
+        delete_project_button.setFocusable(true);
+        delete_project_button.addActionListener(this);
+
         option_button1.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
         option_button1.addItem("Sort based on name");
         option_button1.addItem("sort based on ID");
-        option_button1.setBounds(1000, 0, 150, 35);
+        option_button1.setBounds(850, 0, 150, 35);
         option_button1.setVisible(true);
         option_button1.addActionListener(this);
+
         panel1.setBackground(Color.BLUE);
         panel1.setOpaque(true);
         panel1.setLayout(null);
@@ -604,7 +589,7 @@ public class Window implements Serializable, ActionListener {
             setting_option_button.addItem(setting_option[i]);
         }
         setting_option_button.setVisible(true);
-        setting_option_button.setBounds(850, 0, 150, 35);
+        setting_option_button.setBounds(700, 0, 150, 35);
         setting_option_button.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
         setting_option_button.addActionListener(this);
         setting_option_button.setBackground(Color.CYAN);
@@ -619,6 +604,8 @@ public class Window implements Serializable, ActionListener {
 
         panel1.add(text2);
         panel1.add(button2);
+        frame.add(delete_project);
+        frame.add(delete_project_button);
         frame.add(setting_option_button);
         frame.add(call);
         frame.add(sp_notification);
@@ -633,6 +620,14 @@ public class Window implements Serializable, ActionListener {
 
     }
 
+    public void add_delete_project(ArrayList<String> arr) {
+        delete_project.removeAllItems();
+        for (int i = 0; i < arr.size(); i++) {
+            delete_project.addItem(arr.get(i));
+        }
+
+    }
+
     public void check_icon(int array_size) {
         if (array_size > 0) {
             button3.setIcon(have_noti);
@@ -643,7 +638,7 @@ public class Window implements Serializable, ActionListener {
 
     public void checknotification(ArrayList<String> arr) {
 
-        // the notication panel 
+        // the notication panel
         panel_notification.setPreferredSize(new Dimension(300, 2000));
         panel_notification.setBackground(Color.green);
         panel_notification.setLayout(new FlowLayout());
@@ -706,7 +701,7 @@ public class Window implements Serializable, ActionListener {
         frame.repaint();
     }
 
-    public void reset_table(ArrayList<Project> data) {
+    public static void reset_table(ArrayList<Project> data) {
         tableModel.setRowCount(0);
         for (int i = 0; i < data.size(); i++) {
             String[] arow = new String[3];
@@ -794,6 +789,14 @@ public class Window implements Serializable, ActionListener {
                 Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("calling");
+        }
+        if (e.getSource() == delete_project_button) {
+//            add_delete_project();
+            delete_project.setVisible(true);
+        }
+        if (e.getSource() == delete_project) {
+            String name = (String) delete_project.getSelectedItem();
+
         }
         if (e.getSource() == setting_option_button) {
             switch (setting_option_button.getSelectedIndex()) {

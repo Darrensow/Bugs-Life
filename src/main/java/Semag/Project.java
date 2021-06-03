@@ -1,18 +1,38 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.Serializable;
+import static java.lang.Thread.sleep;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 
 public class Project implements Serializable, ActionListener {
 
@@ -52,6 +72,7 @@ public class Project implements Serializable, ActionListener {
     JComboBox sort_issue = new JComboBox();
     String[] setting_option = {"Changlog", "Quit"};
     JComboBox setting_button = new JComboBox();
+    JComboBox delete_project_combo = new JComboBox();
     ArrayList<JCheckBox> include = new ArrayList<>();
     ArrayList<JCheckBox> exclude = new ArrayList<>();
     JPanel black_panel_up = new JPanel();
@@ -121,102 +142,6 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * owner of project window
-     */
-    public void projectwindow_owner() {
-        this.sortIssueBased(1);
-        boolean quit = false;
-        while (quit == false) {
-            System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)delete project \n7)quit");
-            int input1 = sc.nextInt();
-            switch (input1) {
-                case 1:
-                    System.out.println("sort based on \n1)priority \n2)time");
-                    int in2 = sc.nextInt();
-                    this.sortIssueBased(2);
-                    break;
-                case 2:
-                    System.out.println("enter tags in format (#tags1#tags2)");
-                    String tags_in = sc.nextLine();
-                    System.out.println("enter state in format (#state1#state2)");
-                    String states_in = sc.nextLine();
-                    filterin(tags_in, states_in);
-                    break;
-                case 3:
-                    System.out.println("enter tags in format (#tags1#tags2)");
-                    String tags_out = sc.nextLine();
-                    System.out.println("enter state in format (#state1#state2)");
-                    String states_out = sc.nextLine();
-                    filterout(tags_out, states_out);
-                    break;
-                case 4:
-                    addissue();
-                    break;
-                case 5:
-                    System.out.println("enter search project keyword or #ID");
-                    String in4 = sc.next();
-                    search(in4);
-                    break;
-                case 6:
-                    deleteThisProject();
-                case 7:
-                    quit = true;
-                    return;
-                default:
-                    System.out.println("wrong input");
-                    break;
-            }
-        }
-    }
-
-    /**
-     * normal user window
-     */
-    public void projectwindow() {
-        this.sortIssueBased(1);
-        boolean quit = false;
-        while (quit == false) {
-            System.out.println("action? \n1)sort \n2)include \n3)exclude \n4)add issue \n5)search issue \n6)quit");
-            int input1 = sc.nextInt();
-            switch (input1) {
-                case 1:
-                    System.out.println("sort based on \n1)priority \n2)time");
-                    int in2 = sc.nextInt();
-                    this.sortIssueBased(in2);
-                    break;
-                case 2:
-                    System.out.println("enter tags in format (#tags1#tags2)");
-                    String tags_in = sc.nextLine();
-                    System.out.println("enter state in format (#state1#state2)");
-                    String states_in = sc.nextLine();
-                    filterin(tags_in, states_in);
-                    break;
-                case 3:
-                    System.out.println("enter tags in format (#tags1#tags2)");
-                    String tags_out = sc.nextLine();
-                    System.out.println("enter state in format (#state1#state2)");
-                    String states_out = sc.nextLine();
-                    filterout(tags_out, states_out);
-                    break;
-                case 4:
-                    addissue();
-                    break;
-                case 5:
-                    System.out.println("enter search project keyword or #ID");
-                    String in4 = sc.next();
-                    search(in4);
-                    break;
-                case 6:
-                    quit = true;
-                    return;
-                default:
-                    System.out.println("wrong input");
-                    break;
-            }
-        }
-    }
-
-    /**
      * @param current_people determine whether is owner or not
      */
     public void projectwindow(People current_people, JFrame frame, PeopleADT obj) {
@@ -238,58 +163,6 @@ public class Project implements Serializable, ActionListener {
     }
 
     /**
-     * add issue
-     */
-    public void addissue() {
-        System.out.println("Enter issue name");
-        String issue_name = sc.next();
-        System.out.println("enter tags with , in between");
-        String issue_tags = sc.nextLine();
-        String[] issue_tags_array = issue_tags.split(",");
-        issue_tags_array = addTag(issue_tags_array);    //get the correct tags
-        System.out.println("Enter priority");
-        int priority = sc.nextInt();
-        People assignee_obj;
-        while (true) {
-            System.out.println("enter assignee:");
-            String assignee = sc.nextLine();
-            assignee_obj = searchpeople(assignee);
-            if (assignee_obj != null) {
-                break;
-            }
-            System.out.print("invalid name");
-        }
-        System.out.println("enter issue des");
-        String text = sc.nextLine();
-        Text<String> text_obj = new Text<>();
-        Text<String> temp_text = new Text<>();
-        while (!text.equals("#quit")) {
-            if (text.equals("#undo")) {
-                if (text_obj.getSize() < 0) {
-                    break;
-                }
-                temp_text.push(text_obj.pop());
-            } else if (text.equals("#redo")) {
-                if (temp_text.getSize() < 0) {
-                    break;
-                }
-                text_obj.push(temp_text.pop());
-            } else {
-                text_obj.push(text);
-                temp_text.clear();
-            }
-            text = sc.nextLine();
-        }
-        text = text_obj.getString();
-
-        //To push notification to assignee_obj
-        Issue iss = new Issue(numissue, issue_name, text, current_people, assignee_obj, issue_tags_array, priority, this);
-        issue.add(iss);
-        assignee_obj.addAssigned(this.ID, this.name, numissue, issue_name, current_people.getName());
-        numissue++;
-    }
-
-    /**
      * check if the tags is registered, if not, add it to the tag option and
      * return This method is only called in @{addIssue}
      */
@@ -308,25 +181,6 @@ public class Project implements Serializable, ActionListener {
             toAdd[i] = tag[i];
         }
         return toAdd;
-    }
-
-    /**
-     * @param input keyword search search issue
-     */
-    public void search(String input) { //  only input number will directly assume as ID
-        if (isnumberic(input)) {
-            entertheissue(Integer.parseInt(input.substring(1)));
-        } else {
-            if (printsearchResult(input)) {
-                System.out.println("enter ID of project");
-                int id = sc.nextInt();
-                entertheissue(id);
-            } else {
-                System.out.println("not result found. re-enter keyword");
-                String str = sc.nextLine();
-                search(str);
-            }
-        }
     }
 
     /**
@@ -502,7 +356,7 @@ public class Project implements Serializable, ActionListener {
         for (int i = 0; i < issue.size(); i++) {
             removeIssue(issue.get(i));
         }
-//        Window.removeProject(this);
+        Window.removeProject(this);
     }
 
     /**
@@ -515,25 +369,6 @@ public class Project implements Serializable, ActionListener {
         issue_obj.getAssignee().reduceAssigned();
         issue.remove(issue_obj);
         numissue--;
-    }
-
-    /**
-     * print Issue list, this method is an overloading method
-     */
-    public void print() {
-        this.print(issue);
-    }
-
-    /**
-     * print selected list Tag formatting may be weird if there are a lot of
-     * tags( String[] )
-     */
-    public void print(ArrayList<Issue> toPrint) {
-        System.out.println(String.format("%3s %-30s %-15s %-15s %10s %-30s %-20s %-20s", "ID", "Title", "Status",
-                "Tag", "Priority", "Time", "Assignee", "Creator"));
-        for (int i = 0; i < toPrint.size(); i++) {
-            System.out.println(printOneIssue(toPrint.get(i)));
-        }
     }
 
     /**
@@ -594,73 +429,6 @@ public class Project implements Serializable, ActionListener {
         return return_value;
     }
 
-    /*
-  include  filter kind
-     */
-    private void filterin(String tag, String state) {
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
-        String[] tags = tag.split("#");
-        String[] states = state.split("#");
-        for (int i = 0; i < issue.size(); i++) {
-            label:
-            {
-                /*
-                    note to Sam, my IDE says that the two if statements are always false.
-                    I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
-                 */
-                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue.get(i).getStatus().equals(states[j])) {
-                        pq.add(issue.get(i));
-                        break label;
-                    }
-                    String[] tagsArray = issue.get(i).getTag();
-                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
-                            pq.add(issue.get(i));
-                            break label;
-                        }
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < issue.size(); i++) {
-            System.out.println(pq.poll());
-        }
-    }
-
-    /*
-    exclude filter 
-     */
-    private void filterout(String tag, String state) {
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
-        String[] tags = tag.split("#");
-        String[] states = state.split("#");
-        for (int i = 0; i < issue.size(); i++) {
-            label:
-            {
-                /*
-                    note to Sam, my IDE says that the two if statements are always false.
-                    I think its the states.length > j and tags.length > j problem, could you check it out further?
-                 */
-                for (int j = 0; j < Math.max(state.length(), tags.length); j++) {
-                    if (states.length < j && issue.get(i).getStatus().equals(states[j])) {
-                        break label;
-                    }
-                    String[] tagsArray = issue.get(i).getTag();
-                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (tags.length < j && tagsArray[k].equals(tags[j])) {
-                            break label;
-                        }
-                    }
-                    pq.add(issue.get(i));
-                }
-            }
-        }
-        for (int i = 0; i < issue.size(); i++) {
-            System.out.println(pq.poll());
-        }
-    }
-
     private ArrayList<Issue> filterout_withreturn(String tag, String state) {
         PriorityQueue<Issue> pq = new PriorityQueue<>();
         String[] tags = tag.split("#");
@@ -707,7 +475,16 @@ public class Project implements Serializable, ActionListener {
      */
     public void entertheissue(int index) {
         this.frame.setVisible(false);
-        issue.get(index).issuewindow(current_people, frame);
+
+    }
+
+    private Issue getIssueOfID(int ID) {
+        for (int i = 0; i < issue.size(); i++) {
+            if (issue.get(i).getID() == ID) {
+                return issue.get(i);
+            }
+        }
+        return null;
     }
 
     public int issue_Arraysize() {
@@ -773,7 +550,7 @@ public class Project implements Serializable, ActionListener {
         search_issue.setBounds(0, 0, 200, 50);
         search_issue.setText("search");
         search_issue.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (search_issue.getText().equals("search")) {
                     search_issue.setBounds(0, 0, 300, 50);
                     search_issue.setText("");
@@ -814,6 +591,12 @@ public class Project implements Serializable, ActionListener {
         sort_issue.setBounds(1000, 0, 150, 35);
         sort_issue.setVisible(true);
         sort_issue.addActionListener(this);
+
+        //delete issue
+        delete_project_combo.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        delete_project_combo.setBounds(1180, 50, 100, 50);
+        delete_project_combo.setVisible(false);
+        delete_project_combo.addActionListener(this);
 
         //add the setting button or quit
         setting_button.removeAllItems();
@@ -1002,20 +785,20 @@ public class Project implements Serializable, ActionListener {
         add_issue_panel.setBounds(0, 100, 1000, 550);
         add_issue_panel.setLayout(null);
         add_issue_panel.setVisible(false);
-        // set name text 
+        // set name text
         name_text.setBounds(0, 0, 150, 50);
         name_text.setEditable(true);
         name_text.setVisible(true);
         name_text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         name_text.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (name_text.getText().equals("Enter issue name")) {
                     name_text.setBounds(0, 0, 300, 50);
                     name_text.setText("");
                 }
             }
         });
-        //set the priority 
+        //set the priority
         priority.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         for (int i = 0; i < list_priority.length; i++) {
             priority.addItem(list_priority[i]);
@@ -1036,7 +819,7 @@ public class Project implements Serializable, ActionListener {
         assignee_text.setVisible(true);
         assignee_text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         assignee_text.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (assignee_text.getText().equals("Enter  assignee")) {
                     assignee_text.setBounds(0, 60, 300, 50);
                     assignee_text.setText("");
@@ -1049,7 +832,7 @@ public class Project implements Serializable, ActionListener {
         tags_text.setVisible(true);
         tags_text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         tags_text.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (tags_text.getText().equals("Enter tags")) {
                     tags_text.setBounds(0, 120, 300, 50);
                     tags_text.setText("");
@@ -1062,7 +845,7 @@ public class Project implements Serializable, ActionListener {
         descrip.setEditable(true);
         descrip.setVisible(true);
         descrip.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (descrip.getText().equals("Add description there")) {
                     descrip.setText("");
                 }
@@ -1135,11 +918,17 @@ public class Project implements Serializable, ActionListener {
         frame.add(green_ps_down);
         frame.add(table_scroll);
         frame.add(label);
-        //sample method calling 
+        //sample method calling
 
     }
 
     public void include_and_exluded(ArrayList<String> arr) {
+        for (int i = 0; i < include.size(); i++) {
+            black_panel_up.remove(include.get(i));
+        }
+        for (int i = 0; i < exclude.size(); i++) {
+            black_panel_down.remove(exclude.get(i));
+        }
         include.clear();
         exclude.clear();
         for (int i = 0; i < arr.size(); i++) {
@@ -1216,6 +1005,13 @@ public class Project implements Serializable, ActionListener {
         frame.repaint();
     }
 
+    public void add_delete(ArrayList<String> arr) {
+        delete_project_combo.removeAllItems();
+        for (int i = 0; i < arr.size(); i++) {
+            delete_project_combo.addItem(arr.get(i));
+        }
+    }
+
     public void handle_thread() {
         Thread thread = new Thread() {
             public void run() {
@@ -1242,12 +1038,19 @@ public class Project implements Serializable, ActionListener {
             handle_thread();
         }
         if (e.getSource() == delete_project) {
+//            add_delete(ArrayList<String>);
+            delete_project_combo.setVisible(true);
             System.out.println("delete project button pressed");
-            deleteThisProject();
-            this.frame.setVisible(false);
-            window_frame.setVisible(true);
+//            deleteThisProject();
+//            this.frame.setVisible(false);
+//            window_frame.setVisible(true);
         }
-        if (e.getSource() == sort_issue) {  // this can short but left first 
+        if (e.getSource() == delete_project_combo) {
+            String issuename = (String) delete_project_combo.getSelectedItem();
+
+
+        }
+        if (e.getSource() == sort_issue) {  // this can short but left first
             if (sort_issue.getSelectedIndex() == 0) {
                 sortIssueBased(0);
                 System.out.println("sort based on ID selected");
@@ -1302,15 +1105,21 @@ public class Project implements Serializable, ActionListener {
             String description = descrip.getText();
             int priop = priority.getSelectedIndex() + 1;
             String assignee = assignee_text.getText();
+            name_text.setText("Enter issue name");
+            tags_text.setText("Enter tags");
+            descrip.setText("Add description there");
+            assignee_text.setText("Enter assignee");
             People assignee_obj = searchpeople(assignee);
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
             } else {
+                addTag(issue_tags_array);
                 Issue iss = new Issue(numissue, issue_name, description, current_people, assignee_obj, issue_tags_array, priop, this);
                 issue.add(iss);
                 assignee_obj.addAssigned(this.ID, this.name, numissue, issue_name, current_people.getName());
                 numissue++;
                 exit = true;
+                include_and_exluded(Issue.tagsOption);
                 System.out.println("issue added");
                 reset_table(issue);
             }

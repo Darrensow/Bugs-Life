@@ -2,22 +2,43 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
+
 import java.io.Serializable;
+import static java.lang.Thread.sleep;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 @JsonIgnoreProperties(value = {"changelog", "dtf", "sc", "current+people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator"})
 public class Issue implements Serializable, ActionListener, MouseListener {
@@ -131,79 +152,16 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         this.project_belongsTo = project_belongsTo;
         this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
-//add comment  // change properties //react done //quit //
+//add comment  // change properties //react done //quit // variable bolean,arraylist<integer>
 
-    public void issuewindow_owner() {
-        boolean quit = false;
-        while (!quit) {
-            try {
-                print();
-                System.out.print("1)Add a Comment 2)React on a Comment 3)Delete This Issue 4)Change Properties 5)Quit \nInput: ");
-                int input1 = sc.nextInt();
-                switch (input1) {
-                    case 1:
-                        addComment();
-//                    changelog();
-                        break;
-                    case 2:
-//                        react();
-//                    changelog();
-                        break;
-                    case 3:
-                        deleteThisIssue();
-//                    changelog();
-                        break;
-                    case 4:
-                        changeProperties();
-                        break;
-                    case 5:
-                        quit = true;
-                        break;
-                    default:
-                        System.out.println("Invalid input. Please enter a value between 1-5");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a value between 1-5");
-                sc.nextLine();
-            }
-        }
-    }
 
-    public void issuewindow() {
-        boolean quit = false;
-        while (!quit) {
-            try {
-                print();
-                System.out.print("1)Add comment 2)React on comment 3)Quit \nInput: ");
-                int input1 = sc.nextInt();
-                switch (input1) {
-                    case 1:
-                        addComment();
-//                    changelog();
-                        break;
-                    case 2:
-//                        react();
-//                    changelog();
-                        break;
-                    case 3:
-                        quit = true;
-                        break;
-                    default:                        //catch int other than 1-3
-                        System.out.println("Invalid Input. Please input a value between 1-3");
-                        break;
-                }
-            } catch (InputMismatchException e) {    //catch type error (String/double/char/etc)
-                System.out.println("Invalid Input. Please input a value between 1-3");
-            }
-
-        }
-    }
-
-    public void issuewindow(People current_people, JFrame frame) {
+    public void issuewindow(People current_people, JFrame frame) {  //return one index ,int 0,1  arraylist<integer>
+        this.current_people = current_people;
+        project_frame = frame;
         checkowner(current_people);
         setupwindow();
         set_comment(comments);
+        print();//while(boolean)
     }
 
     public void checkowner(People current_people) {
@@ -219,71 +177,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     //darren upload later
     public void reactComment(int commentID, String reacton) {
         this.comments.get(commentID).addReaction(reacton);
-    }
-
-    public void react(String a, int ID) {
-        // angry happy like dislike , ID = 
-        System.out.println("enter comment ID that you want to react");
-        int index = sc.nextInt();
-        System.out.println("Enter 'h' or happy , 'a' for angry.");
-        char reaction = sc.next().charAt(0);
-        if (reaction == 'h') {
-//            comments.get(index).happy();
-        } else {
-//            comments.get(index).angry();
-        }
-    }
-
-    /**
-     * Method to modify properties Only modifiable properties are status, tag,
-     * priority and Description text
-     */
-    private void changeProperties() {
-        boolean exit = false;
-        while (!exit) {
-            try {
-                System.out.print("Changes: 1)Status 2)Tag 3)Priority 4)Description Text 5)Quit \nInput: ");
-                switch (sc.nextInt()) {
-                    case 1:
-                        String statusUpdate = updateStatus();
-                        if (!statusUpdate.equals("")) { //will not add if value of String is ""
-                            if (addChangeLog(statusUpdate)) {
-                                System.out.println("Status changed successfully!");;
-                            }
-                        }
-                        break;
-                    case 2:
-                        if (addChangeLog(updateTag())) {
-                            System.out.println("Tags changed successfully!");
-                        }
-                        break;
-                    case 3:
-                        String priorityUpdate = updatePriority();
-                        if (!priorityUpdate.equals("")) {
-                            if (addChangeLog(priorityUpdate)) {
-                                System.out.println("Priority changed successfully!");
-                            }
-                        }
-                        break;
-                    case 4:
-                        String descUpdate = updateDescriptionText();
-                        if (!descUpdate.equals("")) {
-                            if (addChangeLog(descUpdate)) {
-                                System.out.println("Description changed successfully!");;
-                            }
-                        }
-                        break;
-                    case 5:
-                        exit = true;
-                        break;
-                    default:                            //Used to catch values other than 1-5
-                        System.out.println("Invalid input, please try again.");
-                        break;
-                }
-            } catch (InputMismatchException e) {        //Used to catch other inputs (String/char/double)
-                System.out.println("Invalid input. Please enter a value from 1 to 5");
-            }
-        }
     }
 
     /**
@@ -319,38 +212,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                 sb.append(tagsArray[i]).append("]");
             }
         }
-        return sb.toString();
-    }
-
-    /**
-     * Method to update priority
-     *
-     * @return A message that will be added to the change log regarding the
-     * change of priority
-     *
-     */
-    private String updatePriority() {
-        StringBuilder sb = new StringBuilder();
-        int originalPriority = this.priority;
-
-        int input = -2;
-        while (true) {
-            try {
-                System.out.println("Please input the new priority for the Issue. (Value is 0-9). Enter '-1' to quit if you don't want to change priority");
-                input = sc.nextInt();
-                if (input > 0 && input <= 10) {
-                    this.priority = input;
-                    break;
-                } else if (input == -1) {
-                    return "";          //empty String signalling no change to be made
-                }
-            } catch (InputMismatchException e) {
-                System.out.print("Invalid input. Please enter a value from 0 to 9 : ");
-                sc.nextLine();
-            }
-        }
-
-        sb.append(current_people.getName()).append(" updated the priority to ").append(this.priority).append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
         return sb.toString();
     }
 
@@ -415,157 +276,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
 //     private String updateStatus(String change){
 //         StringBuilder sb = new StringBuilder();
-//        String originalStatus = this.getStatus(); 
+//        String originalStatus = this.getStatus();
 //        originalStatus.equals(change);
 //     }
-    /**
-     * This method check current status and allow the associated operation
-     *
-     * @return A String representation of the updates made to the tag. The
-     * String will be added to the changeLog.
-     */
-    private String updateStatus() {
-        StringBuilder sb = new StringBuilder();
-        String originalStatus = this.getStatus();
-        boolean exit = false;
-
-        if (status.equalsIgnoreCase("open")) {
-            while (!exit) {
-                try {
-                    System.out.print("Set a status -> (1)In Progress 2)Resolved 3)Closed 4)Quit : ");
-                    switch (sc.nextInt()) {
-                        case 1 -> {
-                            status = "In Progress";
-                            exit = true;
-                        }
-                        case 2 -> {
-                            status = "Resolved";
-                            exit = true;
-                        }
-                        case 3 -> {
-                            status = "Closed";
-                            exit = true;
-                            current_people.addResolved();
-                        }
-                        case 4 -> {
-                            return "";      //return empty String, if .equals(""), then won't add to changeLog
-                        }
-                        default ->
-                            System.out.println("Invalid input. Please enter a value from 1-4");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a value from 1-4");
-                    sc.nextLine();
-                }
-            }
-        } else if (status.equalsIgnoreCase("in progress")) {
-            while (!exit) {
-                try {
-                    System.out.print("Set a status -> (1)Closed 2)Resolved) 3)Quit : ");
-                    switch (sc.nextInt()) {
-                        case 1 -> {
-                            status = "Closed";
-                            exit = true;
-                            current_people.addResolved();
-                        }
-                        case 2 -> {
-                            status = "Resolved";
-                            exit = true;
-                        }
-                        case 3 -> {
-                            return "";
-                        }
-                        default ->
-                            System.out.println("Invalid input. Please enter either 1 or 3");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter either 1 or 3");
-                    sc.nextLine();
-                }
-            }
-        } else if (status.equalsIgnoreCase("resolved")) {
-            while (!exit) {
-                try {
-                    System.out.print("Set a status -> (1)Closed 2)Reopen 3)Quit : ");
-                    switch (sc.nextInt()) {
-                        case 1 -> {
-                            status = "Closed";
-                            exit = true;
-                            current_people.addResolved();
-                        }
-                        case 2 -> {
-                            status = "Open";
-                            exit = true;
-                        }
-                        case 3 -> {
-                            return "";
-                        }
-                        default ->
-                            System.out.println("Invalid input. Please enter either 1 or 3.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter either 1 or 3");
-                    sc.nextLine();
-                }
-            }
-        } else if (status.equalsIgnoreCase("closed")) {
-            while (!exit) {
-                try {
-                    System.out.print("Set a status -> (1)Reopen (2)Quit : ");
-                    switch (sc.nextInt()) {
-                        case 1 -> {
-                            status = "Open";
-                            exit = true;
-                            current_people.reduceResolved();
-                        }
-                        case 2 -> {
-                            return "";
-                        }
-                        default -> {
-                            System.out.println("Invalid input. Please enter either 1 or 2.");
-                        }
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter either 1 or 2.");
-                    sc.nextLine();
-                }
-            }
-        }
-
-        sb.append(current_people.getName()).append(" updated the status from '").append(originalStatus).append("' to '").append(this.getStatus());
-        sb.append("' at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-
-        return sb.toString();
-    }
-
-    private String updateDescriptionText() {
-        System.out.println("Enter new Issue description. ('Enter' to register a new line, '#undo' to undo a line, '#redo' to redo a line and '#quit' to finish.");
-        String text = sc.nextLine();
-        Text<String> text_obj = new Text<>();       //main stack to store all lines enterred by user
-        Text<String> temp_text = new Text<>();      //temp stack for redo and und function
-        while (!text.equals("#quit")) {
-            if (text.equals("#undo")) {
-                if (text_obj.getSize() < 0) {
-                    return "";
-                }
-                temp_text.push(text_obj.pop());
-            } else if (text.equals("#redo")) {
-                if (temp_text.getSize() < 0) {
-                    return "";
-                }
-                text_obj.push(temp_text.pop());
-            } else {
-                text_obj.push(text);
-                temp_text.clear();
-            }
-            text = sc.nextLine();
-        }
-        text = text_obj.getString();
-        this.descriptionText = text;
-
-        return this.current_people.getName() + "changed to description at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)) + "\n";
-    }
-
     /**
      * Add the change description to the changeLog ArrayList
      *
@@ -599,33 +312,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
      */
     public void viewChangelog() {
         print();
-    }
-
-    public void addComment() {
-//        System.out.println("enter comment");
-//        String text = sc.nextLine();
-//        Text<String> text_obj = new Text<>();
-//        Text<String> temp_text = new Text<>();
-//        while (!text.equals("#quit")) {
-//            if (text.equals("#undo")) {
-//                if (text_obj.getSize() < 0) {
-//                    break;
-//                }
-//                temp_text.push(text_obj.pop());
-//            } else if (text.equals("#redo")) {
-//                if (temp_text.getSize() < 0) {
-//                    break;
-//                }
-//                text_obj.push(temp_text.pop());
-//            } else {
-//                text_obj.push(text);
-//                temp_text.clear();
-//            }
-//            text = sc.nextLine();
-//        }
-//        text = text_obj.getString();
-//        comments.add(new Comment(current_people, text, numberOfComments));
-//        numberOfComments++;
     }
 
     /**
@@ -663,9 +349,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         StringBuilder sb = new StringBuilder();
 
         String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n"
-                + "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n"
-                + "Title: %-40s\n"
-                + "Assigned to: %-20sCreated by: %-20s\n\n",
+                        + "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n"
+                        + "Title: %-40s\n"
+                        + "Assigned to: %-20sCreated by: %-20s\n\n",
                 o.getID(), o.getStatus(),
                 o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
                 o.getTitle(),
@@ -673,9 +359,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         sb.append(issueInfo);
         sb.append("Issue Description\n-----------");
         sb.append("\n" + o.getDescriptionText());
-        sb.append("\n\n").append(displayCommentsSection(o));
-
-        System.out.println(sb.toString());
+        issue_descrip.setText(sb.toString());
     }
 
     //Helper method to print(Issue o), returns all the tags in String format
@@ -809,7 +493,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         add_comment_text.setEditable(true);
         add_comment_text.setText("Enter comment there");
         add_comment_text.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { //after mouse click 
+            public void mouseClicked(MouseEvent e) { //after mouse click
                 if (add_comment_text.getText().equals("Enter comment there")) {
                     add_comment_text.setText("");
                 }
@@ -847,7 +531,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         insert_image_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         insert_image_button.addActionListener(this);
         insert_image_button.setFocusable(true);
-        //build label image 
+        //build label image
         image.setVisible(true);
         image.setBounds(750, 0, 100, 50);
         image.setFocusable(true);
@@ -870,13 +554,13 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         add_comment_panel.add(redo);
         add_comment_panel.add(add_comment_submit);
 
-        //build delete issue button 
+        //build delete issue button
         delete_issue.setIcon(delete_issue_image);
         delete_issue.setBounds(1230, 0, 50, 50);
-        delete_issue.setVisible(true);
+        delete_issue.setVisible(false);
         delete_issue.setFocusable(true);
         delete_issue.addActionListener(this);
-        //build delete issue button 
+        //build delete issue button
         edit_issue.setIcon(edit);
         edit_issue.setBounds(1280, 0, 50, 50);
         edit_issue.setVisible(true);
@@ -936,7 +620,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         edit_tags.setVisible(true);
         edit_tags.setEditable(true);
         edit_tags.setFont(new Font("TimesRoman", Font.PLAIN, 16));
-        //build prior button 
+        //build prior button
         edit_priop.addItem("1");
         edit_priop.addItem("2");
         edit_priop.addItem("3");
@@ -1018,13 +702,9 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     }
 
     public void set_comment(ArrayList<Comment> com) {
-//        comment_sr = new JScrollPane[com.length];
-//        comment = new JTextPane[com.length];
-//        like = new JButton[com.length];
-//        dislike = new JButton[com.length];
-//        happy = new JButton[com.length];
-//        angry = new JButton[com.length];
-//        comment_panel = new JPanel[com.length];
+        for (int i = 0; i < comment_panel.size(); i++) {
+            mid_panel.remove(comment_panel.get(i));
+        }
         for (int i = 0; i < com.size(); i++) {
             //build small panel
             comment_panel.add(new JPanel());
@@ -1091,6 +771,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add_comment) {
             System.out.println("adding comment");
+            set_comment(comments);
             add_comment_panel.setVisible(true);
             issue_scroll.setVisible(false);
         }
@@ -1164,11 +845,6 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             updateTagsGUI(updatedTags);
             updateTextGUI(updatedDescription);
             updateStatusGUI(updatedStatus);
-
-//            System.out.println("priority : " + edit_priop.getSelectedIndex());
-//            System.out.println("tags  : " + edit_tags.getText());
-//            System.out.println("descrip : " + edit_descrip.getText());
-//            System.out.println("status : " + edit_status.getSelectedItem()); // will return the states choose
         }
         if (e.getSource() == undo) {
             if (!text_undo.isEmpty()) {
