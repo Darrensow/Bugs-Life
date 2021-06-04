@@ -263,8 +263,14 @@
     "name" : "project one",
     "owner" : "pua",
     "id" : 4
+  }, {
+    "issue" : [ ],
+    "numissue" : 0,
+    "name" : "Prog1",
+    "owner" : "ang",
+    "id" : 5
   } ],
-  "numberproject" : 5,
+  "numberproject" : 6,
   "people_Array_replica" : {
     "list" : [ {
       "newAssignedNotification" : [ {
