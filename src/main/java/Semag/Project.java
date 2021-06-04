@@ -136,7 +136,7 @@ public class Project implements Serializable, ActionListener {
      * @param current_people determine whether is owner or not
      */
     public void projectwindow(People current_people, JFrame frame) {
-        this.current_people=current_people;
+        this.current_people = current_people;
         window_frame = frame;
         setupwindow();
         sortIssueBased(0);
@@ -391,7 +391,12 @@ public class Project implements Serializable, ActionListener {
         }
         ArrayList<Issue> pq = new ArrayList<>();
         String[] tags = tag.split("#");
-        String[] states = state.substring(1).split("#");
+        String[] states ;
+        if(state.length()==0){
+            states =new String[0];
+        }else{
+            states = state.substring(1).split("#");
+        }
         for (int i = 0; i < issue_array.size(); i++) {
             label:
             {
@@ -420,7 +425,12 @@ public class Project implements Serializable, ActionListener {
     private ArrayList<Issue> filterout_withreturn(String tag, String state) {
         ArrayList<Issue> ay = new ArrayList<>();
         String[] tags = tag.split("#");
-        String[] states = state.substring(1).split("#");
+        String[] states;
+        if (state.length() <= 0) {
+            states = new String[0];
+        } else {
+            states = state.substring(1).split("#");
+        }
         for (int i = 0; i < issue.size(); i++) {
             label:
             {

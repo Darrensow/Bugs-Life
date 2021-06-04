@@ -148,6 +148,7 @@ public class Window implements Serializable, ActionListener {
      * @return true if have that project
      */
     public void printsearchResult(String seachkeyword) {
+
         ArrayList<Project> temp = new ArrayList<>();
         String[] token = seachkeyword.split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
@@ -180,7 +181,7 @@ public class Window implements Serializable, ActionListener {
      * @return true if it is an id
      */
     public boolean isnumberic(String sen) {
-        if(sen.length()<1){
+        if (sen.length() < 1) {
             return false;
         }
         try {
@@ -188,7 +189,7 @@ public class Window implements Serializable, ActionListener {
                 return false;
             }
             double d = Double.parseDouble(sen.substring(1));
-            if (d >=numberproject) {
+            if (d >= numberproject) {
                 return false;
             }
         } catch (NumberFormatException nfe) {
@@ -262,7 +263,6 @@ public class Window implements Serializable, ActionListener {
      * print selected list
      */
     public void print(ArrayList<Project> toPrint) {
-        System.out.println(String.format("%-3s %-30s %-15s ", "ID", "Name", "Issue Count"));
         String[][] atable = new String[toPrint.size()][3];
         for (int i = 0; i < toPrint.size(); i++) {
             atable[i][0] = toPrint.get(i).getID() + "";
