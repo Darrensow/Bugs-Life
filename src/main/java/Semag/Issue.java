@@ -103,7 +103,11 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     Text<String> text_undo = new Text<>();
     Text<String> text_redo = new Text<>();
 
+    JTextArea changelog_textarea = new JTextArea();
+    JScrollPane changelog_textsp = new JScrollPane(changelog_textarea);
+
     JFrame project_frame;
+    JFrame changlogframe = new JFrame();
 
     public Issue() {
     }
@@ -131,21 +135,42 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     public void issuewindow(People current_people, JFrame frame) {  //return one index ,int 0,1  arraylist<integer>
         this.current_people = current_people;
         project_frame = frame;
-        checkowner(current_people);
+
         setupwindow();
         set_comment(comments);
         print();//while(boolean)
+        cheacowner();
+        keeprenew();
     }
 
-    public void checkowner(People current_people) {
-        if (this.current_people == current_people) {
-            delete_issue.setVisible(true);
+    public void cheacowner() {
+        if (this.creator.equals(current_people.getName()) || this.assignee.equals(current_people.getName())) {
+            System.out.println("same");
+            System.out.println(creator);
+            System.out.println(assignee);
+            System.out.println(current_people.getName());
             edit_issue.setVisible(true);
         } else {
-            delete_issue.setVisible(false);
             edit_issue.setVisible(false);
         }
     }
+
+    public void keeprenew() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                    print();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
+
 
     //darren upload later
     public void reactComment(int commentID, String reacton) {
@@ -256,17 +281,17 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         String originalStatus = this.getStatus();
         ArrayList<String> option_state = new ArrayList<>();
         option_state.add(originalStatus);
-        if (originalStatus.equals("Open")) {
+        if (originalStatus.equalsIgnoreCase("Open")) {
             option_state.add("In Progress");
             option_state.add("Resolved");
             option_state.add("Closed");
-        } else if (originalStatus.equals("In Progress")) {
+        } else if (originalStatus.equalsIgnoreCase("In Progress")) {
             option_state.add("Closed");
             option_state.add("Resolved");
-        } else if (originalStatus.equals("Resolved")) {
+        } else if (originalStatus.equalsIgnoreCase("Resolved")) {
             option_state.add("Closed");
             option_state.add("Open");
-        } else if (originalStatus.equals("Closed")) {
+        } else if (originalStatus.equalsIgnoreCase("Closed")) {
             option_state.add("Open");
         }
         set_status(option_state);
@@ -446,6 +471,15 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
     //gui method
     public void setupwindow() {
+
+        //build window
+        changlogframe.setLayout(null);
+        changlogframe.setTitle("changelog");
+        changlogframe.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        changlogframe.setResizable(true);
+        changlogframe.setSize(1350, 730);
+        changlogframe.setLayout(null);
+        changlogframe.setVisible(false);
         //build window
         ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
         frame.setLayout(null);
@@ -556,10 +590,10 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         //build delete issue button
         edit_issue.setIcon(edit);
         edit_issue.setBounds(1280, 0, 50, 50);
-        edit_issue.setVisible(true);
         edit_issue.setFocusable(true);
         edit_issue.addActionListener(this);
         //build setting button / quit
+        setting_button.removeAllItems();
         for (int i = 0; i < setting_option.length; i++) {
             setting_button.addItem(setting_option[i]);
         }
@@ -661,7 +695,20 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         edit_panel.add(edit_status);
         edit_panel.add(edit_descrip_scroll);
         edit_panel.add(done_edit);
+
+        //build changelog text
+        changelog_textarea.setPreferredSize(new Dimension(900, 200000));
+        changelog_textarea.setVisible(true);
+        changelog_textarea.setEditable(false);
+
+        //build chnagelog text sp
+        changelog_textsp.setBounds(0, 100, 1300, 780);
+        changelog_textsp.setVisible(true);
+        changelog_textsp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+        changelog_textsp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+
         //add component to frame
+        changlogframe.add(changelog_textsp);
         frame.add(edit_issue);
         frame.add(edit_panel);
         frame.add(add_comment);
@@ -678,6 +725,13 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         edit_status.removeAllItems();
         for (int i = 0; i < status.size(); i++) {
             edit_status.addItem(status.get(i));
+        }
+    }
+
+    public void setchangelogtext(ArrayList<String> changelogetext) {
+        changelog_textarea.setText("");
+        for (int i = 0; i < changelogetext.size(); i++) {
+            changelog_textarea.append(changelogetext.get(i));
         }
     }
 
@@ -816,6 +870,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             switch (setting_button.getSelectedIndex()) {
                 case 0:
                     System.out.println("changlog");
+                    setchangelogtext(getChangelog());
+                    changlogframe.setVisible(true);
                     break;
                 case 1:
                     frame.setVisible(false);
@@ -930,7 +986,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                     }
                 }
             }
-        }; thread.start();
+        };
+        thread.start();
     }
 
     /*

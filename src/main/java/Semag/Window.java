@@ -46,12 +46,13 @@ public class Window implements Serializable, ActionListener {
 
     //gui
     String column[] = {"ID", "Project Name", "Issue"};
-    ArrayList<String> notification = new ArrayList<>();
+    ArrayList<AssignedIssue> notification = new ArrayList<>();
     JTextField text1 = new JTextField();
     JComboBox option_button1 = new JComboBox();
     JButton button1 = new JButton();
     JButton button2 = new JButton();
-    JButton delete_project_button = new JButton("D Pro");
+    ImageIcon delete_project_image = new ImageIcon("trash_icon.png");
+    JButton delete_project_button = new JButton();
     JButton button3 = new JButton();
     JPanel panel1 = new JPanel();
     JTextField text2 = new JTextField();
@@ -98,9 +99,40 @@ public class Window implements Serializable, ActionListener {
         }
         System.out.println(current_people.getName() + people_Array.get(0).getName());
         setupwindow();
+        keeprenew();
         reset_table(project_Array);
         //        Thread.sleep(30000);
-//        setNotification(ArrayList of notification);
+        checkpeople();//cheack icon
+        sp_notification.setVisible(false);
+
+    }
+
+    public void checkpeople() {
+        for (int i = 0; i < people_Array.size(); i++) {
+            if (people_Array.get(i).getName().equals(current_people.getName())) {
+                setNotification(people_Array.get(i).newAssignedNotification);
+                checknotification(people_Array.get(i).newAssignedNotification);
+                break;
+            }
+        }
+    }
+
+    public void keeprenew() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                    if (frame.isVisible() == false) {
+                        reset_table(project_Array);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
     }
 
     public void search(String input) {
@@ -205,7 +237,6 @@ public class Window implements Serializable, ActionListener {
                 break;
             }
         }
-        numberproject--;
         reset_table(project_Array);
     }
 
@@ -446,7 +477,7 @@ public class Window implements Serializable, ActionListener {
 
     public void setupwindow() {
         // make it not visible first
-        panel_notification.setVisible(false);
+        panel_notification.setVisible(true);
         ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
         frame.setTitle("Doge");
@@ -523,7 +554,8 @@ public class Window implements Serializable, ActionListener {
         text1.setVisible(true);
         text1.setEditable(true);
 
-        delete_project_button.setBounds(1180, 50, 150, 50);
+        delete_project_button.setBounds(1130, 0, 50, 50);
+        delete_project_button.setIcon(delete_project_image);
         delete_project_button.setVisible(true);
         delete_project_button.setFocusable(true);
         delete_project_button.addActionListener(this);
@@ -595,10 +627,10 @@ public class Window implements Serializable, ActionListener {
 
         panel1.add(text2);
         panel1.add(button2);
+        frame.add(sp_notification);
         frame.add(delete_project_button);
         frame.add(setting_option_button);
         frame.add(call);
-        frame.add(sp_notification);
         frame.add(panel1);
         frame.add(option_button1);
         frame.add(text1);
@@ -638,7 +670,7 @@ public class Window implements Serializable, ActionListener {
         }
     }
 
-    public void checknotification(ArrayList<String> arr) {
+    public void checknotification(ArrayList<AssignedIssue> arr) {
 
         // the notication panel
         panel_notification.setPreferredSize(new Dimension(300, 2000));
@@ -655,8 +687,7 @@ public class Window implements Serializable, ActionListener {
         for (int i = 0; i < arr.size(); i++) {
             //set acccept button
             accept_a.add(new JButton());
-            accept_a.get(i).setText("Accept");
-            accept_a.get(i).setText("Accept");
+            accept_a.get(i).setText("Dismiss");
             accept_a.get(i).setFocusable(true);
             accept_a.get(i).setBounds(100, 60, 90, 30);
             accept_a.get(i).setVisible(true);
@@ -677,7 +708,7 @@ public class Window implements Serializable, ActionListener {
             each_notification_panel_a.get(i).setPreferredSize(new Dimension(300, 100));
             //build textfield
             notification_textarea.add(new JTextArea());
-            notification_textarea.get(i).setText(arr.get(i));
+            notification_textarea.get(i).setText(arr.get(i).getIssueInfo());
             notification_textarea.get(i).setVisible(true);
             notification_textarea.get(i).setBounds(0, 0, 300, 50);
             notification_textarea.get(i).setEditable(false);
@@ -690,7 +721,7 @@ public class Window implements Serializable, ActionListener {
 
     }
 
-    public void setNotification(ArrayList<String> notification) {
+    public void setNotification(ArrayList<AssignedIssue> notification) {
         this.notification = notification;
         check_icon(this.notification.size());
     }
@@ -758,9 +789,9 @@ public class Window implements Serializable, ActionListener {
                 table_scroll.setVisible(true);
                 sp_notification.setVisible(false);
             } else {
-                checknotification(notification);
+                checkpeople();
                 table_scroll.setVisible(false);
-                System.out.println("button3 pressed");
+                sp_notification.setVisible(true);
             }
 
         }
@@ -785,7 +816,6 @@ public class Window implements Serializable, ActionListener {
                     each_notification_panel_a.get(i).setVisible(false);
                     each_notification_panel_a.remove(i);
                     System.out.println(notification.get(i));
-                    notification.remove(i);
                     accept_a.remove(i);
                     ignore_a.remove(i);
                     frame.repaint();
@@ -856,6 +886,7 @@ public class Window implements Serializable, ActionListener {
                 case 4:
                     frame.setVisible(false);
                     System.out.println("user quiting ");
+                    System.exit(0);
                     break;
             }
         }

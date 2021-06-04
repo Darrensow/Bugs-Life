@@ -136,20 +136,32 @@ public class Project implements Serializable, ActionListener {
      * @param current_people determine whether is owner or not
      */
     public void projectwindow(People current_people, JFrame frame) {
+        this.current_people=current_people;
         window_frame = frame;
-        if (current_people.getName() == owner) {
-            this.current_people = current_people;
-            delete_project.setEnabled(true);
-
-        } else {
-            this.current_people = current_people;
-            delete_project.setEnabled(false);
-        }
         setupwindow();
         sortIssueBased(0);
+        keeprenew();
         ArrayList<String> status = new ArrayList<>(Arrays.asList(Issue.statusOption));
         include_and_exluded(Issue.tagsOption);
         include_and_exluded_state(status);
+    }
+
+    public void keeprenew() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                    if (frame.isVisible() == false) {
+                        reset_table(issue);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
     }
 
     /**
@@ -158,20 +170,26 @@ public class Project implements Serializable, ActionListener {
      */
     public String[] addTag(String[] tag) {
         String[] toAdd = new String[tag.length];
+
         for (int i = 0; i < tag.length; i++) {
-            for (int j = 0; j < Semag.Issue.tagsOption.size(); j++) {
+            boolean exist = false;
+            for (int j = 0; j < Issue.tagsOption.size(); j++) {
                 //check if the tag is available, if yes, copy and break
-                if (Semag.Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
-                    toAdd[i] = Semag.Issue.tagsOption.get(j);
+                if (Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
+                    toAdd[i] = Issue.tagsOption.get(j);
+                    exist = true;
                     break;
                 }
             }
-            //if no, add the tag option and copy
-            Semag.Issue.tagsOption.add(tag[i]);
-            toAdd[i] = tag[i];
+            if (!exist) {
+                //if no, add the tag option and copy
+                Issue.tagsOption.add(tag[i]);
+                toAdd[i] = tag[i];
+            }
         }
         return toAdd;
     }
+
 
     /**
      * @param input keyword search search issue
@@ -901,7 +919,7 @@ public class Project implements Serializable, ActionListener {
             include.get(i).setText(arr.get(i));
             include.get(i).setFocusable(true);
             include.get(i).setLayout(null);
-            include.get(i).setFont(new Font("Consolas", Font.PLAIN, 25));
+            include.get(i).setFont(new Font("Consolas", Font.PLAIN, 10));
             include.get(i).setSize(new Dimension(300, 100));
             include.get(i).setVisible(true);
             black_panel_up.add(include.get(i));
@@ -910,7 +928,7 @@ public class Project implements Serializable, ActionListener {
             exclude.add(new JCheckBox());
             exclude.get(i).setText(arr.get(i));
             exclude.get(i).setFocusable(true);
-            exclude.get(i).setFont(new Font("Consolas", Font.PLAIN, 25));
+            exclude.get(i).setFont(new Font("Consolas", Font.PLAIN, 10));
             exclude.get(i).setSize(new Dimension(300, 100));
             exclude.get(i).setVisible(true);
             black_panel_down.add(exclude.get(i));
@@ -1000,7 +1018,6 @@ public class Project implements Serializable, ActionListener {
                 break;
             }
         }
-        numissue--;
         in_delete_mode = false;
     }
 
@@ -1102,7 +1119,7 @@ public class Project implements Serializable, ActionListener {
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
             } else {
-                addTag(issue_tags_array);
+                issue_tags_array = addTag(issue_tags_array);
                 Issue iss = new Issue(numissue, issue_name, description, current_people.getName(), assignee_obj.getName(), issue_tags_array, priop, this);
                 issue.add(iss);
                 assignee_obj.addAssigned(this.ID, this.name, numissue, issue_name, current_people.getName());
