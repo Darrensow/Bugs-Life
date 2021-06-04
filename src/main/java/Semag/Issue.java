@@ -872,28 +872,28 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             //build label
             happycount.add(new JLabel());
             happycount.get(i).setBounds(750, 250, 50, 50);
-            happycount.get(i).setVisible(true);
+            happycount.get(i).setVisible(false);
             happycount.get(i).setBackground(Color.red);
             happycount.get(i).addMouseListener(this);
             happycount.get(i).setOpaque(true);
             //
             angrycount.add(new JLabel());
             angrycount.get(i).setBounds(700, 250, 50, 50);
-            angrycount.get(i).setVisible(true);
+            angrycount.get(i).setVisible(false);
             angrycount.get(i).addMouseListener(this);
             angrycount.get(i).setBackground(Color.green);
             angrycount.get(i).setOpaque(true);
             //
             likecount.add(new JLabel());
             likecount.get(i).setBounds(800, 250, 50, 50);
-            likecount.get(i).setVisible(true);
+            likecount.get(i).setVisible(false);
             likecount.get(i).addMouseListener(this);
             likecount.get(i).setBackground(Color.blue);
             likecount.get(i).setOpaque(true);
             //
             dislikecount.add(new JLabel());
             dislikecount.get(i).setBounds(850, 250, 50, 50);
-            dislikecount.get(i).setVisible(true);
+            dislikecount.get(i).setVisible(false);
             dislikecount.get(i).addMouseListener(this);
             dislikecount.get(i).setBackground(Color.pink);
             dislikecount.get(i).setOpaque(true);
@@ -1086,28 +1086,28 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (dislikecount != null) {
             for (int i = 0; i < dislikecount.size(); i++) {
                 if (e.getSource() == dislikecount.get(i)) {
-                    dislikecount.get(i).setText(comments.get(i).getdislikes()+"");
+                    dislikecount.get(i).setText(comments.get(i).dislikecount()+"");
                     dislikecount.get(i).setVisible(true);
                 }
             }
         }if (happycount != null) {
             for (int i = 0; i < happycount.size(); i++) {
                 if (e.getSource() == happycount.get(i)) {
-                    happycount.get(i).setText(comments.get(i).gethappy()+"");
+                    happycount.get(i).setText(comments.get(i).happycount()+"");
                     happycount.get(i).setVisible(true);
                 }
             }
         }if (angrycount != null) {
             for (int i = 0; i < angrycount.size(); i++) {
                 if (e.getSource() == angrycount.get(i)) {
-                    angrycount.get(i).setText(comments.get(i).getangry()+"");
+                    angrycount.get(i).setText(comments.get(i).angrycount()+"");
                     angrycount.get(i).setVisible(true);
                 }
             }
         }if (likecount != null) {
             for (int i = 0; i < likecount.size(); i++) {
                 if (e.getSource() == likecount.get(i)) {
-                    likecount.get(i).setText(comments.get(i).getlike()+"");
+                    likecount.get(i).setText(comments.get(i).likecount()+"");
                     likecount.get(i).setVisible(true);
                 }
             }

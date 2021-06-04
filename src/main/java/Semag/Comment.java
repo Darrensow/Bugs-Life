@@ -94,19 +94,19 @@ public class Comment implements Serializable {
         return sb.toString();
     }
 
-    public int gethappy() {
+    public int happycount() {
         return counter.get("happy");
     }
 
-    public int getdislikes() {
+    public int dislikecount() {
         return counter.get("dislikes");
     }
 
-    public int getangry() {
+    public int angrycount() {
         return counter.get("angry");
     }
 
-    public int getlike() {
+    public int likecount() {
         return counter.get("like");
     }
 
