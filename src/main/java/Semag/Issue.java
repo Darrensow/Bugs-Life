@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 @JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
 public class Issue implements Serializable, ActionListener, MouseListener ,Comparator<Issue>{
 
-    private ArrayList<String> changelog;
+    private ArrayList<String> changelog = new ArrayList<>() ;
     private Integer ID;
     private String title;
     private String descriptionText;
@@ -886,7 +886,7 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             edit_panel.setVisible(false);
             issue_scroll.setVisible(true);
 
-            int updatedPriority = edit_priop.getSelectedIndex();
+            int updatedPriority = edit_priop.getSelectedIndex()+1;
             String updatedTags = edit_tags.getText();
             String updatedDescription = edit_descrip.getText();
             String updatedStatus = edit_status.getSelectedItem() + "";
