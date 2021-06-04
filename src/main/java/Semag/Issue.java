@@ -12,16 +12,14 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
-public class Issue implements Serializable, ActionListener, MouseListener ,Comparator<Issue>{
+public class Issue implements Serializable, ActionListener, MouseListener, Comparator<Issue> {
 
-    private ArrayList<String> changelog = new ArrayList<>() ;
+    private ArrayList<String> changelog = new ArrayList<>();
     private Integer ID;
     private String title;
     private String descriptionText;
@@ -71,6 +69,10 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
     ArrayList<JButton> dislike = new ArrayList<>();
     ArrayList<JButton> happy = new ArrayList<>();
     ArrayList<JButton> angry = new ArrayList<>();
+    ArrayList<JLabel> happycount = new ArrayList<>();
+    ArrayList<JLabel> angrycount = new ArrayList<>();
+    ArrayList<JLabel> likecount = new ArrayList<>();
+    ArrayList<JLabel> dislikecount = new ArrayList<>();
     ImageIcon happy_icon = new ImageIcon("happy_icon.png");
     ImageIcon angry_icon = new ImageIcon("angry_icon.png");
     ImageIcon like_image = new ImageIcon("like_icon.png");
@@ -105,6 +107,7 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
 
     JTextArea changelog_textarea = new JTextArea();
     JScrollPane changelog_textsp = new JScrollPane(changelog_textarea);
+    JButton quitchangelog = new JButton("Quit changelog");
 
     JFrame project_frame;
     JFrame changlogframe = new JFrame();
@@ -240,42 +243,106 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
      */
 
     private void updateTagsGUI(String fromGUI) {
-        String[] updatedTags = fromGUI.substring(1).split("#");         // tags returned from GUI
+        String[] updatedTags = fromGUI.substring(1).split("#");                // tags returned from GUI
+        StringBuilder sb = new StringBuilder();
 
+        if (this.tag.length == updatedTags.length) {
+            if (sameTags(this.tag, updatedTags)) {
+                System.out.println("Same tags, don't need to anything");
+                return;                                     // don't update and add to changelog
+            } else {
+                System.out.println("Same array length but different tags inside");
+                sb.append(pushTagsUpdate(updatedTags));     // can delete sb.append after debugging
+            }
+        } else {
+            System.out.println("Different array length");
+            sb.append(pushTagsUpdate(updatedTags));         // can delete sb.append after debugging
+        }
+
+        System.out.println(sb.toString());
+    }
+
+    //Helper method for updateTagsGUI() to check if the tags are the same when both array size are equals
+    private boolean sameTags(String[] array1, String[] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        // Hash map
+        Map<String, Integer> map = new HashMap<>();
+        int count = 0;
+        // Store arr1[] elements and their counts in
+        for (int i = 0; i < array1.length; i++) {
+            if (map.get(array1[i]) == null)             // no key exists in the map
+                map.put(array1[i], 1);
+            else {
+                count = map.get(array1[i]);
+                count++;
+                map.put(array1[i], count);
+            }
+        }
+
+        // Traverse array2 to check if all the elements in it has the same count as array1
+        for (int i = 0; i < array1.length; i++) {
+            if (!map.containsKey(array2[i]))            // There exists no key of array2[i] inside array1
+                return false;
+
+            if (map.get(array2[i]) == 0)                // If an element of array2 appears more times than it appears in array1
+                return false;
+
+            count = map.get(array2[i]);                 // Get the count of array2[i] from the Map
+            --count;                                    // Subtract by 1
+            map.put(array2[i], count);                  // Update the value into the Map
+        }
+        return true;
+    }
+
+    //Helper method for updateTagsGUI() to push updates onto changelog
+    private String pushTagsUpdate(String[] updatedTags) {
         StringBuilder sb = new StringBuilder();
         sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
         sb.append(current_people.getName()).append(" updated the tags.");
-        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  // append original tags
-        sb.append("Edited: ").append(showAllTags(updatedTags)).append("\n\n"); // append new tags
-
-        this.tag = updatedTags;                                              // update the tags array with the new tags
-
-        this.changelog.add(sb.toString());                                   // add change description changelog
+        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");         // append original tags
+        sb.append("Edited: ").append(showAllTags(updatedTags)).append("\n\n");      // append new tags
+        this.tag = updatedTags;                                                     // update the tags array with the new tags
+        this.changelog.add(sb.toString());                                          // add change description changelog
+        return sb.toString();
     }
 
     private void updatePriorityGUI(int fromGUI) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-        sb.append(current_people.getName()).append(" updated the priority from ").append(this.priority).append(" to ").append(fromGUI);
-        this.priority = fromGUI;                                             // update priority with new priority from GUI
-        this.changelog.add(sb.toString());                                   // add change description changelog
+        if (this.priority != fromGUI) {
+            sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+            sb.append(current_people.getName()).append(" updated the priority from ").append(this.priority).append(" to ").append(fromGUI);
+            this.priority = fromGUI;                                             // update priority with new priority from GUI
+            this.changelog.add(sb.toString());                                   // add change description changelog
+        }
+        System.out.println(sb.toString());
+        System.out.println("Inside Priority GUI");
     }
 
     private void updateStatusGUI(String fromGUI) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-        sb.append(current_people.getName()).append(" updated the status from ").append(this.status).append(" to ").append(fromGUI);
-        this.status = fromGUI;                                               // update status with new status from GUI
-        this.changelog.add(sb.toString());                                   // add change description changelog
+        if (!this.status.equals(fromGUI)) {
+            sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+            sb.append(current_people.getName()).append(" updated the status from ").append(this.status).append(" to ").append(fromGUI);
+            this.status = fromGUI;                                               // update status with new status from GUI
+            this.changelog.add(sb.toString());                                   // add change description changelog
+        }
+        System.out.println(sb.toString());
     }
 
     private void updateTextGUI(String fromGUI) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-        sb.append(current_people.getName()).append(" updated the description text.");
-        this.descriptionText = fromGUI;                                      // update the Description text with the new input from GUI
-        this.changelog.add(sb.toString());                                   // add change description changelog
+        if (!this.descriptionText.equals(fromGUI)) {
+            sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+            sb.append(current_people.getName()).append(" updated the description text.");
+            this.descriptionText = fromGUI;                                      // update the Description text with the new input from GUI
+            this.changelog.add(sb.toString());                                   // add change description changelog
+        }
+        System.out.println(sb.toString());
     }
+
 
     public void return_option() {
         String originalStatus = this.getStatus();
@@ -473,14 +540,6 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
     public void setupwindow() {
 
         //build window
-        changlogframe.setLayout(null);
-        changlogframe.setTitle("changelog");
-        changlogframe.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        changlogframe.setResizable(true);
-        changlogframe.setSize(1350, 730);
-        changlogframe.setLayout(null);
-        changlogframe.setVisible(false);
-        //build window
         ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
         frame.setLayout(null);
         frame.setTitle("firstPage");
@@ -605,12 +664,12 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
         setting_button.setOpaque(true);
         //build issue show text
         mid_panel.setVisible(true);
-        mid_panel.setPreferredSize(new Dimension(1000, 1000000));
+        mid_panel.setPreferredSize(new Dimension(1000, 100000));
         mid_panel.setBackground(Color.CYAN);
         mid_panel.setOpaque(true);
         mid_panel.setLayout(new FlowLayout());
         //builf issue scroll
-        issue_scroll.setBounds(0, 100, 1000, 550);
+        issue_scroll.setBounds(0, 200, 1000, 450);
         issue_scroll.setVisible(true);
         issue_scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         issue_scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
@@ -621,21 +680,21 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
         issue_descrip.setEditable(false);
 
         //build issue scroll
-        issue_descrip_sp.setBounds(0, 100, 900, 200);
+        issue_descrip_sp.setBounds(50, 50, 900, 150);
         issue_descrip_sp.setVisible(true);
         issue_descrip_sp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         issue_descrip_sp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
 
         //build issue descrp panel
         issue_des_panel.setVisible(true);
-        issue_des_panel.setPreferredSize(new Dimension(900, 300));
+        issue_des_panel.setBounds(0, 0, 1000, 200);
         issue_des_panel.setLayout(null);
         issue_des_panel.setBackground(Color.red);
         issue_des_panel.setOpaque(true);
         // add scroll to panel
         issue_des_panel.add(issue_descrip_sp);
         //add component to issue panel
-        mid_panel.add(issue_des_panel);
+        frame.add(issue_des_panel);
         //build edit panel
         edit_panel.setBounds(0, 80, 1000, 600);
         edit_panel.setBackground(Color.yellow);
@@ -696,19 +755,24 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
         edit_panel.add(edit_descrip_scroll);
         edit_panel.add(done_edit);
 
+//build quit changelog button
+        quitchangelog.setBounds(1250, 0, 100, 50);
+        quitchangelog.setFocusable(true);
+        quitchangelog.addActionListener(this);
+
         //build changelog text
         changelog_textarea.setPreferredSize(new Dimension(900, 200000));
         changelog_textarea.setVisible(true);
         changelog_textarea.setEditable(false);
 
         //build chnagelog text sp
-        changelog_textsp.setBounds(0, 100, 1300, 780);
-        changelog_textsp.setVisible(true);
+        changelog_textsp.setBounds(0, 0, 1250, 730);
+        changelog_textsp.setVisible(false);
         changelog_textsp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         changelog_textsp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
 
         //add component to frame
-        changlogframe.add(changelog_textsp);
+        frame.add(changelog_textsp);
         frame.add(edit_issue);
         frame.add(edit_panel);
         frame.add(add_comment);
@@ -749,10 +813,10 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
     }
 
     public void set_comment(ArrayList<Comment> com) {
-        for (int i = 0; i < comment_panel.size(); i++) {
-            mid_panel.remove(comment_panel.get(i));
-        }
         for (int i = 0; i < com.size(); i++) {
+            if (i < comment_panel.size()) {
+                continue;
+            }
             //build small panel
             comment_panel.add(new JPanel());
             comment_panel.get(i).setLayout(null);
@@ -762,10 +826,13 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             comment_panel.get(i).setVisible(true);
             //build comment
             comment.add(new JTextPane());
-            comment.get(i).setText(com.get(i).getText());
+            System.out.println("comment " + i + " : " + com.get(i).getText());
             if (com.get(i).getImage_file() != null) {
+                System.out.println("have enter");
                 comment.get(i).insertIcon(new ImageIcon(com.get(i).getImage_file().toString()));
+                append("\n", comment.get(i));
             }
+            append(com.get(i).getText(), comment.get(i));
             comment.get(i).setVisible(true);
             comment.get(i).setPreferredSize(new Dimension(900, 20000));
             comment.get(i).setEditable(false);
@@ -802,7 +869,41 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             angry.get(i).setFocusable(true);
             angry.get(i).setBounds(700, 200, 50, 50);
             angry.get(i).setVisible(true);
+            //build label
+            happycount.add(new JLabel());
+            happycount.get(i).setBounds(750, 250, 50, 50);
+            happycount.get(i).setVisible(true);
+            happycount.get(i).setBackground(Color.red);
+            happycount.get(i).addMouseListener(this);
+            happycount.get(i).setOpaque(true);
+            //
+            angrycount.add(new JLabel());
+            angrycount.get(i).setBounds(700, 250, 50, 50);
+            angrycount.get(i).setVisible(true);
+            angrycount.get(i).addMouseListener(this);
+            angrycount.get(i).setBackground(Color.green);
+            angrycount.get(i).setOpaque(true);
+            //
+            likecount.add(new JLabel());
+            likecount.get(i).setBounds(800, 250, 50, 50);
+            likecount.get(i).setVisible(true);
+            likecount.get(i).addMouseListener(this);
+            likecount.get(i).setBackground(Color.blue);
+            likecount.get(i).setOpaque(true);
+            //
+            dislikecount.add(new JLabel());
+            dislikecount.get(i).setBounds(850, 250, 50, 50);
+            dislikecount.get(i).setVisible(true);
+            dislikecount.get(i).addMouseListener(this);
+            dislikecount.get(i).setBackground(Color.pink);
+            dislikecount.get(i).setOpaque(true);
+
+
             //add component to small panel
+            comment_panel.get(i).add(happycount.get(i));
+            comment_panel.get(i).add(angrycount.get(i));
+            comment_panel.get(i).add(likecount.get(i));
+            comment_panel.get(i).add(dislikecount.get(i));
             comment_panel.get(i).add(happy.get(i));
             comment_panel.get(i).add(angry.get(i));
             comment_panel.get(i).add(like.get(i));
@@ -818,9 +919,9 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add_comment) {
             System.out.println("adding comment");
-            set_comment(comments);
             add_comment_panel.setVisible(true);
             issue_scroll.setVisible(false);
+            issue_des_panel.setVisible(false);
         }
         if (e.getSource() == add_comment_submit) {
             exit = true;
@@ -831,6 +932,11 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             numberOfComments++;
             comments.add(new Comment(current_people.getName(), add_comment_text.getText(), numberOfComments, image_file));
             add_comment_text.setText("Enter comment there");
+            insert_image = new ImageIcon();
+            insert_image_button.setEnabled(true);
+            issue_des_panel.setVisible(true);
+            insert_image_topanel();
+            set_comment(comments);
         }
         if (e.getSource() == delete_issue) {
             frame.setVisible(false);
@@ -871,7 +977,9 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
                 case 0:
                     System.out.println("changlog");
                     setchangelogtext(getChangelog());
-                    changlogframe.setVisible(true);
+                    changelog_textsp.setVisible(true);
+                    mid_panel.setVisible(false);
+                    setting_button.setVisible(false);
                     break;
                 case 1:
                     frame.setVisible(false);
@@ -886,7 +994,7 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             edit_panel.setVisible(false);
             issue_scroll.setVisible(true);
 
-            int updatedPriority = edit_priop.getSelectedIndex()+1;
+            int updatedPriority = edit_priop.getSelectedIndex() + 1;
             String updatedTags = edit_tags.getText();
             String updatedDescription = edit_descrip.getText();
             String updatedStatus = edit_status.getSelectedItem() + "";
@@ -929,18 +1037,24 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
             }
         }
         if (e.getSource() == edit_issue) {
+            edit_priop.setSelectedIndex(this.priority - 1);
             edit_panel.setVisible(true);
             issue_scroll.setVisible(false);
             return_option(); //set the option
             edit_descrip.setText(this.getDescriptionText()); //set descrip text
             set_tags(this.returnTagsGUI()); //set tags
         }
+        if (e.getSource() == quitchangelog) {
+            changelog_textsp.setVisible(false);
+            mid_panel.setVisible(true);
+            setting_button.setVisible(true);
+        }
 
     }
 
-    public void append(String s) {
+    public void append(String s, JTextPane textPane) {
         try {
-            Document doc = add_comment_text.getDocument();
+            Document doc = textPane.getDocument();
             doc.insertString(doc.getLength(), s, null);
         } catch (BadLocationException exc) {
             exc.printStackTrace();
@@ -966,12 +1080,72 @@ public class Issue implements Serializable, ActionListener, MouseListener ,Compa
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        image.setBounds(0, 0, 1000, 600);
+        if (e.getSource() == image_file) {
+            image.setBounds(0, 0, 1000, 600);
+        }
+        if (dislikecount != null) {
+            for (int i = 0; i < dislikecount.size(); i++) {
+                if (e.getSource() == dislikecount.get(i)) {
+                    dislikecount.get(i).setText(comments.get(i).getdislikes()+"");
+                    dislikecount.get(i).setVisible(true);
+                }
+            }
+        }if (happycount != null) {
+            for (int i = 0; i < happycount.size(); i++) {
+                if (e.getSource() == happycount.get(i)) {
+                    happycount.get(i).setText(comments.get(i).gethappy()+"");
+                    happycount.get(i).setVisible(true);
+                }
+            }
+        }if (angrycount != null) {
+            for (int i = 0; i < angrycount.size(); i++) {
+                if (e.getSource() == angrycount.get(i)) {
+                    angrycount.get(i).setText(comments.get(i).getangry()+"");
+                    angrycount.get(i).setVisible(true);
+                }
+            }
+        }if (likecount != null) {
+            for (int i = 0; i < likecount.size(); i++) {
+                if (e.getSource() == likecount.get(i)) {
+                    likecount.get(i).setText(comments.get(i).getlike()+"");
+                    likecount.get(i).setVisible(true);
+                }
+            }
+        }
+
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        image.setBounds(750, 0, 100, 50);
+        if (e.getSource() == image_file) {
+            image.setBounds(750, 0, 100, 50);
+        } if (dislikecount != null) {
+            for (int i = 0; i < dislikecount.size(); i++) {
+                if (e.getSource() == dislikecount.get(i)) {
+                    dislikecount.get(i).setVisible(false);
+                }
+            }
+        }if (happycount != null) {
+            for (int i = 0; i < happycount.size(); i++) {
+                if (e.getSource() == happycount.get(i)) {
+                    happycount.get(i).setVisible(false);
+                }
+            }
+        }if (angrycount != null) {
+            for (int i = 0; i < angrycount.size(); i++) {
+                if (e.getSource() == angrycount.get(i)) {
+                    angrycount.get(i).setVisible(false);
+                }
+            }
+        }if (likecount != null) {
+            for (int i = 0; i < likecount.size(); i++) {
+                if (e.getSource() == likecount.get(i)) {
+                    likecount.get(i).setVisible(false);
+                }
+            }
+        }
+
     }
 
     public void handle_thread() {

@@ -792,10 +792,12 @@ public class Window implements Serializable, ActionListener {
             if (panel_notification.isShowing() == true) {
                 table_scroll.setVisible(true);
                 sp_notification.setVisible(false);
+                check_icon(notification.size());
             } else {
                 checkpeople();
                 table_scroll.setVisible(false);
                 sp_notification.setVisible(true);
+                check_icon(notification.size());
             }
 
         }
