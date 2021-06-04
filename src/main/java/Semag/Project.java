@@ -42,14 +42,13 @@ import javax.swing.text.Utilities;
 public class Project implements Serializable, ActionListener {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
-    PeopleADT people_Array;                                 // store people
     private int numissue = 0;                               // issue id
 
     @JsonIgnore
     private People current_people;                          // current log in people
     private Integer ID;                                     // project id
     private String name;                                    // project name
-    private People owner;                                   // project owner
+    private String owner;                                   // project owner
     private Comparator<Issue> comparatorInUse;              // ID, Title, Priority, Timestamp
 
     //gui
@@ -64,7 +63,6 @@ public class Project implements Serializable, ActionListener {
     JComboBox sort_issue = new JComboBox();
     String[] setting_option = {"Changlog", "Quit"};
     JComboBox setting_button = new JComboBox();
-    JComboBox delete_project_combo = new JComboBox();
     ArrayList<JCheckBox> include = new ArrayList<>();
     ArrayList<JCheckBox> exclude = new ArrayList<>();
     JPanel black_panel_up = new JPanel();
@@ -118,6 +116,7 @@ public class Project implements Serializable, ActionListener {
     ArrayList<JCheckBox> include_state = new ArrayList<>();
     ArrayList<JCheckBox> exclude_state = new ArrayList<>();
     JFrame window_frame;
+    boolean in_delete_mode = false;
 
     public Project() {
     }
@@ -127,7 +126,7 @@ public class Project implements Serializable, ActionListener {
      * @param ID
      * @param owner create project
      */
-    public Project(String name, int ID, People owner) {
+    public Project(String name, int ID, String owner) {
         this.ID = ID;
         this.name = name;
         this.owner = owner;
@@ -136,10 +135,9 @@ public class Project implements Serializable, ActionListener {
     /**
      * @param current_people determine whether is owner or not
      */
-    public void projectwindow(People current_people, JFrame frame, PeopleADT obj) {
+    public void projectwindow(People current_people, JFrame frame) {
         window_frame = frame;
-        people_Array = obj;
-        if (current_people == owner) {
+        if (current_people.getName() == owner) {
             this.current_people = current_people;
             delete_project.setEnabled(true);
 
@@ -345,29 +343,9 @@ public class Project implements Serializable, ActionListener {
         reset_table(sortedIssueList);
     }
 
-    /**
-     * Delete current project Update, this remove project we move it to Window
-     */
-    public void deleteThisProject() {
-        for (int i = 0; i < issue.size(); i++) {
-            removeIssue(issue.get(i));
-        }
-//        Window.removeProject(this);
-    }
 
     /**
-     * This is a method to just remove one issue from issue dashboard, called by
-     * Issue class
-     *
-     * @param issue_obj issue to be removed
-     */
-    public void removeIssue(Issue issue_obj) {
-        issue_obj.getAssignee().reduceAssigned();
-        issue.remove(issue_obj);
-        numissue--;
-    }
-
-    /**
+     * d
      * This method return string representation of one Issue in the Issue
      * Dashboard, this method is called by
      * {@code print(ArrayList<Issue> toPrint)}
@@ -380,8 +358,8 @@ public class Project implements Serializable, ActionListener {
         str.append(String.format(" %-15s", o.getTag()));
         str.append(String.format(" %10d", o.getPriority()));
         str.append(String.format(" %-30s", o.getTimestamp()));
-        str.append(String.format(" %-20s", o.getAssignee().getName()));
-        str.append(String.format(" %-20s", o.getCreator().getName()));
+        str.append(String.format(" %-20s", o.getAssignee()));
+        str.append(String.format(" %-20s", o.getCreator()));
         return str.toString();
     }
 
@@ -447,9 +425,9 @@ public class Project implements Serializable, ActionListener {
     }
 
     private People searchpeople(String name) {
-        for (int i = 0; i < people_Array.size(); i++) {
-            if (name.equals(people_Array.get(i).getName())) {
-                return people_Array.get(i);
+        for (int i = 0; i < Window.people_Array.size(); i++) {
+            if (name.equals(Window.people_Array.get(i).getName())) {
+                return Window.people_Array.get(i);
             }
         }
         return null;
@@ -460,7 +438,7 @@ public class Project implements Serializable, ActionListener {
      */
     public void entertheissue(int index) {
         this.frame.setVisible(false);
-issue.get(index).issuewindow(current_people,frame);
+        issue.get(index).issuewindow(current_people, frame);
     }
 
     private Issue getIssueOfID(int ID) {
@@ -577,11 +555,6 @@ issue.get(index).issuewindow(current_people,frame);
         sort_issue.setVisible(true);
         sort_issue.addActionListener(this);
 
-        //delete issue
-        delete_project_combo.setFont(new Font("TimesRoman", Font.PLAIN, 16));
-        delete_project_combo.setBounds(1180, 50, 100, 50);
-        delete_project_combo.setVisible(false);
-        delete_project_combo.addActionListener(this);
 
         //add the setting button or quit
         setting_button.removeAllItems();
@@ -757,7 +730,12 @@ issue.get(index).issuewindow(current_people,frame);
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
-                entertheissue(value);
+                if (in_delete_mode == false) {
+                    entertheissue(value);
+                } else {
+                    deleteIssue(value);
+                }
+
             }
         });
         //set table scroll
@@ -983,19 +961,13 @@ issue.get(index).issuewindow(current_people,frame);
             arow[3] = Arrays.toString(data.get(i).getTag()) + "";
             arow[4] = data.get(i).getPriority() + "";
             arow[5] = data.get(i).getTimestamp() + "";
-            arow[6] = data.get(i).getAssignee().getName() + "";
-            arow[7] = data.get(i).getCreator().getName() + "";
+            arow[6] = data.get(i).getAssignee() + "";
+            arow[7] = data.get(i).getCreator() + "";
             tableModel.addRow(arow);
         }
         frame.repaint();
     }
 
-    public void add_delete(ArrayList<String> arr) {
-        delete_project_combo.removeAllItems();
-        for (int i = 0; i < arr.size(); i++) {
-            delete_project_combo.addItem(arr.get(i));
-        }
-    }
 
     public void handle_thread() {
         Thread thread = new Thread() {
@@ -1019,27 +991,29 @@ issue.get(index).issuewindow(current_people,frame);
      *
      * @param toDelete issue to be removed
      */
-    public void deleteIssue(String toDelete) {
+    public void deleteIssue(int ID) {
 
         for (int i = 0; i < issue.size(); i++) {
-            if(issue.get(i).getTitle().equalsIgnoreCase(toDelete))
-                issue.get(i).getAssignee().reduceAssigned();
-            issue.remove(issue.get(i));
+            if (issue.get(i).getID() == ID) {
+                Window.getPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
+                issue.remove(i);
+                break;
+            }
         }
         numissue--;
+        in_delete_mode = false;
     }
 
-
-    public ArrayList<String> showIssueThatCanDelete() {
-        ArrayList<String> temp = new ArrayList<>();
+    //    name, tags ,priority, assignee
+    public ArrayList<Issue> returnCanDeleteIssue() {
+        ArrayList<Issue> temp = new ArrayList<>();
         for (int i = 0; i < issue.size(); i++) {
-            if (issue.get(i).getCreator().equals(current_people)) {
-                temp.add(issue.get(i).getTitle());
+            if (current_people.getName().equals(issue.get(i).getCreator())) {
+                temp.add(issue.get(i));
             }
         }
         return temp;
     }
-//    name, tags ,priority, assignee
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -1050,17 +1024,17 @@ issue.get(index).issuewindow(current_people,frame);
             handle_thread();
         }
         if (e.getSource() == delete_project) {
-            add_delete(showIssueThatCanDelete());
-            delete_project_combo.setVisible(true);
-            System.out.println("delete project button pressed");
-//            deleteThisProject();
-//            this.frame.setVisible(false);
-//            window_frame.setVisible(true);
-        }
-        if (e.getSource() == delete_project_combo) {
-            String issuename = (String) delete_project_combo.getSelectedItem();
-            deleteIssue(issuename);
+            if (in_delete_mode == true) {
+                in_delete_mode = false;
+                JOptionPane.showMessageDialog(null, "you are out from deleting issue mode", "delete issue", JOptionPane.WARNING_MESSAGE);
+                reset_table(issue);
+            } else {
+                in_delete_mode = true;
+                JOptionPane.showMessageDialog(null, "you are in deleting issue mode", "delete issue", JOptionPane.WARNING_MESSAGE);
+                reset_table(returnCanDeleteIssue());
+            }
 
+            System.out.println("delete project button pressed");
         }
         if (e.getSource() == sort_issue) {  // this can short but left first
             if (sort_issue.getSelectedIndex() == 0) {
@@ -1129,7 +1103,7 @@ issue.get(index).issuewindow(current_people,frame);
                 popwindow("user issue", "invalid people");
             } else {
                 addTag(issue_tags_array);
-                Issue iss = new Issue(numissue, issue_name, description, current_people, assignee_obj, issue_tags_array, priop, this);
+                Issue iss = new Issue(numissue, issue_name, description, current_people.getName(), assignee_obj.getName(), issue_tags_array, priop, this);
                 issue.add(iss);
                 assignee_obj.addAssigned(this.ID, this.name, numissue, issue_name, current_people.getName());
                 numissue++;
@@ -1197,7 +1171,6 @@ issue.get(index).issuewindow(current_people,frame);
 
     public void loadData() {
         Project temp = dm.readProjectData();
-        this.people_Array = temp.people_Array;
         this.ID = temp.ID;
         this.name = temp.name;
         this.owner = temp.owner;
@@ -1217,11 +1190,8 @@ issue.get(index).issuewindow(current_people,frame);
         return name;
     }
 
-    public PeopleADT getPeople_Array() {
-        return people_Array;
-    }
 
-    public People getOwner() {
+    public String getOwner() {
         return owner;
     }
 
@@ -1230,9 +1200,6 @@ issue.get(index).issuewindow(current_people,frame);
         this.issue = issue;
     }
 
-    public void setPeople_Array(PeopleADT people_Array) {
-        this.people_Array = people_Array;
-    }
 
     public void setID(Integer ID) {
         this.ID = ID;
@@ -1242,7 +1209,7 @@ issue.get(index).issuewindow(current_people,frame);
         this.name = name;
     }
 
-    public void setOwner(People owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 

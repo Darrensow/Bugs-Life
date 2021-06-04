@@ -49,7 +49,6 @@ public class Window implements Serializable, ActionListener {
     ArrayList<String> notification = new ArrayList<>();
     JTextField text1 = new JTextField();
     JComboBox option_button1 = new JComboBox();
-    JComboBox delete_project = new JComboBox();
     JButton button1 = new JButton();
     JButton button2 = new JButton();
     JButton delete_project_button = new JButton("D Pro");
@@ -78,6 +77,8 @@ public class Window implements Serializable, ActionListener {
     JButton call;
     JComboBox setting_option_button = new JComboBox();
     String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file", "Quit"};
+    boolean in_delete_mode = false;
+
 
     public Window() {
     }
@@ -98,7 +99,7 @@ public class Window implements Serializable, ActionListener {
         System.out.println(current_people.getName() + people_Array.get(0).getName());
         setupwindow();
         reset_table(project_Array);
-        Thread.sleep(30000);
+        //        Thread.sleep(30000);
 //        setNotification(ArrayList of notification);
     }
 
@@ -107,7 +108,6 @@ public class Window implements Serializable, ActionListener {
             entertheprojext(Integer.parseInt(input.substring(1)));
         } else {
             printsearchResult(input);
-
         }
     }
 
@@ -166,7 +166,7 @@ public class Window implements Serializable, ActionListener {
      * @param name project name add project
      */
     public void addproject(String name) {
-        project_Array.add(new Project(name, numberproject, current_people));
+        project_Array.add(new Project(name, numberproject, current_people.getName()));
         numberproject++;
     }
 
@@ -196,12 +196,13 @@ public class Window implements Serializable, ActionListener {
 
     /**
      * @param projectName want to remove
-     */
-    public void deleteProject(String projectName) {
+     *///may delete other project which same name
+    public void deleteProject(int ID) {
         for (int i = 0; i < project_Array.size(); i++) {
-            if(project_Array.get(i).getName().equalsIgnoreCase(projectName)){
-                project_Array.remove(project_Array.get(i));
-                delete_project.removeItem(projectName);
+            if (project_Array.get(i).getID() == ID) {
+                project_Array.remove(i);
+                in_delete_mode = false;
+                break;
             }
         }
         numberproject--;
@@ -213,7 +214,7 @@ public class Window implements Serializable, ActionListener {
      */
     public void entertheprojext(int index) {
         frame.setVisible(false);
-        project_Array.get(index).projectwindow(current_people, frame, people_Array);
+        project_Array.get(index).projectwindow(current_people, frame);
     }
 
     /**
@@ -473,11 +474,17 @@ public class Window implements Serializable, ActionListener {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
+
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
-                frame.setVisible(false);
-                entertheprojext(value);
+                if (in_delete_mode != true) {
+                    frame.setVisible(false);
+                    entertheprojext(value);
+                } else {
+                    deleteProject(value);
+                }
+
             }
         });
 //set collum width
@@ -515,13 +522,6 @@ public class Window implements Serializable, ActionListener {
         text1.addActionListener(action1);
         text1.setVisible(true);
         text1.setEditable(true);
-
-        //add delete
-        delete_project.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
-        delete_project.setBounds(1000, 0, 150, 35);
-        delete_project.setVisible(false);
-        delete_project.setEnabled(false);
-        delete_project.addActionListener(this);
 
         delete_project_button.setBounds(1180, 50, 150, 50);
         delete_project_button.setVisible(true);
@@ -595,7 +595,6 @@ public class Window implements Serializable, ActionListener {
 
         panel1.add(text2);
         panel1.add(button2);
-        frame.add(delete_project);
         frame.add(delete_project_button);
         frame.add(setting_option_button);
         frame.add(call);
@@ -611,22 +610,24 @@ public class Window implements Serializable, ActionListener {
 
     }
 
-    public void add_delete_project(ArrayList<String> arr) {
-        delete_project.removeAllItems();
-        delete_project.addItem("");
-        for (int i = 0; i < arr.size(); i++) {
-            delete_project.addItem(arr.get(i));
-        }
-    }
 
     public ArrayList<String> showProjectThatCanDelete() {
         ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < project_Array.size(); i++) {
-            if (project_Array.get(i).getOwner().equals(current_people)) {
+            if (project_Array.get(i).getOwner().equals(current_people.getName())) {
                 temp.add(project_Array.get(i).getName());
             }
         }
         return temp;
+    }
+
+    public static People getPeopleByUsername(String username) {
+        for (int i = 0; i < Window.people_Array.size(); i++) {
+            if (username.equals(Window.people_Array.get(i).getName())) {
+                return Window.people_Array.get(i);
+            }
+        }
+        return null;
     }
 
     public void check_icon(int array_size) {
@@ -714,6 +715,16 @@ public class Window implements Serializable, ActionListener {
         frame.repaint();
     }
 
+    public ArrayList<Project> returnCanDelete() {
+        ArrayList<Project> return_value = new ArrayList<>();
+        for (int i = 0; i < project_Array.size(); i++) {
+            if (current_people.getName().equals(project_Array.get(i).getOwner())) {
+                return_value.add(project_Array.get(i));
+            }
+        }
+        return return_value;
+    }
+
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == option_button1) {
             if (option_button1.getSelectedIndex() == 0) {
@@ -792,14 +803,17 @@ public class Window implements Serializable, ActionListener {
             System.out.println("calling");
         }
         if (e.getSource() == delete_project_button) {
-            add_delete_project(showProjectThatCanDelete());
-            delete_project.setVisible(true);
-            delete_project.setEnabled(true);
+            if (in_delete_mode == true) {
+                in_delete_mode = false;
+                JOptionPane.showMessageDialog(null, "you are out from deleting project mode", "delete project", JOptionPane.WARNING_MESSAGE);
+                reset_table(project_Array);
+            } else {
+                in_delete_mode = true;
+                JOptionPane.showMessageDialog(null, "you are in deleting project mode", "delete project", JOptionPane.WARNING_MESSAGE);
+                reset_table(returnCanDelete());
+            }
         }
-        if (e.getSource() == delete_project) {
-            String name = (String) delete_project.getSelectedItem();
-            deleteProject(name);
-        }
+
         if (e.getSource() == setting_option_button) {
             switch (setting_option_button.getSelectedIndex()) {
                 case 0: {
@@ -839,7 +853,6 @@ public class Window implements Serializable, ActionListener {
                 }
                 System.out.println("json file printing");
                 break;
-
                 case 4:
                     frame.setVisible(false);
                     System.out.println("user quiting ");
@@ -923,12 +936,12 @@ public class Window implements Serializable, ActionListener {
         this.people_Array = people_Array;
     }
 
-    public  int getNumberproject() {
+    public int getNumberproject() {
         return this.numberproject;
     }
 
     public void setNumberproject(int numberproject) {
-        this.numberproject=numberproject;
+        this.numberproject = numberproject;
     }
 
     public People getCurrent_people() {

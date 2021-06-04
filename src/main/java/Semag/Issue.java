@@ -25,8 +25,8 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     private Integer ID;
     private String title;
     private String descriptionText;
-    private People creator;
-    private People assignee;
+    private String creator;
+    private String assignee;
     private ArrayList<Comment> comments = new ArrayList<>();
     private int numberOfComments;
     private String[] tag;
@@ -108,11 +108,11 @@ public class Issue implements Serializable, ActionListener, MouseListener {
     public Issue() {
     }
 
-    public People getAssignee() {
+    public String getAssignee() {
         return assignee;
     }
 
-    public Issue(Integer ID, String title, String text, People creator, People assignee, String[] tag, int priop, Project project_belongsTo) {
+    public Issue(Integer ID, String title, String text, String creator, String assignee, String[] tag, int priop, Project project_belongsTo) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
         this.ID = ID;
         this.title = title;
@@ -201,51 +201,77 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         return sb.toString();
     }
 
+
     /*
-        The method below is to update the variables returned by the GUI
+        The method below is to update the variables returned by the GUI.
+        The String format of one of the change log is as of below.
+
+        -----
+        "Time: dd/MM/yyyy HH:mm:ss z"
+        "<Change description>\n"
+        "\n"
+        -----
+
      */
 
-    /**
-     * Method to assign the new edited tags value to the String[] tags
-     *
-     * @param fromGUI String representation to be parsed and added to this.tags
-     */
     private void updateTagsGUI(String fromGUI) {
-        String[] strings = fromGUI.substring(1).split("#");
-        this.tag = strings;
+        String[] updatedTags = fromGUI.substring(1).split("#");         // tags returned from GUI
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the tags.");
+        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  // append original tags
+        sb.append("Edited: ").append(showAllTags(updatedTags)).append("\n\n"); // append new tags
+
+        this.tag = updatedTags;                                              // update the tags array with the new tags
+
+        this.changelog.add(sb.toString());                                   // add change description changelog
     }
 
     private void updatePriorityGUI(int fromGUI) {
-        this.priority = fromGUI;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the priority from ").append(this.priority).append(" to ").append(fromGUI);
+        this.priority = fromGUI;                                             // update priority with new priority from GUI
+        this.changelog.add(sb.toString());                                   // add change description changelog
     }
 
     private void updateStatusGUI(String fromGUI) {
-        this.status = fromGUI;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the status from ").append(this.status).append(" to ").append(fromGUI);
+        this.status = fromGUI;                                               // update status with new status from GUI
+        this.changelog.add(sb.toString());                                   // add change description changelog
     }
 
     private void updateTextGUI(String fromGUI) {
-        this.descriptionText = fromGUI;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
+        sb.append(current_people.getName()).append(" updated the description text.");
+        this.descriptionText = fromGUI;                                      // update the Description text with the new input from GUI
+        this.changelog.add(sb.toString());                                   // add change description changelog
     }
 
     public void return_option() {
         String originalStatus = this.getStatus();
         ArrayList<String> option_state = new ArrayList<>();
         option_state.add(originalStatus);
-        if (originalStatus.equals("open")) {
+        if (originalStatus.equals("Open")) {
             option_state.add("In Progress");
             option_state.add("Resolved");
             option_state.add("Closed");
-        } else if (originalStatus.equals("in progress")) {
+        } else if (originalStatus.equals("In Progress")) {
             option_state.add("Closed");
             option_state.add("Resolved");
-        } else if (originalStatus.equals("resolved")) {
+        } else if (originalStatus.equals("Resolved")) {
             option_state.add("Closed");
             option_state.add("Open");
-        } else if (originalStatus.equals("closed")) {
+        } else if (originalStatus.equals("Closed")) {
             option_state.add("Open");
         }
         set_status(option_state);
     }
+
 
 //     private String updateStatus(String change){
 //         StringBuilder sb = new StringBuilder();
@@ -329,7 +355,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                 o.getID(), o.getStatus(),
                 o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
                 o.getTitle(),
-                o.getAssignee().getName(), o.getCreator().getName());
+                o.getAssignee(), o.getCreator());
         sb.append(issueInfo);
         sb.append("Issue Description\n-----------");
         sb.append("\n" + o.getDescriptionText());
@@ -749,7 +775,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
             add_comment_panel.setVisible(false);
             issue_scroll.setVisible(true);
             numberOfComments++;
-            comments.add(new Comment(current_people, add_comment_text.getText(), numberOfComments, image_file));
+            comments.add(new Comment(current_people.getName(), add_comment_text.getText(), numberOfComments, image_file));
             add_comment_text.setText("Enter comment there");
         }
         if (e.getSource() == delete_issue) {
@@ -904,7 +930,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
                     }
                 }
             }
-        };
+        }; thread.start();
     }
 
     /*
@@ -969,15 +995,15 @@ public class Issue implements Serializable, ActionListener, MouseListener {
         this.descriptionText = descriptionText;
     }
 
-    public People getCreator() {
+    public String getCreator() {
         return creator;
     }
 
-    public void setCreator(People creator) {
+    public void setCreator(String creator) {
         this.creator = creator;
     }
 
-    public void setAssignee(People assignee) {
+    public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
 

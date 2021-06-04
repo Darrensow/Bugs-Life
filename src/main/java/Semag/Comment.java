@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Comment implements Serializable {
 
     private int ID;
-    private People createdBy;
+    private String createdBy;
     private String text;
     private String timestamp;
     private File image_file;
@@ -45,7 +45,7 @@ public class Comment implements Serializable {
      * @param text      His comment
      * @param ID        Comment number
      */
-    public Comment(People createdBy, String text, int ID, File image_file) {
+    public Comment(String createdBy, String text, int ID, File image_file) {
         if (createdBy == null) {
             throw new NullPointerException("Person cannot be anonymous");
         }
@@ -83,7 +83,7 @@ public class Comment implements Serializable {
     @Override
     public String toString() {
         String str = "#" + this.ID;
-        str += "\t" + timestamp + " By : " + this.createdBy.getName();
+        str += "\t" + timestamp + " By : " + this.createdBy;
         str += "\n" + this.text;
         str += reactionsToString();
         return str + "\n";
@@ -134,7 +134,7 @@ public class Comment implements Serializable {
         this.ID = ID;
     }
 
-    public void setCreatedBy(People createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -155,7 +155,7 @@ public class Comment implements Serializable {
         return ID;
     }
 
-    public People getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 

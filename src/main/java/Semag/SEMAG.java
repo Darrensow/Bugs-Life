@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -83,9 +85,19 @@ public class SEMAG implements Serializable {
 //        o = (SEMAG) deSerializeJavaObjectFromDB(connection, 1);
         o.obj.ac();
         o.obj.saveData();
-
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                    o.obj.saveData();
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }; thread.start();
         //save json
-        
 ////        serializeJavaObjectToDB(connection, o);
 //        connection.close();
     }

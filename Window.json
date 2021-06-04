@@ -1,762 +1,214 @@
 {
-  "project_Array": [
-    {
-      "issue": [
-        {
-          "changelog": null,
-          "title": "Can't display the table",
-          "descriptionText": "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          "assignee": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          "comments": [
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "liew",
-                "assigned": 0,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 3
-              },
-              "text": "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
-              "timestamp": "08/08/2019 00:20:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 2,
-                "dislikes": 0,
-                "angry": 1,
-                "likes": 5
-              },
-              "id": 0
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "ang",
-                "assigned": 1,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 4
-              },
-              "text": "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
-              "timestamp": "01/09/2019 20:22:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 10,
-                "dislikes": 0,
-                "angry": 1,
-                "likes": 8
-              },
-              "id": 1
-            }
-          ],
-          "numberOfComments": 2,
-          "tag": [ "Frontend" ],
-          "priority": 4,
-          "status": "In Progress",
-          "timestamp": "07/08/2019 23:44:00 GMT+08:00",
-          "image_file": null,
-          "id": 0,
-          "numbercomment": 2
+  "project_Array" : [ {
+    "issue" : [ {
+      "changelog" : null,
+      "title" : "Flash of unstyled content",
+      "descriptionText" : "What is expected ?\nExpected correct scrollspy active link highlighting and all links work.\n\nWhat is actually happening?\nPage jumps to top before smooth scroll, which leads to weird links highlighting. Also, sometimes some links doesn't highlight (like Server Rendered in demo video)\n\nAdditional comments?\nDemonstration - https://imgur.com/a/GGvITVB",
+      "creator" : "btan",
+      "assignee" : "ang",
+      "comments" : [ {
+        "createdBy" : "liew",
+        "text" : "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
+        "timestamp" : "07/10/2019 13:00:00 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 23,
+          "dislikes" : 7,
+          "angry" : 1,
+          "likes" : 9
         },
-        {
-          "changelog": null,
-          "title": "Can't open file",
-          "descriptionText": "Windows 10 Photo will not open a jpg file. I get \"We can't open this file.\" error message.\n\nThey're family photo that I sure would like to salvage.  Thanks",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          "assignee": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          "comments": [
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "liew",
-                "assigned": 0,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 3
-              },
-              "text": "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
-              "timestamp": "09/08/2019 00:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 10,
-                "dislikes": 1,
-                "angry": 2,
-                "likes": 5
-              },
-              "id": 0
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "btan",
-                "assigned": 2,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 2
-              },
-              "text": "lad photos of windows 8 & 10 are worst possible application ever developed!\n\n                    just change default view to \"windows photo viewer\" if you dont have any other application",
-              "timestamp": "09/08/2019 05:55:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 14,
-                "dislikes": 0,
-                "angry": 1,
-                "likes": 8
-              },
-              "id": 1
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "ang",
-                "assigned": 1,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 4
-              },
-              "text": "Window 10 can but window vista does not work",
-              "timestamp": "10/08/2019 09:41:40 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 0,
-                "dislikes": 0,
-                "angry": 1,
-                "likes": 0
-              },
-              "id": 2
-            }
-          ],
-          "numberOfComments": 3,
-          "tag": [ "Backend" ],
-          "priority": 3,
-          "status": "Open",
-          "timestamp": "08/08/2019 23:44:00 GMT+08:00",
-          "image_file": null,
-          "id": 1,
-          "numbercomment": 3
-        }
-      ],
-      "people_Array": {
-        "list": [
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "liew",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 3
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          }
-        ]
-      },
-      "numissue": 2,
-      "name": "Nuxtjs",
-      "owner": {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "jhoe",
-        "assigned": 2,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 1
-      },
-      "id": 0
-    },
-    {
-      "issue": [
-        {
-          "changelog": null,
-          "title": "Flash of unstyled content",
-          "descriptionText": "What is expected ?\nExpected correct scrollspy active link highlighting and all links work.\n\nWhat is actually happening?\nPage jumps to top before smooth scroll, which leads to weird links highlighting. Also, sometimes some links doesn't highlight (like Server Rendered in demo video)\n\nAdditional comments?\nDemonstration - https://imgur.com/a/GGvITVB",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          "assignee": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          },
-          "comments": [
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "liew",
-                "assigned": 0,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 3
-              },
-              "text": "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
-              "timestamp": "07/10/2019 13:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 23,
-                "dislikes": 7,
-                "angry": 1,
-                "likes": 9
-              },
-              "id": 0
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "ang",
-                "assigned": 1,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 4
-              },
-              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
-              "timestamp": "07/10/2019 17:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 100,
-                "dislikes": 7,
-                "angry": 10,
-                "likes": 8
-              },
-              "id": 1
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "jhoe",
-                "assigned": 2,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 1
-              },
-              "text": "Thanks for everything",
-              "timestamp": "07/10/2019 19:46:40 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 20,
-                "dislikes": 9,
-                "angry": 19,
-                "likes": 8
-              },
-              "id": 2
-            }
-          ],
-          "numberOfComments": 3,
-          "tag": [ "cmty:bug-report" ],
-          "priority": 6,
-          "status": "Open",
-          "timestamp": "01/10/2019 17:00:00 GMT+08:00",
-          "image_file": null,
-          "id": 0,
-          "numbercomment": 3
+        "id" : 0
+      }, {
+        "createdBy" : "ang",
+        "text" : "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+        "timestamp" : "07/10/2019 17:00:00 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 100,
+          "dislikes" : 7,
+          "angry" : 10,
+          "likes" : 8
         },
-        {
-          "changelog": null,
-          "title": "User is \"trapped\" on 404 page",
-          "descriptionText": "When hitting the 404 page, the Nuxt layout isn't applied correctly.",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          },
-          "assignee": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          "comments": [
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "btan",
-                "assigned": 2,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 2
-              },
-              "text": "Still a problem. ",
-              "timestamp": "08/10/2019 17:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 15,
-                "dislikes": 4,
-                "angry": 1,
-                "likes": 10
-              },
-              "id": 0
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "ang",
-                "assigned": 1,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 4
-              },
-              "text": "/cc @clarkdo",
-              "timestamp": "08/10/2019 20:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 12,
-                "dislikes": 1,
-                "angry": 11,
-                "likes": 5
-              },
-              "id": 1
-            }
-          ],
-          "numberOfComments": 2,
-          "tag": [ "Backend" ],
-          "priority": 8,
-          "status": "Closed",
-          "timestamp": "08/10/2019 12:00:00 GMT+08:00",
-          "image_file": null,
-          "id": 1,
-          "numbercomment": 2
-        }
-      ],
-      "people_Array": {
-        "list": [
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "liew",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 3
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          }
-        ]
-      },
-      "numissue": 2,
-      "name": "Vuejs",
-      "owner": {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "btan",
-        "assigned": 2,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 2
-      },
-      "id": 1
-    },
-    {
-      "issue": [
-        {
-          "changelog": null,
-          "title": "Flash of unstyled content",
-          "descriptionText": "What is expected ?\nThere is no flash of unstyled content            \n\nWhat is actually happening?\nThere is a brief flash of unstyled content\n\nAdditional comments? \nDoesn't occur in Chrome",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "liew",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 3
-          },
-          "assignee": {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          "comments": [
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "liew",
-                "assigned": 0,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 3
-              },
-              "text": "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
-              "timestamp": "07/09/2019 19:00:00 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 11,
-                "dislikes": 7,
-                "angry": 24,
-                "likes": 10
-              },
-              "id": 0
-            },
-            {
-              "createdBy": {
-                "newAssignedNotification": [],
-                "password": "password",
-                "name": "ang",
-                "assigned": 1,
-                "number_solved": 0,
-                "gmail": "xianpua2001.sim03@gmail.com",
-                "id": 4
-              },
-              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
-              "timestamp": "10/03/2020 23:56:06 GMT+08:00",
-              "image_file": null,
-              "counter": {
-                "happy": 17,
-                "dislikes": 11,
-                "angry": 5,
-                "likes": 9
-              },
-              "id": 1
-            }
-          ],
-          "numberOfComments": 2,
-          "tag": [ "cmty:bug-report" ],
-          "priority": 1,
-          "status": "Open",
-          "timestamp": "01/09/2019 20:00:00 GMT+08:00",
-          "image_file": null,
-          "id": 0,
-          "numbercomment": 2
-        }
-      ],
-      "people_Array": {
-        "list": [
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "liew",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 3
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          }
-        ]
-      },
-      "numissue": 1,
-      "name": "Reactjs",
-      "owner": {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "liew",
-        "assigned": 0,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 3
-      },
-      "id": 2
-    },
-    {
-      "issue": [
-        {
-          "changelog": [],
-          "title": "Issue with blocks ",
-          "descriptionText": "head",
-          "creator": {
-            "newAssignedNotification": [],
-            "password": "Letmein@1234",
-            "name": "mandy",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "mandysoo665@outlook.com",
-            "id": 5
-          },
-          "assignee": {
-            "newAssignedNotification": [
-              {
-                "accepted": false,
-                "issueInfo": "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
-              }
-            ],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 3,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          "comments": [],
-          "numberOfComments": 0,
-          "tag": [ "", "tough" ],
-          "priority": 1,
-          "status": "open",
-          "timestamp": "04/06/2021 04:34:19 GMT+08:00",
-          "image_file": null,
-          "id": 0,
-          "numbercomment": 0
-        }
-      ],
-      "people_Array": {
-        "list": [
-          {
-            "newAssignedNotification": [
-              {
-                "accepted": false,
-                "issueInfo": "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
-              }
-            ],
-            "password": "password",
-            "name": "jhoe",
-            "assigned": 3,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 1
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "btan",
-            "assigned": 2,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 2
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "liew",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 3
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "password",
-            "name": "ang",
-            "assigned": 1,
-            "number_solved": 0,
-            "gmail": "xianpua2001.sim03@gmail.com",
-            "id": 4
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "Letmein@1234",
-            "name": "mandy",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "mandysoo665@outlook.com",
-            "id": 5
-          },
-          {
-            "newAssignedNotification": [],
-            "password": "Letmein@1234",
-            "name": "ally",
-            "assigned": 0,
-            "number_solved": 0,
-            "gmail": "mandysoo665@gmail.com",
-            "id": 5
-          }
-        ]
-      },
-      "numissue": 1,
-      "name": "Minecraft ",
-      "owner": {
-        "newAssignedNotification": [],
-        "password": "Letmein@1234",
-        "name": "mandy",
-        "assigned": 0,
-        "number_solved": 0,
-        "gmail": "mandysoo665@outlook.com",
-        "id": 5
-      },
-      "id": 3
-    }
-  ],
-  "numberOfUsers": 5,
-  "numberproject": 4,
-  "people_Array_replica": {
-    "list": [
-      {
-        "newAssignedNotification": [
-          {
-            "accepted": false,
-            "issueInfo": "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
-          }
-        ],
-        "password": "password",
-        "name": "jhoe",
-        "assigned": 3,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 1
-      },
-      {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "btan",
-        "assigned": 2,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 2
-      },
-      {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "liew",
-        "assigned": 0,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 3
-      },
-      {
-        "newAssignedNotification": [],
-        "password": "password",
-        "name": "ang",
-        "assigned": 1,
-        "number_solved": 0,
-        "gmail": "xianpua2001.sim03@gmail.com",
-        "id": 4
-      },
-      {
-        "newAssignedNotification": [],
-        "password": "Letmein@1234",
-        "name": "ally",
-        "assigned": 0,
-        "number_solved": 0,
-        "gmail": "mandysoo665@gmail.com",
-        "id": 5
-      }
-    ]
+        "id" : 1
+      }, {
+        "createdBy" : "jhoe",
+        "text" : "Thanks for everything",
+        "timestamp" : "07/10/2019 19:46:40 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 20,
+          "dislikes" : 9,
+          "angry" : 19,
+          "likes" : 8
+        },
+        "id" : 2
+      } ],
+      "numberOfComments" : 3,
+      "tag" : [ "cmty:bug-report" ],
+      "priority" : 6,
+      "status" : "Open",
+      "timestamp" : "01/10/2019 17:00:00 GMT+08:00",
+      "image_file" : null,
+      "id" : 0,
+      "numbercomment" : 3
+    }, {
+      "changelog" : null,
+      "title" : "User is \"trapped\" on 404 page",
+      "descriptionText" : "When hitting the 404 page, the Nuxt layout isn't applied correctly.",
+      "creator" : "ang",
+      "assignee" : "jhoe",
+      "comments" : [ {
+        "createdBy" : "btan",
+        "text" : "Still a problem. ",
+        "timestamp" : "08/10/2019 17:00:00 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 15,
+          "dislikes" : 4,
+          "angry" : 1,
+          "likes" : 10
+        },
+        "id" : 0
+      }, {
+        "createdBy" : "ang",
+        "text" : "/cc @clarkdo",
+        "timestamp" : "08/10/2019 20:00:00 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 12,
+          "dislikes" : 1,
+          "angry" : 11,
+          "likes" : 5
+        },
+        "id" : 1
+      } ],
+      "numberOfComments" : 2,
+      "tag" : [ "Backend" ],
+      "priority" : 8,
+      "status" : "Closed",
+      "timestamp" : "08/10/2019 12:00:00 GMT+08:00",
+      "image_file" : null,
+      "id" : 1,
+      "numbercomment" : 2
+    } ],
+    "numissue" : 2,
+    "name" : "Vuejs",
+    "owner" : "btan",
+    "id" : 1
+  }, {
+    "issue" : [ {
+      "changelog" : null,
+      "title" : "Flash of unstyled content",
+      "descriptionText" : "What is expected ?\nThere is no flash of unstyled content            \n\nWhat is actually happening?\nThere is a brief flash of unstyled content\n\nAdditional comments? \nDoesn't occur in Chrome",
+      "creator" : "liew",
+      "assignee" : "btan",
+      "comments" : [ {
+        "createdBy" : "liew",
+        "text" : "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
+        "timestamp" : "07/09/2019 19:00:00 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 11,
+          "dislikes" : 7,
+          "angry" : 24,
+          "likes" : 10
+        },
+        "id" : 0
+      }, {
+        "createdBy" : "ang",
+        "text" : "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+        "timestamp" : "10/03/2020 23:56:06 GMT+08:00",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 17,
+          "dislikes" : 11,
+          "angry" : 5,
+          "likes" : 9
+        },
+        "id" : 1
+      } ],
+      "numberOfComments" : 2,
+      "tag" : [ "cmty:bug-report" ],
+      "priority" : 1,
+      "status" : "Open",
+      "timestamp" : "01/09/2019 20:00:00 GMT+08:00",
+      "image_file" : null,
+      "id" : 0,
+      "numbercomment" : 2
+    } ],
+    "numissue" : 1,
+    "name" : "Reactjs",
+    "owner" : "liew",
+    "id" : 2
+  }, {
+    "issue" : [ {
+      "changelog" : [ ],
+      "title" : "Issue with blocks ",
+      "descriptionText" : "head",
+      "creator" : "mandy",
+      "assignee" : "jhoe",
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "tag" : [ "tough" ],
+      "priority" : 1,
+      "status" : "open",
+      "timestamp" : "04/06/2021 04:34:19 GMT+08:00",
+      "image_file" : null,
+      "id" : 0,
+      "numbercomment" : 0
+    } ],
+    "numissue" : 1,
+    "name" : "Minecraft ",
+    "owner" : "mandy",
+    "id" : 3
+  } ],
+  "numberproject" : 3,
+  "people_Array_replica" : {
+    "list" : [ {
+      "newAssignedNotification" : [ {
+        "accepted" : false,
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
+      } ],
+      "password" : "password",
+      "name" : "jhoe",
+      "assigned" : 3,
+      "number_solved" : 0,
+      "gmail" : "xianpua2001.sim03@gmail.com",
+      "id" : 1
+    }, {
+      "newAssignedNotification" : [ ],
+      "password" : "password",
+      "name" : "btan",
+      "assigned" : 2,
+      "number_solved" : 0,
+      "gmail" : "xianpua2001.sim03@gmail.com",
+      "id" : 2
+    }, {
+      "newAssignedNotification" : [ ],
+      "password" : "password",
+      "name" : "liew",
+      "assigned" : 0,
+      "number_solved" : 0,
+      "gmail" : "xianpua2001.sim03@gmail.com",
+      "id" : 3
+    }, {
+      "newAssignedNotification" : [ ],
+      "password" : "password",
+      "name" : "ang",
+      "assigned" : 1,
+      "number_solved" : 0,
+      "gmail" : "xianpua2001.sim03@gmail.com",
+      "id" : 4
+    }, {
+      "newAssignedNotification" : [ ],
+      "password" : "Letmein@1234",
+      "name" : "ally",
+      "assigned" : 0,
+      "number_solved" : 0,
+      "gmail" : "mandysoo665@gmail.com",
+      "id" : 5
+    } ]
   },
-  "tagsOption_replica": [ "", "tough" ]
+  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report" ],
+  "numberOfUsers" : 5
 }
