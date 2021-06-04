@@ -910,6 +910,7 @@ public class Window implements Serializable, ActionListener {
         }
     }
 
+
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
