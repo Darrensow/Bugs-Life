@@ -180,12 +180,15 @@ public class Window implements Serializable, ActionListener {
      * @return true if it is an id
      */
     public boolean isnumberic(String sen) {
+        if(sen.length()<1){
+            return false;
+        }
         try {
             if (sen.charAt(0) != '#') {
                 return false;
             }
             double d = Double.parseDouble(sen.substring(1));
-            if (d > project_Array.size()) {
+            if (d >=numberproject) {
                 return false;
             }
         } catch (NumberFormatException nfe) {
@@ -227,7 +230,7 @@ public class Window implements Serializable, ActionListener {
     }
 
     /**
-     * @param projectName want to remove
+     * @param ID want to remove
      *///may delete other project which same name
     public void deleteProject(int ID) {
         for (int i = 0; i < project_Array.size(); i++) {
