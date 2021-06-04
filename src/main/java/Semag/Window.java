@@ -770,7 +770,7 @@ public class Window implements Serializable, ActionListener {
                 sortBased(1);
                 System.out.println("sort based on Name sselected");
             }
-            if (option_button1.getSelectedIndex() == 3) {
+            if (option_button1.getSelectedIndex() == 2) {
                 sortBased(2);
                 System.out.println("sort based on Issue Count selected");
             }
