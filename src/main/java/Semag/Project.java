@@ -61,7 +61,7 @@ public class Project implements Serializable, ActionListener {
     ImageIcon delete_project_image = new ImageIcon("trash_icon.png");
     JButton delete_project = new JButton();
     JComboBox sort_issue = new JComboBox();
-    String[] setting_option = {"Changlog", "Quit"};
+    String[] setting_option = {"Quit"};
     JComboBox setting_button = new JComboBox();
     ArrayList<JCheckBox> include = new ArrayList<>();
     ArrayList<JCheckBox> exclude = new ArrayList<>();
@@ -1080,9 +1080,6 @@ public class Project implements Serializable, ActionListener {
         if (e.getSource() == setting_button) {
             switch (setting_button.getSelectedIndex()) {
                 case 0:
-                    System.out.println("changlog displaying");
-                    break;
-                case 1:
                     this.frame.setVisible(false);
                     window_frame.setVisible(true);
                     System.out.println("quitting ");

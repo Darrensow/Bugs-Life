@@ -564,8 +564,9 @@ public class Window implements Serializable, ActionListener {
         delete_project_button.addActionListener(this);
 
         option_button1.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
-        option_button1.addItem("Sort based on name");
-        option_button1.addItem("sort based on ID");
+        option_button1.addItem("Sort based on ID");
+        option_button1.addItem("sort based on Name");
+        option_button1.addItem("sort based on Issue count");
         option_button1.setBounds(850, 0, 150, 35);
         option_button1.setVisible(true);
         option_button1.addActionListener(this);
@@ -762,15 +763,15 @@ public class Window implements Serializable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == option_button1) {
             if (option_button1.getSelectedIndex() == 0) {
-                sortBased(1);
-                System.out.println("sort based on name selected");
+                sortBased(0);
+                System.out.println("sort based on ID selected");
             }
             if (option_button1.getSelectedIndex() == 1) {
-                sortBased(2);
-                System.out.println("sort based on id sselected");
+                sortBased(1);
+                System.out.println("sort based on Name sselected");
             }
             if (option_button1.getSelectedIndex() == 3) {
-                sortBased(3);
+                sortBased(2);
                 System.out.println("sort based on Issue Count selected");
             }
         }
