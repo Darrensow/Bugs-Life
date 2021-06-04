@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
-public class Issue implements Serializable, ActionListener, MouseListener {
+public class Issue implements Serializable, ActionListener, MouseListener ,Comparator<Issue>{
 
     private ArrayList<String> changelog;
     private Integer ID;
@@ -39,7 +39,7 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
     public static ArrayList<String> tagsOption = new ArrayList<>();
 
-    public static final String[] statusOption = {"open", "in progress", "solved", "closed"};
+    public static final String[] statusOption = {"Open", "In Progress", "Solved", "Closed"};
 
     private Project project_belongsTo;      //for the delete function
 
@@ -1190,5 +1190,10 @@ public class Issue implements Serializable, ActionListener, MouseListener {
 
     public void setTagComparator(Comparator<Issue> tagComparator) {
         this.tagComparator = tagComparator;
+    }
+
+    @Override
+    public int compare(Issue o1, Issue o2) {
+        return 0;
     }
 }

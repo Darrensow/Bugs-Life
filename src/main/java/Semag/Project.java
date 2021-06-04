@@ -39,7 +39,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
-public class Project implements Serializable, ActionListener {
+public class Project implements Serializable, ActionListener,Comparator<Project> {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
     private int numissue = 0;                               // issue id
@@ -1252,5 +1252,10 @@ public class Project implements Serializable, ActionListener {
     public static void main(String[] args) {
 
 
+    }
+
+    @Override
+    public int compare(Project o1, Project o2) {
+        return 0;
     }
 }
