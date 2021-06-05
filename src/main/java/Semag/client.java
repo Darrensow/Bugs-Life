@@ -23,6 +23,7 @@ public class client implements Serializable {
 
     final static int ServerPort = 1234;
 
+
     public client(People people) throws UnknownHostException, IOException {
         Scanner scn = new Scanner(System.in);
 

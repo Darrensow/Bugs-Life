@@ -110,6 +110,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
 
     JFrame project_frame;
     JFrame changlogframe = new JFrame();
+    boolean isowner = false;
 
     public Issue() {
     }
@@ -147,12 +148,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
 
     public void cheacowner() {
         if (this.creator.equals(current_people.getName()) || this.assignee.equals(current_people.getName())) {
-            System.out.println("same");
-            System.out.println(creator);
-            System.out.println(assignee);
-            System.out.println(current_people.getName());
+            isowner = true;
             edit_issue.setVisible(true);
         } else {
+            isowner = false;
             edit_issue.setVisible(false);
         }
     }
@@ -720,11 +719,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         edit_tags.setEditable(true);
         edit_tags.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         //build prior button
-        edit_priop.addItem("1");
-        edit_priop.addItem("2");
-        edit_priop.addItem("3");
-        edit_priop.addItem("4");
-        edit_priop.addItem("5");
+        edit_priop.removeAllItems();
+        for (int i = 1; i < 11; i++) {
+            edit_priop.addItem(i + "");
+        }
         edit_priop.setBounds(900, 0, 100, 50);
         edit_priop.setVisible(true);
         edit_priop.addActionListener(this);
@@ -935,21 +933,31 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == add_comment) {
             System.out.println("adding comment");
             add_comment_panel.setVisible(true);
+
+            edit_issue.setVisible(false);
             issue_scroll.setVisible(false);
             issue_des_panel.setVisible(false);
+            open_changelog.setVisible(false);
+            add_comment.setVisible(false);
         }
         if (e.getSource() == add_comment_submit) {
             exit = true;
             text_undo.clear();
             text_redo.clear();
             add_comment_panel.setVisible(false);
+
+            if (isowner) {
+                edit_issue.setVisible(true);
+            }
+            issue_des_panel.setVisible(true);
             issue_scroll.setVisible(true);
+            open_changelog.setVisible(true);
+            add_comment.setVisible(true);
             numberOfComments++;
             comments.add(new Comment(current_people.getName(), add_comment_text.getText(), numberOfComments, image_file));
             add_comment_text.setText("Enter comment there");
             insert_image = new ImageIcon();
             insert_image_button.setEnabled(true);
-            issue_des_panel.setVisible(true);
             insert_image_topanel();
             set_comment(comments);
         }
@@ -990,9 +998,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == open_changelog) {
             System.out.println("changlog");
             setchangelogtext(getChangelog());
-            edit_issue.setVisible(false);
             quitchangelog.setVisible(true);
             changelog_textsp.setVisible(true);
+            edit_issue.setVisible(false);
+            add_comment.setVisible(false);
             issue_des_panel.setVisible(false);
             mid_panel.setVisible(false);
             open_changelog.setVisible(false);
@@ -1000,9 +1009,15 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == done_edit) {
             System.out.println("submit");
             edit_panel.setVisible(false);
-            issue_scroll.setVisible(true);
+            if (isowner) {
+                edit_issue.setVisible(true);
+            }
+
             issue_des_panel.setVisible(true);
-            edit_issue.setVisible(true);
+            issue_scroll.setVisible(true);
+            open_changelog.setVisible(true);
+            add_comment.setVisible(true);
+
             int updatedPriority = edit_priop.getSelectedIndex() + 1;
             String updatedTags = edit_tags.getText();
             String updatedDescription = edit_descrip.getText();
@@ -1048,8 +1063,12 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == edit_issue) {
             edit_priop.setSelectedIndex(this.priority - 1);
             edit_panel.setVisible(true);
+
+            edit_issue.setVisible(false);
             issue_des_panel.setVisible(false);
             issue_scroll.setVisible(false);
+            open_changelog.setVisible(false);
+            add_comment.setVisible(false);
             return_option(); //set the option
             edit_descrip.setText(this.getDescriptionText()); //set descrip text
             set_tags(this.returnTagsGUI()); //set tags
@@ -1057,6 +1076,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == quitchangelog) {
             changelog_textsp.setVisible(false);
             quitchangelog.setVisible(false);
+            if (isowner) {
+                edit_issue.setVisible(true);
+            }
+            add_comment.setVisible(true);
             issue_des_panel.setVisible(true);
             mid_panel.setVisible(true);
             open_changelog.setVisible(true);

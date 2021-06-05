@@ -75,27 +75,35 @@ public class chat_window implements ActionListener, MouseListener, Serializable 
         ImageIcon app_icon = new ImageIcon("C:\\Users\\xianp\\OneDrive\\Documents\\NetBeansProjects\\SEMAG\\whatapps icon.jpg");
         frame.setLayout(null);
         frame.setTitle("Chat window");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                try {
+                    dos.writeUTF("logout");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
         frame.setIconImage(app_icon.getImage());
         frame.setResizable(true);
-        frame.setSize(1350, 700);
+        frame.setSize(690, 700);
 
         title.setBackground(Color.red);
         title.setBorder(border);
         title.setVerticalAlignment(JLabel.CENTER);
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setOpaque(true);
-        title.setBounds(0, 0, 1350, 50);
+        title.setBounds(0, 0, 675, 50);
         title.setText("Group Chat");
         title.setFont(new Font("Serif", Font.PLAIN, 35));
 
         displaytext.setEditable(false);
         displaytext.setVisible(true);
-        displaytext.setBounds(0, 0, 100, 100);
+        displaytext.setBounds(0, 0, 675, 500);
 
         JScrollPane scrollPane = new JScrollPane(displaytext);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(0, 50, 1350, 500);
+        scrollPane.setBounds(0, 50, 675, 500);
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         keyin_place.setEditable(true);
@@ -107,10 +115,10 @@ public class chat_window implements ActionListener, MouseListener, Serializable 
         JScrollPane scroll_keyin_place = new JScrollPane(keyin_place);
         scroll_keyin_place.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll_keyin_place.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll_keyin_place.setBounds(0, 550, 1200, 100);
+        scroll_keyin_place.setBounds(0, 550, 600, 100);
 
         button.addActionListener((ActionListener) this);
-        button.setBounds(1230, 600, 100, 30);
+        button.setBounds(600, 600, 75, 30);
         frame.add(title);
         frame.add(button);
         frame.add(scroll_keyin_place);

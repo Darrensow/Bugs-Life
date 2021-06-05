@@ -134,7 +134,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                     if (frame.isVisible() == false) {
                         current_issue = issue;
                         reset_table(current_issue);
-                        System.out.println("still in process");
                     }
                     try {
                         Thread.sleep(1000);
