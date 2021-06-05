@@ -943,6 +943,32 @@ public class Window implements Serializable, ActionListener {
         }
     }
 
+    /**
+     * Method to increase the number of issues resolved of a particular person.
+     * Occurs when an issue is set to 'Resolved' status.
+     * @param people The person assigned to the issue
+     */
+    public static void resolvedAnIssue(People people) {
+        for (int i = 0; i < Window.people_Array.size(); i++) {
+            if (people.getName().equals(Window.people_Array.get(i).getName())) {
+                Window.people_Array.get(i).addResolved();
+            }
+        }
+    }
+
+    /**
+     * Method to decrease the number of issues resolved of a particular person.
+     * Occurs when a resolved issue is set to 'Reopen' state.
+     * @param people The person assigned to the issue.
+     */
+    public static void reopenedAnIssue(People people) {
+        for (int i = 0; i < Window.people_Array.size(); i++) {
+            if (people.getName().equals(Window.people_Array.get(i).getName())) {
+                Window.people_Array.get(i).reduceResolved();
+            }
+        }
+    }
+
     public void sendfile(File file) throws IOException {
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi" + current_people.getName() + " this is the json file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file};

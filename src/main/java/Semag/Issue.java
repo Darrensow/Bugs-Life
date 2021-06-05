@@ -322,9 +322,21 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
 
     private void updateStatusGUI(String fromGUI) {
         StringBuilder sb = new StringBuilder();
+        // Add or deduct resolved
+        if (fromGUI.equals("Resolved")) {                                       // increase the number of issues solved for current_people
+            Window.resolvedAnIssue(current_people);
+        } else if (fromGUI.equals("Reopen")) {
+            Window.reopenedAnIssue(current_people);                             // decrease the number of issues solved for current_people
+        }
+
         if (!this.status.equals(fromGUI)) {
             sb.append("Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-            sb.append(current_people.getName()).append(" updated the status from ").append(this.status).append(" to ").append(fromGUI);
+            if (fromGUI.equals("Reopen")) {                                     // special case when status is 'Reopened'
+                fromGUI = "Open";                                               // "Reopen -> Open", so that won't have issues with the algo
+                sb.append(current_people.getName()).append(" reopened the issue.");
+            } else {
+                sb.append(current_people.getName()).append(" updated the status from '").append(this.status).append("' to '").append(fromGUI).append("'");
+            }
             this.status = fromGUI;                                               // update status with new status from GUI
             this.changelog.add(sb.toString());                                   // add change description changelog
         }
@@ -343,6 +355,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
     }
 
 
+    //Display the options that the user is able to choose to update the status of the issue
     public void return_option() {
         String originalStatus = this.getStatus();
         ArrayList<String> option_state = new ArrayList<>();
@@ -356,9 +369,9 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             option_state.add("Resolved");
         } else if (originalStatus.equalsIgnoreCase("Resolved")) {
             option_state.add("Closed");
-            option_state.add("Open");
+            option_state.add("Reopen");
         } else if (originalStatus.equalsIgnoreCase("Closed")) {
-            option_state.add("Open");
+            option_state.add("Reopen");
         }
         set_status(option_state);
     }
