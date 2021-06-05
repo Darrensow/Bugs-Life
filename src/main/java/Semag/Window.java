@@ -147,11 +147,11 @@ public class Window implements Serializable, ActionListener {
             if (current_project_Array.size() > 0) {
                 Collections.sort(current_project_Array, comparatorInUse);
                 for (int i = 0; i < current_project_Array.size(); i++) {
-                    print(current_project_Array);
+                    reset_table(current_project_Array);
                 }
             }
             else
-                print(current_project_Array);
+                reset_table(current_project_Array);
         }
     }
 
