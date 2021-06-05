@@ -107,7 +107,7 @@ public class Comment implements Serializable {
     }
 
     public int likecount() {
-        return counter.get("like");
+        return counter.get("likes");
     }
 
 

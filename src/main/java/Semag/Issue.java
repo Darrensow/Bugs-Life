@@ -845,6 +845,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             like.add(new JButton());
             like.get(i).setIcon(like_image);
             like.get(i).addActionListener(this);
+            like.get(i).addMouseListener(this);
             like.get(i).setFocusable(true);
             like.get(i).setBounds(800, 200, 50, 50);
             like.get(i).setVisible(true);
@@ -852,6 +853,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             dislike.add(new JButton());
             dislike.get(i).setIcon(dislike_image);
             dislike.get(i).addActionListener(this);
+            dislike.get(i).addMouseListener(this);
             dislike.get(i).setFocusable(true);
             dislike.get(i).setBounds(850, 200, 50, 50);
             dislike.get(i).setVisible(true);
@@ -859,6 +861,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             happy.add(new JButton());
             happy.get(i).setIcon(happy_icon);
             happy.get(i).addActionListener(this);
+            happy.get(i).addMouseListener(this);
             happy.get(i).setFocusable(true);
             happy.get(i).setBounds(750, 200, 50, 50);
             happy.get(i).setVisible(true);
@@ -866,6 +869,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             angry.add(new JButton());
             angry.get(i).setIcon(angry_icon);
             angry.get(i).addActionListener(this);
+            angry.get(i).addMouseListener(this);
             angry.get(i).setFocusable(true);
             angry.get(i).setBounds(700, 200, 50, 50);
             angry.get(i).setVisible(true);
@@ -874,27 +878,23 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             happycount.get(i).setBounds(750, 250, 50, 50);
             happycount.get(i).setVisible(false);
             happycount.get(i).setBackground(Color.red);
-            happycount.get(i).addMouseListener(this);
             happycount.get(i).setOpaque(true);
             //
             angrycount.add(new JLabel());
             angrycount.get(i).setBounds(700, 250, 50, 50);
             angrycount.get(i).setVisible(false);
-            angrycount.get(i).addMouseListener(this);
             angrycount.get(i).setBackground(Color.green);
             angrycount.get(i).setOpaque(true);
             //
             likecount.add(new JLabel());
             likecount.get(i).setBounds(800, 250, 50, 50);
             likecount.get(i).setVisible(false);
-            likecount.get(i).addMouseListener(this);
             likecount.get(i).setBackground(Color.blue);
             likecount.get(i).setOpaque(true);
             //
             dislikecount.add(new JLabel());
             dislikecount.get(i).setBounds(850, 250, 50, 50);
             dislikecount.get(i).setVisible(false);
-            dislikecount.get(i).addMouseListener(this);
             dislikecount.get(i).setBackground(Color.pink);
             dislikecount.get(i).setOpaque(true);
 
@@ -947,14 +947,14 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (like != null) {
             for (int i = 0; i < like.size(); i++) {
                 if (e.getSource() == like.get(i)) {
-                    reactComment(i, "like");
+                    reactComment(i, "likes");
                 }
             }
         }
         if (dislike != null) {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
-                    reactComment(i, "dislike");
+                    reactComment(i, "dislikes");
                 }
             }
         }
@@ -1068,6 +1068,38 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == image_file) {
+            image.setBounds(0, 0, 1000, 600);
+        }
+        if (dislike != null) {
+            for (int i = 0; i < dislike.size(); i++) {
+                if (e.getSource() == dislike.get(i)) {
+                    dislikecount.get(i).setText(comments.get(i).dislikecount()+"");
+                    dislikecount.get(i).setVisible(true);
+                }
+            }
+        }if (happy != null) {
+            for (int i = 0; i < happy.size(); i++) {
+                if (e.getSource() == happy.get(i)) {
+                    happycount.get(i).setText(comments.get(i).happycount()+"");
+                    happycount.get(i).setVisible(true);
+                }
+            }
+        }if (angry!= null) {
+            for (int i = 0; i < angry.size(); i++) {
+                if (e.getSource() == angry.get(i)) {
+                    angrycount.get(i).setText(comments.get(i).angrycount()+"");
+                    angrycount.get(i).setVisible(true);
+                }
+            }
+        }if (like != null) {
+            for (int i = 0; i < like.size(); i++) {
+                if (e.getSource() == like.get(i)) {
+                    likecount.get(i).setText(comments.get(i).likecount()+"");
+                    likecount.get(i).setVisible(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -1083,30 +1115,30 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == image_file) {
             image.setBounds(0, 0, 1000, 600);
         }
-        if (dislikecount != null) {
-            for (int i = 0; i < dislikecount.size(); i++) {
-                if (e.getSource() == dislikecount.get(i)) {
+        if (dislike != null) {
+            for (int i = 0; i < dislike.size(); i++) {
+                if (e.getSource() == dislike.get(i)) {
                     dislikecount.get(i).setText(comments.get(i).dislikecount()+"");
                     dislikecount.get(i).setVisible(true);
                 }
             }
-        }if (happycount != null) {
-            for (int i = 0; i < happycount.size(); i++) {
-                if (e.getSource() == happycount.get(i)) {
+        }if (happy != null) {
+            for (int i = 0; i < happy.size(); i++) {
+                if (e.getSource() == happy.get(i)) {
                     happycount.get(i).setText(comments.get(i).happycount()+"");
                     happycount.get(i).setVisible(true);
                 }
             }
-        }if (angrycount != null) {
-            for (int i = 0; i < angrycount.size(); i++) {
-                if (e.getSource() == angrycount.get(i)) {
+        }if (angry!= null) {
+            for (int i = 0; i < angry.size(); i++) {
+                if (e.getSource() == angry.get(i)) {
                     angrycount.get(i).setText(comments.get(i).angrycount()+"");
                     angrycount.get(i).setVisible(true);
                 }
             }
-        }if (likecount != null) {
-            for (int i = 0; i < likecount.size(); i++) {
-                if (e.getSource() == likecount.get(i)) {
+        }if (like != null) {
+            for (int i = 0; i < like.size(); i++) {
+                if (e.getSource() == like.get(i)) {
                     likecount.get(i).setText(comments.get(i).likecount()+"");
                     likecount.get(i).setVisible(true);
                 }
@@ -1120,27 +1152,27 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == image_file) {
             image.setBounds(750, 0, 100, 50);
-        } if (dislikecount != null) {
-            for (int i = 0; i < dislikecount.size(); i++) {
-                if (e.getSource() == dislikecount.get(i)) {
+        } if (dislike != null) {
+            for (int i = 0; i < dislike.size(); i++) {
+                if (e.getSource() == dislike.get(i)) {
                     dislikecount.get(i).setVisible(false);
                 }
             }
-        }if (happycount != null) {
-            for (int i = 0; i < happycount.size(); i++) {
-                if (e.getSource() == happycount.get(i)) {
+        }if (happy!= null) {
+            for (int i = 0; i < happy.size(); i++) {
+                if (e.getSource() == happy.get(i)) {
                     happycount.get(i).setVisible(false);
                 }
             }
-        }if (angrycount != null) {
+        }if (angry != null) {
             for (int i = 0; i < angrycount.size(); i++) {
-                if (e.getSource() == angrycount.get(i)) {
+                if (e.getSource() == angry.get(i)) {
                     angrycount.get(i).setVisible(false);
                 }
             }
-        }if (likecount != null) {
+        }if (like != null) {
             for (int i = 0; i < likecount.size(); i++) {
-                if (e.getSource() == likecount.get(i)) {
+                if (e.getSource() == like.get(i)) {
                     likecount.get(i).setVisible(false);
                 }
             }
