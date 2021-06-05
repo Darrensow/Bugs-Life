@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
-public class Project implements Serializable, ActionListener, Comparator<Project> {
+public class Project implements Serializable, ActionListener,Comparator<Project>,Comparable<Project> {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
     private int numissue = 0;                               // issue id
@@ -174,45 +174,7 @@ public class Project implements Serializable, ActionListener, Comparator<Project
     }
 
 
-    /**
-     * @param input keyword search search issue
-     */
-    public void search(String input) { //  only input number will directly assume as ID
-        if (isnumberic(input)) {
-            entertheissue(Integer.parseInt(input.substring(1)));
-        } else {
-            current_issue = printsearchResult(input);
-            Collections.sort(current_issue, comparatorInUse);
-            reset_table(current_issue);
-        }
-    }
 
-    /**
-     * @param seachkeyword print issue
-     * @return true if have isseu
-     */
-    public ArrayList<Issue> printsearchResult(String seachkeyword) {
-        if (seachkeyword.equals("") || seachkeyword.equals("search")) {
-            return current_issue;
-        }
-        ArrayList<Issue> temp = new ArrayList<>();
-        String[] token = seachkeyword.toLowerCase().split("#");
-        for (int i = 0; i < current_issue.size(); i++) {
-            for (int j = 0; j < token.length; j++) {
-                if (current_issue.get(i).getTitle().toLowerCase().equals(token[j])) {
-                    temp.add(current_issue.get(i));
-                    break;
-                } else if (current_issue.get(i).getDescriptionText().toLowerCase().equals(token[j])) {
-                    temp.add(current_issue.get(i));
-                    break;
-                } else if (checkcomment(current_issue.get(i).getComments(), token[j])) {
-                    temp.add(current_issue.get(i));
-                    break;
-                }
-            }
-        }
-        return temp;
-    }
 
     /**
      * @param arr   comment arraylist
@@ -293,78 +255,7 @@ public class Project implements Serializable, ActionListener, Comparator<Project
     }
 
 
-    /*
-  include  filter kind
-     */
-    private ArrayList<Issue> filterin(String tag, String state) {
-        if (tag.equals("") && state.equals("")) {
-            return current_issue;
-        }
-        ArrayList<Issue> temp = new ArrayList<>();
-        String[] tags = tag.split("#");
-        String[] states;
-        if (state.length() == 0) {
-            states = new String[0];
-        } else {
-            states = state.substring(1).split("#");
-        }
-        for (int i = 0; i < current_issue.size(); i++) {
-            label:
-            {
-                /*
-                    note to Sam, my IDE says that the two if statements are always false.
-                    I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
-                 */
-                for (int j = 0; j < Math.max(states.length, tags.length); j++) {
-                    if (j < states.length && current_issue.get(i).getStatus().equals(states[j])) {
-                        temp.add(current_issue.get(i));
-                        break label;
-                    }
-                    String[] tagsArray = current_issue.get(i).getTag();
-                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (tags.length > j && tagsArray[k].equals(tags[j])) {
-                            temp.add(current_issue.get(i));
-                            break label;
-                        }
-                    }
-                }
-            }
-        }
-        return temp;
-    }
 
-    private ArrayList<Issue> filterout(String tag, String state) {
-        if (tag.equals("") && state.equals("")) {
-            return current_issue;
-        }
-        ArrayList<Issue> temp = new ArrayList<>();
-        String[] tags = tag.split("#");
-        String[] states;
-        if (state.length() <= 0) {
-            states = new String[0];
-        } else {
-            states = state.substring(1).split("#");
-        }
-        for (int i = 0; i < issue.size(); i++) {
-            label:
-            {
-                for (int j = 0; j < Math.max(states.length, tags.length); j++) {
-                    if (j < states.length && issue.get(i).getStatus().equals(states[j])) {
-                        break label;
-                    }
-                    String[] tagsArray = issue.get(i).getTag();
-                    for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
-                        if (j < tags.length && tagsArray[k].equals(tags[j])) {
-                            break label;
-                        }
-                    }
-                    temp.add(issue.get(i));
-                }
-            }
-
-        }
-        return temp;
-    }
 
     private People searchpeople(String name) {
         for (int i = 0; i < Window.people_Array.size(); i++) {
@@ -941,7 +832,7 @@ public class Project implements Serializable, ActionListener, Comparator<Project
      * This is a method to just remove one issue from issue dashboard, called by
      * Issue class
      *
-     * @param toDelete issue to be removed
+     * @param ID issue to be removed
      */
     public void deleteIssue(int ID) {
 
@@ -971,6 +862,7 @@ public class Project implements Serializable, ActionListener, Comparator<Project
         if (e.getSource() == add_issue) {
             add_issue_panel.setVisible(true);
             table_scroll.setVisible(false);
+            System.out.println("add issue button pressed");
             handle_thread();
         }
         if (e.getSource() == delete_project) {
@@ -1023,7 +915,7 @@ public class Project implements Serializable, ActionListener, Comparator<Project
         if (e.getSource() == submit) {
             String issue_name = name_text.getText();
             String tags = tags_text.getText();
-            String[] issue_tags_array = tags.split("#");
+            String[] issue_tags_array = tags.substring(1).split("#");
             String description = descrip.getText();
             int priop = priority.getSelectedIndex() + 1;
             String assignee = assignee_text.getText();
@@ -1105,11 +997,181 @@ public class Project implements Serializable, ActionListener, Comparator<Project
             }
         }
         if (can_search) {
-            current_issue = filterout(exclude_tags, excludestate);
-            current_issue = filterin(include_tags, includestate);
+            current_issue = filterout(exclude_tags, excludestate);//        System.out.println("issue size after filterout:" + current_issue.size());
+            current_issue = filterin(include_tags, includestate);//        System.out.println("issue size after filterin:" + current_issue.size());
             search(keyword);
         }
 
+    }
+
+    private ArrayList<Issue> filterout(String tag, String state) {
+        if (tag.equals("") && state.equals("")) {
+            return issue;
+        }
+        String[] tags;
+        String [] states;
+
+        if (tag.length() == 0){
+            tags = new String[0];
+        }else
+            tags = tag.substring(1).split("#");
+
+        if (state.length() == 0){
+            states = new String[0];
+        }else
+            states = state.substring(1).split("#");
+
+//        System.out.println(Arrays.toString(tags));
+//        System.out.println(Arrays.toString(states));
+
+        boolean[] kenaExclude =new boolean[issue.size()];   //acts like an index pointer
+        for (int i = 0; i < issue.size(); i++) {
+
+            if (tags.length != 0) {     //only compare tag if there's tag
+            for (int j = 0; j < issue.get(i).getTag().length ; j++) {
+                    String currentIssueTag = issue.get(i).getTag()[j];
+
+                    for (int k = 0; k < tags.length; k++) {
+                        if(tags[k].equalsIgnoreCase(currentIssueTag)){
+                            kenaExclude[i] = true;              //if kena mark true, means it will be excluded
+                            j = issue.get(i).getTag().length;   //:)) sorry I don't know how to use label
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+
+            if (states.length != 0) {     //only compare status if there's status
+                    String currentIssueStatus = issue.get(i).getStatus();
+                    for (int k = 0; k < states.length; k++) {
+                        if(states[k].equalsIgnoreCase(currentIssueStatus)){
+//                            System.out.println("I kena exclude: " + issue.get(i).getTitle());
+                            kenaExclude[i] = true;
+                            break;
+                        }
+                    }
+            }
+        }
+        ArrayList<Issue> temp = new ArrayList<>();
+        System.out.println(Arrays.toString(kenaExclude));
+        for (int i = 0; i < kenaExclude.length; i++) {
+            if(!kenaExclude[i]){
+//                System.out.println("I dinnot kena exclude: " + issue.get(i).getTitle());
+                temp.add(issue.get(i));
+            }
+        }
+        return temp;
+    }
+
+
+
+
+    /*
+    include  filter kind
+    */
+    private ArrayList<Issue> filterin(String tag, String state) {
+        if (current_issue.isEmpty() || (tag.equals("") && state.equals(""))) {
+            return current_issue;
+        }
+        String[] tags;
+        String [] states;
+
+        if (tag.length() == 0){
+            tags = new String[0];
+        }else
+            tags = tag.substring(1).split("#");
+
+        if (state.length() == 0){
+            states = new String[0];
+        }else
+            states = state.substring(1).split("#");
+
+//        System.out.println(Arrays.toString(tags));
+//        System.out.println(Arrays.toString(states));
+
+        boolean[] willInclude =new boolean[current_issue.size()];   //acts like an index pointer
+        for (int i = 0; i < current_issue.size(); i++) {
+            if (tags.length != 0) {     //only compare tag if there's tag
+                for (int j = 0; j <current_issue.get(i).getTag().length ; j++) {
+                    String currentIssueTag = current_issue.get(i).getTag()[j];
+
+                    for (int k = 0; k < tags.length; k++) {
+                        if(tags[k].equalsIgnoreCase(currentIssueTag)){
+                            willInclude[i] = true;              //if kena mark true, means it will be excluded
+                            j = issue.get(i).getTag().length;   //:)) sorry I don't know how to use label
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+            if (states.length != 0) {     //only compare status if there's status
+                String currentIssueStatus = current_issue.get(i).getStatus();
+                for (int k = 0; k < states.length; k++) {
+                    if(states[k].equalsIgnoreCase(currentIssueStatus)){
+                        System.out.println("I kena include: " + current_issue.get(i).getTitle());
+                        willInclude[i] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        ArrayList<Issue> temp = new ArrayList<>();
+        System.out.println(Arrays.toString(willInclude));
+        for (int i = 0; i < willInclude.length; i++) {
+            if(willInclude[i]){
+                System.out.println("I kena include: " + current_issue.get(i).getTitle());
+                temp.add(current_issue.get(i));
+            }
+        }
+        return temp;
+    }
+
+    /**
+     * @param input keyword search search issue
+     */
+    public void search(String input) { //  only input number will directly assume as ID
+        if (isnumberic(input)) {
+            entertheissue(Integer.parseInt(input.substring(1)));
+        } else {
+            current_issue = printsearchResult(input);
+            System.out.println("issue size after filter and searchkeyword: "+ current_issue.size());
+            Collections.sort(current_issue,comparatorInUse);
+            reset_table(current_issue);
+        }
+    }
+
+    /**
+     * @param seachkeyword print issue
+     * @return true if have isseu
+     */
+    public ArrayList<Issue> printsearchResult(String seachkeyword) {
+        if (seachkeyword.equals("") || seachkeyword.equals("search")) {
+            return current_issue;
+        }
+        ArrayList<Issue> temp = new ArrayList<>();
+        String[] token = seachkeyword.toLowerCase().split("#");
+        System.out.println(Arrays.toString(token));
+
+        for (int i = 0; i < current_issue.size(); i++) {
+            for (int j = 0; j < token.length; j++) {
+                if (current_issue.get(i).getTitle().toLowerCase().contains(token[j])) {
+                    temp.add(current_issue.get(i));
+                    System.out.println("I got match with title");
+                    break;
+                } else if (current_issue.get(i).getDescriptionText().toLowerCase().contains(token[j])) {
+                    temp.add(current_issue.get(i));
+                    break;
+                } else if (checkcomment(current_issue.get(i).getComments(), token[j])) {
+                    temp.add(current_issue.get(i));
+                    break;
+                }
+            }
+        }
+        return temp;
     }
 
     public void popwindow(String title, String content) {
@@ -1189,6 +1251,11 @@ public class Project implements Serializable, ActionListener, Comparator<Project
 
     @Override
     public int compare(Project o1, Project o2) {
+        return 0;
+    }
+
+    @Override
+    public int compareTo(Project o) {
         return 0;
     }
 }

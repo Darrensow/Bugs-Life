@@ -159,7 +159,7 @@ public class Window implements Serializable, ActionListener {
      */
     public ArrayList<Project> printsearchResult(String seachkeyword) {
         if (seachkeyword.equals("") || seachkeyword.equals("search")) {
-            return current_project_Array;
+            return project_Array;
         }
         ArrayList<Project> temp = new ArrayList<>();
         String[] token = seachkeyword.toLowerCase().split(" ");
