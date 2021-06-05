@@ -58,8 +58,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
     ImageIcon redo_icon = new ImageIcon("redo.png");
     ImageIcon delete_issue_image = new ImageIcon("trash_icon.png");
     JButton delete_issue = new JButton();
-    JComboBox setting_button = new JComboBox();
-    String[] setting_option = {"Changlog", "Quit"};
+    JButton open_changelog = new JButton();
     JPanel mid_panel = new JPanel();
     JPanel issue_des_panel = new JPanel();
     JTextArea issue_descrip = new JTextArea();
@@ -543,7 +542,11 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         ImageIcon konoha = new ImageIcon("konoha_logo.jpg");
         frame.setLayout(null);
         frame.setTitle("firstPage");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                project_frame.setVisible(true);
+            }
+        });
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
         frame.setSize(1350, 730);
@@ -652,16 +655,13 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         edit_issue.setFocusable(true);
         edit_issue.addActionListener(this);
         //build setting button / quit
-        setting_button.removeAllItems();
-        for (int i = 0; i < setting_option.length; i++) {
-            setting_button.addItem(setting_option[i]);
-        }
-        setting_button.setVisible(true);
-        setting_button.setBounds(1000, 35, 150, 35);
-        setting_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-        setting_button.addActionListener(this);
-        setting_button.setBackground(Color.CYAN);
-        setting_button.setOpaque(true);
+        open_changelog.setVisible(true);
+        open_changelog.setBounds(1000, 35, 150, 35);
+        open_changelog.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+        open_changelog.setText("Open Changelog");
+        open_changelog.addActionListener(this);
+        open_changelog.setBackground(Color.CYAN);
+        open_changelog.setOpaque(true);
         //build issue show text
         mid_panel.setVisible(true);
         mid_panel.setPreferredSize(new Dimension(1000, 100000));
@@ -756,9 +756,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         edit_panel.add(done_edit);
 
 //build quit changelog button
-        quitchangelog.setBounds(1250, 0, 100, 50);
+        quitchangelog.setBounds(1150, 0, 150, 50);
         quitchangelog.setFocusable(true);
         quitchangelog.addActionListener(this);
+        quitchangelog.setVisible(false);
 
         //build changelog text
         changelog_textarea.setPreferredSize(new Dimension(900, 200000));
@@ -766,19 +767,20 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         changelog_textarea.setEditable(false);
 
         //build chnagelog text sp
-        changelog_textsp.setBounds(0, 0, 1250, 730);
+        changelog_textsp.setBounds(0, 0, 1150, 730);
         changelog_textsp.setVisible(false);
         changelog_textsp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         changelog_textsp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
 
         //add component to frame
+        frame.add(quitchangelog);
         frame.add(changelog_textsp);
         frame.add(edit_issue);
         frame.add(edit_panel);
         frame.add(add_comment);
         frame.add(add_comment_panel);
         frame.add(delete_issue);
-        frame.add(setting_button);
+        frame.add(open_changelog);
         frame.add(issue_scroll);
         frame.add(label);
         frame.repaint();
@@ -877,19 +879,19 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
             happycount.add(new JLabel());
             happycount.get(i).setBounds(750, 250, 50, 50);
             happycount.get(i).setVisible(false);
-            happycount.get(i).setBackground(Color.red);
+            happycount.get(i).setBackground(Color.pink);
             happycount.get(i).setOpaque(true);
             //
             angrycount.add(new JLabel());
             angrycount.get(i).setBounds(700, 250, 50, 50);
             angrycount.get(i).setVisible(false);
-            angrycount.get(i).setBackground(Color.green);
+            angrycount.get(i).setBackground(Color.pink);
             angrycount.get(i).setOpaque(true);
             //
             likecount.add(new JLabel());
             likecount.get(i).setBounds(800, 250, 50, 50);
             likecount.get(i).setVisible(false);
-            likecount.get(i).setBackground(Color.blue);
+            likecount.get(i).setBackground(Color.pink);
             likecount.get(i).setOpaque(true);
             //
             dislikecount.add(new JLabel());
@@ -972,28 +974,22 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
                 }
             }
         }
-        if (e.getSource() == setting_button) {
-            switch (setting_button.getSelectedIndex()) {
-                case 0:
-                    System.out.println("changlog");
-                    setchangelogtext(getChangelog());
-                    changelog_textsp.setVisible(true);
-                    mid_panel.setVisible(false);
-                    setting_button.setVisible(false);
-                    break;
-                case 1:
-                    frame.setVisible(false);
-                    project_frame.setVisible(true);
-                    System.out.println("quit");
-                    break;
-
-            }
+        if (e.getSource() == open_changelog) {
+            System.out.println("changlog");
+            setchangelogtext(getChangelog());
+            edit_issue.setVisible(false);
+            quitchangelog.setVisible(true);
+            changelog_textsp.setVisible(true);
+            issue_des_panel.setVisible(false);
+            mid_panel.setVisible(false);
+            open_changelog.setVisible(false);
         }
         if (e.getSource() == done_edit) {
             System.out.println("submit");
             edit_panel.setVisible(false);
             issue_scroll.setVisible(true);
-
+            issue_des_panel.setVisible(true);
+            edit_issue.setVisible(true);
             int updatedPriority = edit_priop.getSelectedIndex() + 1;
             String updatedTags = edit_tags.getText();
             String updatedDescription = edit_descrip.getText();
@@ -1039,6 +1035,7 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (e.getSource() == edit_issue) {
             edit_priop.setSelectedIndex(this.priority - 1);
             edit_panel.setVisible(true);
+            issue_des_panel.setVisible(false);
             issue_scroll.setVisible(false);
             return_option(); //set the option
             edit_descrip.setText(this.getDescriptionText()); //set descrip text
@@ -1046,8 +1043,10 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         }
         if (e.getSource() == quitchangelog) {
             changelog_textsp.setVisible(false);
+            quitchangelog.setVisible(false);
+            issue_des_panel.setVisible(true);
             mid_panel.setVisible(true);
-            setting_button.setVisible(true);
+            open_changelog.setVisible(true);
         }
 
     }
@@ -1074,28 +1073,31 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (dislike != null) {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
-                    dislikecount.get(i).setText(comments.get(i).dislikecount()+"");
+                    dislikecount.get(i).setText(comments.get(i).dislikecount() + "");
                     dislikecount.get(i).setVisible(true);
                 }
             }
-        }if (happy != null) {
+        }
+        if (happy != null) {
             for (int i = 0; i < happy.size(); i++) {
                 if (e.getSource() == happy.get(i)) {
-                    happycount.get(i).setText(comments.get(i).happycount()+"");
+                    happycount.get(i).setText(comments.get(i).happycount() + "");
                     happycount.get(i).setVisible(true);
                 }
             }
-        }if (angry!= null) {
+        }
+        if (angry != null) {
             for (int i = 0; i < angry.size(); i++) {
                 if (e.getSource() == angry.get(i)) {
-                    angrycount.get(i).setText(comments.get(i).angrycount()+"");
+                    angrycount.get(i).setText(comments.get(i).angrycount() + "");
                     angrycount.get(i).setVisible(true);
                 }
             }
-        }if (like != null) {
+        }
+        if (like != null) {
             for (int i = 0; i < like.size(); i++) {
                 if (e.getSource() == like.get(i)) {
-                    likecount.get(i).setText(comments.get(i).likecount()+"");
+                    likecount.get(i).setText(comments.get(i).likecount() + "");
                     likecount.get(i).setVisible(true);
                 }
             }
@@ -1118,28 +1120,31 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
         if (dislike != null) {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
-                    dislikecount.get(i).setText(comments.get(i).dislikecount()+"");
+                    dislikecount.get(i).setText(comments.get(i).dislikecount() + "");
                     dislikecount.get(i).setVisible(true);
                 }
             }
-        }if (happy != null) {
+        }
+        if (happy != null) {
             for (int i = 0; i < happy.size(); i++) {
                 if (e.getSource() == happy.get(i)) {
-                    happycount.get(i).setText(comments.get(i).happycount()+"");
+                    happycount.get(i).setText(comments.get(i).happycount() + "");
                     happycount.get(i).setVisible(true);
                 }
             }
-        }if (angry!= null) {
+        }
+        if (angry != null) {
             for (int i = 0; i < angry.size(); i++) {
                 if (e.getSource() == angry.get(i)) {
-                    angrycount.get(i).setText(comments.get(i).angrycount()+"");
+                    angrycount.get(i).setText(comments.get(i).angrycount() + "");
                     angrycount.get(i).setVisible(true);
                 }
             }
-        }if (like != null) {
+        }
+        if (like != null) {
             for (int i = 0; i < like.size(); i++) {
                 if (e.getSource() == like.get(i)) {
-                    likecount.get(i).setText(comments.get(i).likecount()+"");
+                    likecount.get(i).setText(comments.get(i).likecount() + "");
                     likecount.get(i).setVisible(true);
                 }
             }
@@ -1152,25 +1157,29 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == image_file) {
             image.setBounds(750, 0, 100, 50);
-        } if (dislike != null) {
+        }
+        if (dislike != null) {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
                     dislikecount.get(i).setVisible(false);
                 }
             }
-        }if (happy!= null) {
+        }
+        if (happy != null) {
             for (int i = 0; i < happy.size(); i++) {
                 if (e.getSource() == happy.get(i)) {
                     happycount.get(i).setVisible(false);
                 }
             }
-        }if (angry != null) {
+        }
+        if (angry != null) {
             for (int i = 0; i < angrycount.size(); i++) {
                 if (e.getSource() == angry.get(i)) {
                     angrycount.get(i).setVisible(false);
                 }
             }
-        }if (like != null) {
+        }
+        if (like != null) {
             for (int i = 0; i < likecount.size(); i++) {
                 if (e.getSource() == like.get(i)) {
                     likecount.get(i).setVisible(false);

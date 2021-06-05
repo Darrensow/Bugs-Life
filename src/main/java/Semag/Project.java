@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
-public class Project implements Serializable, ActionListener,Comparator<Project> {
+public class Project implements Serializable, ActionListener, Comparator<Project> {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
     private int numissue = 0;                               // issue id
@@ -43,8 +43,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     ImageIcon delete_project_image = new ImageIcon("trash_icon.png");
     JButton delete_project = new JButton();
     JComboBox sort_issue = new JComboBox();
-    String[] setting_option = {"Quit"};
-    JComboBox setting_button = new JComboBox();
     ArrayList<JCheckBox> include = new ArrayList<>();
     ArrayList<JCheckBox> exclude = new ArrayList<>();
     JPanel black_panel_up = new JPanel();
@@ -75,7 +73,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     ImageIcon redo_icon = new ImageIcon("redo.png");
     JButton undo = new JButton();
     JButton reundo = new JButton();
-    String[] list_priority = {"1", "2", "3", "4", "5"};
+    String[] list_priority = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     JButton submit = new JButton("SUBMIT");
     String[] sort_option = {"Sort based ID", "Sort based priority", "Sort based timestamp"};
 
@@ -136,6 +134,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                     if (frame.isVisible() == false) {
                         current_issue = issue;
                         reset_table(current_issue);
+                        System.out.println("still in process");
                     }
                     try {
                         Thread.sleep(1000);
@@ -183,7 +182,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             entertheissue(Integer.parseInt(input.substring(1)));
         } else {
             current_issue = printsearchResult(input);
-            Collections.sort(current_issue,comparatorInUse);
+            Collections.sort(current_issue, comparatorInUse);
             reset_table(current_issue);
         }
     }
@@ -200,7 +199,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         String[] token = seachkeyword.toLowerCase().split("#");
         for (int i = 0; i < current_issue.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-               if (current_issue.get(i).getTitle().toLowerCase().equals(token[j])) {
+                if (current_issue.get(i).getTitle().toLowerCase().equals(token[j])) {
                     temp.add(current_issue.get(i));
                     break;
                 } else if (current_issue.get(i).getDescriptionText().toLowerCase().equals(token[j])) {
@@ -303,10 +302,10 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         }
         ArrayList<Issue> temp = new ArrayList<>();
         String[] tags = tag.split("#");
-        String[] states ;
-        if(state.length()==0){
-            states =new String[0];
-        }else{
+        String[] states;
+        if (state.length() == 0) {
+            states = new String[0];
+        } else {
             states = state.substring(1).split("#");
         }
         for (int i = 0; i < current_issue.size(); i++) {
@@ -442,7 +441,12 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
         frame.setTitle("Doge");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.out.println("the window is closing");
+                window_frame.setVisible(true);
+            }
+        });
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
         frame.setSize(1350, 730);
@@ -500,16 +504,16 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
 
 
         //add the setting button or quit
-        setting_button.removeAllItems();
-        for (int i = 0; i < setting_option.length; i++) {
-            setting_button.addItem(setting_option[i]);
-        }
-        setting_button.setVisible(true);
-        setting_button.setBounds(1000, 35, 150, 35);
-        setting_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-        setting_button.addActionListener(this);
-        setting_button.setBackground(Color.CYAN);
-        setting_button.setOpaque(true);
+//        setting_button.removeAllItems();
+//        for (int i = 0; i < setting_option.length; i++) {
+//            setting_button.addItem(setting_option[i]);
+//        }
+//        setting_button.setVisible(true);
+//        setting_button.setBounds(1000, 35, 150, 35);
+//        setting_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+//        setting_button.addActionListener(this);
+//        setting_button.setBackground(Color.CYAN);
+//        setting_button.setOpaque(true);
 
         // build the included title and button
         //title
@@ -815,7 +819,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         frame.add(add_issue);
         frame.add(delete_project);
         frame.add(sort_issue);
-        frame.add(setting_button);
         frame.add(include_title);
         frame.add(exluded_title);
         frame.add(black_ps_up);
@@ -863,6 +866,10 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     }
 
     public void include_and_exluded_state(ArrayList<String> arr) {
+        for (int i = 0;i<include_state.size();i++){
+            green_panel_up.remove(include_state.get(i));
+            green_panel_down.remove(exclude_state.get(i));
+        }
         include_state.clear();
         exclude_state.clear();
         for (int i = 0; i < arr.size(); i++) {
@@ -964,7 +971,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         if (e.getSource() == add_issue) {
             add_issue_panel.setVisible(true);
             table_scroll.setVisible(false);
-            System.out.println("add issue button pressed");
             handle_thread();
         }
         if (e.getSource() == delete_project) {
@@ -994,15 +1000,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                 System.out.println("sort based on Timestemp selected");
             }
         }
-        if (e.getSource() == setting_button) {
-            switch (setting_button.getSelectedIndex()) {
-                case 0:
-                    this.frame.setVisible(false);
-                    window_frame.setVisible(true);
-                    System.out.println("quitting ");
-                    break;
-            }
-        }
         if (e.getSource() == undo) {
             if (!text_undo.isEmpty()) {
                 exit = true;
@@ -1024,8 +1021,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             }
         }
         if (e.getSource() == submit) {
-            add_issue_panel.setVisible(false);
-            table_scroll.setVisible(true);
             String issue_name = name_text.getText();
             String tags = tags_text.getText();
             String[] issue_tags_array = tags.split("#");
@@ -1042,6 +1037,10 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             People assignee_obj = searchpeople(assignee);
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
+            } else if (issue_name.equals("Enter issue name") || issue_name.equals("")) {
+                popwindow("Worring", "Please ENTER valid issue name");
+            } else if (tags.equals("Enter tags") || tags.equals("")) {
+                popwindow("Worring", "Please ENTER valid tags");
             } else {
                 issue_tags_array = addTag(issue_tags_array);
                 Issue iss = new Issue(numissue, issue_name, description, current_people.getName(), assignee_obj.getName(), issue_tags_array, priop, this);
@@ -1053,10 +1052,12 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                 System.out.println("issue added");
                 current_issue = issue;
                 reset_table(current_issue);
+                add_issue_panel.setVisible(false);
+                table_scroll.setVisible(true);
             }
         }
         if (e.getSource() == sreach) {
-            System.out.println("search");
+            System.out.println("searchafasd");
             search_situation();
         }
     }
@@ -1067,30 +1068,48 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         String includestate = "";
         String excludestate = "";
         String keyword = search_issue.getText();
+        boolean can_search = true;
 
         for (int i = 0; i < include.size(); i++) {
             if (include.get(i).isSelected()) {
                 include_tags += "#" + include.get(i).getText();
+                if (exclude.get(i).isSelected()) {
+                    popwindow("WARNING!", "Including and excluding the same tags are not allowed.");
+                    can_search = false;
+                    break;
+                }
             }
         }
-        for (int i = 0; i < exclude.size(); i++) {
-            if (exclude.get(i).isSelected()) {
-                exclude_tags += "#" + exclude.get(i).getText();
+        if (can_search) {
+            for (int i = 0; i < exclude.size(); i++) {
+                if (exclude.get(i).isSelected()) {
+                    exclude_tags += "#" + exclude.get(i).getText();
+                }
+            }
+            for (int i = 0; i < include_state.size(); i++) {
+                if (include_state.get(i).isSelected()) {
+                    includestate += "#" + include_state.get(i).getText();
+                    if (exclude_state.get(i).isSelected()) {
+                        popwindow("WARNING", "Including and excluding the same tags are not allowed.");
+                        can_search = false;
+                        break;
+                    }
+                }
+            }
+            if(can_search){
+                for (int i = 0; i < exclude_state.size(); i++) {
+                    if (exclude_state.get(i).isSelected()) {
+                        excludestate += "#" + exclude_state.get(i).getText();
+                    }
+                }
             }
         }
-        for (int i = 0; i < include_state.size(); i++) {
-            if (include_state.get(i).isSelected()) {
-                includestate += "#" + include_state.get(i).getText();
-            }
+        if (can_search) {
+            current_issue = filterout(exclude_tags, excludestate);
+            current_issue = filterin(include_tags, includestate);
+            search(keyword);
         }
-        for (int i = 0; i < exclude_state.size(); i++) {
-            if (exclude_state.get(i).isSelected()) {
-                excludestate += "#" + exclude_state.get(i).getText();
-            }
-        }
-        current_issue = filterout(exclude_tags, excludestate);
-        current_issue = filterin(include_tags, includestate);
-        search(keyword);
+
     }
 
     public void popwindow(String title, String content) {
@@ -1165,7 +1184,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     }
 
     public static void main(String[] args) {
-
 
     }
 

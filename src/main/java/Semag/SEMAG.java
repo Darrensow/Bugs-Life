@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 
 public class SEMAG implements Serializable {
 
-//    private static final String save = "REPLACE INTO doge (serialized_id, object_name,serialized_object ) VALUES (?,?,?)";
+    //    private static final String save = "REPLACE INTO doge (serialized_id, object_name,serialized_object ) VALUES (?,?,?)";
 //    private static final String load = "SELECT serialized_object FROM doge WHERE serialized_id = ?";
 //    private static final String createTable = "CREATE TABLE IF NOT EXISTS doge(serialized_id int NOT NULL AUTO_INCREMENT, object_name varchar(255), serialized_object blob,PRIMARY KEY(serialized_id))";
 //    private static Connection connection = null;
@@ -31,7 +31,7 @@ public class SEMAG implements Serializable {
     Window obj = new Window();
 // USER INTERFACE
 
-//    public SEMAG() throws SQLException {
+    //    public SEMAG() throws SQLException {
 //        connection = DriverManager.getConnection(url, username, password);
 //        PreparedStatement ps = connection.prepareStatement(createTable);
 //        ps.executeUpdate();
@@ -79,7 +79,7 @@ public class SEMAG implements Serializable {
 //    }
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         //load json
-        
+
         SEMAG o = new SEMAG();
         o.obj.loadData();
 //        o = (SEMAG) deSerializeJavaObjectFromDB(connection, 1);
@@ -96,7 +96,8 @@ public class SEMAG implements Serializable {
                     }
                 }
             }
-        }; thread.start();
+        };
+        thread.start();
         //save json
 ////        serializeJavaObjectToDB(connection, o);
 //        connection.close();

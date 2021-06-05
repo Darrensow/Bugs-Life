@@ -107,7 +107,6 @@ public class Window implements Serializable, ActionListener {
         //        Thread.sleep(30000);
         checkpeople();//cheack icon
         sp_notification.setVisible(false);
-
     }
 
     public void checkpeople() {
@@ -149,8 +148,7 @@ public class Window implements Serializable, ActionListener {
                 for (int i = 0; i < current_project_Array.size(); i++) {
                     reset_table(current_project_Array);
                 }
-            }
-            else
+            } else
                 reset_table(current_project_Array);
         }
     }
@@ -305,61 +303,91 @@ public class Window implements Serializable, ActionListener {
         int in_progress = 0;
         ArrayList<labelCounter> label = new ArrayList<>();
         int num_label = 0;
-        labelCounter top_label;
+        ArrayList<labelCounter> top_label = new ArrayList<>();
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < project_Array.get(i).issue_Arraysize(); j++) {
                 Issue temp = project_Array.get(i).issuegetindex(j);
                 switch (temp.getStatus()) {
-                    case "resolved":
+                    case "Resolved":
                         resolved++;
                         break;
-                    case "unresolved":
-                        unresolved++;
-                        break;
-                    case "in progress":
+                    case "In Progress":
                         in_progress++;
                         break;
+                    default:
+                        unresolved++;
                 }
-                int have = -1;
-                for (int k = 0; k < label.size(); k++) {
+                int have = 0;
+                for (int k = 0; k < label.size(); k++) {  // add if have that same tags in label
                     String[] tagsArray = temp.getTag();
                     for (int l = 0; l < tagsArray.length; l++) {
                         if (label.get(k).getName().equals(tagsArray[l])) {
                             label.get(k).add();
-                            have = 1;
+                            have++;
                             break;
                         }
                     }
                 }
-                if (have == -1) {
+                if (have != temp.getTag().length) {  // add the tags that no have in label
                     String[] tagsArray = temp.getTag();
                     for (int k = 0; k < tagsArray.length; k++) {
-                        label.add(new labelCounter(tagsArray[k]));
+                        if (label.size() > 0) {
+                            for (int m = 0; m < label.size(); m++) {
+                                if (!label.get(m).getName().equals(tagsArray[k])) {
+                                    label.add(new labelCounter(tagsArray[k]));
+                                    break;
+                                }
+                            }
+                        } else {
+                            label.add(new labelCounter(tagsArray[k]));
+                        }
+
                     }
                 }
             }
         }
-        PriorityQueue<labelCounter> pq = new PriorityQueue<>();
+        int max_tags = -1;  // find maximum number of tags
         for (int i = 0; i < label.size(); i++) {
-            pq.add(label.get(i));
+            if (label.get(i).getTotal() > max_tags) {
+                top_label.clear();
+                max_tags = label.get(i).getTotal();
+                top_label.add(label.get(i));
+            } else if (label.get(i).getTotal() == max_tags) {
+                top_label.add(label.get(i));
+            }
         }
-        top_label = pq.peek();
-        int max = -1;
+        int max = -1;  // check maximum number of perform team
         String top_perform = "";
         for (int i = 0; i < people_Array.size(); i++) {
             if (people_Array.get(i).getNumber_solved() > max) {
                 max = people_Array.get(i).getNumber_solved();
                 top_perform = people_Array.get(i).getName();
+            } else if (people_Array.get(i).getNumber_solved() == max) {
+                top_perform += people_Array.get(i).getName() + "; ";
             }
         }
+        top_perform = "[" + top_perform + "]";
+        String str = "[";
+        for (int i = 0; i < top_label.size(); i++) {
+            str += top_label.get(i).getName() + "; ";
+        }
+        str = str.substring(0, str.length() - 2) + "]";
         if (num == 1) {
             try {
                 PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
                 out.println("Number of resolved issue : " + resolved);
                 out.println("Number of unresolved issue : " + unresolved);
                 out.println("Number of in progress issue : " + in_progress);
-                out.println("Most frequent label : " + top_label.getName() + " (total: " + top_label.getTotal() + " )");
-                out.println("Top performer in team: " + top_perform + "(total: " + max + " )");
+                if (max_tags <= 0) {
+                    out.println("Most frequent label : null");
+                } else {
+                    out.println("Most frequent label : " + str + " (total: " + max_tags + " )");
+                }
+                if (max <= 0) {
+                    out.println("Top performer in team: null");
+                } else {
+                    out.println("Top performer in team: " + top_perform + "(total: " + max + " )");
+                }
                 out.close();
             } catch (IOException e) {
                 System.out.println("Problem with file output");
@@ -368,7 +396,17 @@ public class Window implements Serializable, ActionListener {
             try {
                 PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
                 out.println("Number of resolved issue, Number of unresolved issue, Number of in progress issue, Most frequent label, Top performer in team");
-                out.println(resolved + ", " + unresolved + ", " + in_progress + ", " + top_label.getName() + " (" + top_label.getTotal() + "), " + top_perform + " (" + max + ") ");
+                String top_people;
+                if (max <= 0) {
+                    top_people = "null";
+                } else {
+                    top_people = top_perform + " (" + max + ") ";
+                }
+                if (max_tags < 0) {
+                    out.println(resolved + "," + unresolved + "," + in_progress + ",null," + top_people);
+                } else {
+                    out.println(resolved + "," + unresolved + "," + in_progress + ", " + str + " (" + max_tags + ")," + top_people);
+                }
                 out.close();
             } catch (IOException e) {
                 System.out.println("Problem with file output");
@@ -378,13 +416,22 @@ public class Window implements Serializable, ActionListener {
             text.add("Number of resolved issue : " + resolved);
             text.add("Number of unresolved issue : " + unresolved);
             text.add("Number of in progress issue : " + in_progress);
-            text.add("Most frequent label : " + top_label.getName() + " (total: " + top_label.getTotal() + " )");
-            text.add("Top performer in team: " + top_perform + "(total: " + max + " )");
+            if (max_tags < 0) {
+                text.add("Most frequent label : null");
+            } else {
+                text.add("Most frequent label : " + str + " (total: " + max_tags + " )");
+            }
+            if (max <= 0) {
+                text.add("Top performer in team: null");
+            } else {
+                text.add("Top performer in team: " + top_perform + "(total: " + max + " )");
+            }
+
             createpdf(file_name, text);
         }
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi" + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
-        gmail_obj.sendattachment(file_send);
+
         //open the file
         if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not
         {
@@ -397,6 +444,7 @@ public class Window implements Serializable, ActionListener {
 
             }
         }
+        gmail_obj.sendattachment(file_send);
 
     }
 
@@ -503,7 +551,6 @@ public class Window implements Serializable, ActionListener {
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
                 if (in_delete_mode != true) {
-                    frame.setVisible(false);
                     entertheprojext(value);
                 } else {
                     deleteProject(value);
@@ -768,17 +815,23 @@ public class Window implements Serializable, ActionListener {
         }
         if (e.getSource() == button1) {
             System.out.println("add button pressed");
+            table_scroll.setVisible(false);
             panel1.setVisible(true);
         }
         if (e.getSource() == button2) {
             // add project to  array list
             String project_name = text2.getText();
-            text2.setText("Enter Project Name");
-//            System.out.println(text2.getText());
-            addproject(project_name);
-            panel1.setVisible(false);
-            current_project_Array = project_Array;
-            reset_table(current_project_Array);
+            if (project_name.equals("Enter Project Name") || project_name.equals("")) {
+                text2.setText("Enter Project Name");
+                JOptionPane.showMessageDialog(null, "Please ENTER project name", "warring", JOptionPane.WARNING_MESSAGE);
+            } else {
+                text2.setText("Enter Project Name");
+                addproject(project_name);
+                panel1.setVisible(false);
+                table_scroll.setVisible(true);
+                current_project_Array = project_Array;
+                reset_table(current_project_Array);
+            }
         }
         if (e.getSource() == button3) {
             if (panel_notification.isShowing() == true) {
