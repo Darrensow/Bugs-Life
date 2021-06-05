@@ -204,9 +204,9 @@
         "timestamp" : "07/09/2019 19:00:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : 11,
+          "happy" : 14,
           "dislikes" : 7,
-          "angry" : 24,
+          "angry" : 27,
           "likes" : 10
         },
         "id" : 0
@@ -243,103 +243,34 @@
       "descriptionText" : "head",
       "creator" : "mandy",
       "assignee" : "jhoe",
-      "comments" : [ ],
-      "numberOfComments" : 0,
+      "comments" : [ {
+        "createdBy" : "ang",
+        "text" : "passasdasd",
+        "timestamp" : "05/06/2021 03:44:51 MYT",
+        "image_file" : null,
+        "counter" : {
+          "happy" : 8,
+          "dislikes" : 18,
+          "angry" : 2,
+          "likes" : 4
+        },
+        "id" : 1
+      } ],
+      "numberOfComments" : 1,
       "tag" : [ "tough" ],
       "priority" : 1,
-      "status" : "Open",
+      "status" : "open",
       "timestamp" : "04/06/2021 04:34:19 GMT+08:00",
       "image_file" : null,
       "id" : 0,
-      "numbercomment" : 0
+      "numbercomment" : 1
     } ],
     "numissue" : 1,
     "name" : "Minecraft ",
     "owner" : "mandy",
     "id" : 3
-  }, {
-    "issue" : [ {
-      "changelog" : [ ],
-      "title" : "Enter issue name",
-      "descriptionText" : "Add description there",
-      "creator" : "ang",
-      "assignee" : "ang",
-      "comments" : [ ],
-      "numberOfComments" : 0,
-      "tag" : [ "Enter tags" ],
-      "priority" : 1,
-      "status" : "open",
-      "timestamp" : "05/06/2021 00:24:14 MYT",
-      "image_file" : null,
-      "id" : 0,
-      "numbercomment" : 0
-    }, {
-      "changelog" : [ "Time : 05/06/2021 00:39:32 MYT\nang updated the priority from 1 to 1", "Time : 05/06/2021 00:39:32 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:39:32 MYT\nang updated the description text.", "Time : 05/06/2021 00:39:32 MYT\nang updated the status from open to Resolved", "Time : 05/06/2021 00:39:42 MYT\nang updated the priority from 1 to 1", "Time : 05/06/2021 00:39:42 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags, adf]\n\n", "Time : 05/06/2021 00:39:42 MYT\nang updated the description text.", "Time : 05/06/2021 00:39:42 MYT\nang updated the status from Resolved to Resolved", "Time : 05/06/2021 00:39:49 MYT\nang updated the priority from 1 to 3", "Time : 05/06/2021 00:39:49 MYT\nang updated the tags.Original: [Enter tags, adf]\nEdited: [Enter tags, adf]\n\n", "Time : 05/06/2021 00:39:49 MYT\nang updated the description text.", "Time : 05/06/2021 00:39:49 MYT\nang updated the status from Resolved to Resolved" ],
-      "title" : "Enter issue name",
-      "descriptionText" : "Add description there",
-      "creator" : "ang",
-      "assignee" : "ang",
-      "comments" : [ ],
-      "numberOfComments" : 0,
-      "tag" : [ "Enter tags", "adf" ],
-      "priority" : 3,
-      "status" : "Resolved",
-      "timestamp" : "05/06/2021 00:24:19 MYT",
-      "image_file" : null,
-      "id" : 1,
-      "numbercomment" : 0
-    }, {
-      "changelog" : [ "Time : 05/06/2021 00:36:22 MYT\nang updated the priority from 1 to 0", "Time : 05/06/2021 00:36:22 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:22 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:22 MYT\nang updated the status from open to In Progress", "Time : 05/06/2021 00:36:22 MYT\nang updated the priority from 0 to 0", "Time : 05/06/2021 00:36:22 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:22 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:22 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:28 MYT\nang updated the priority from 0 to 0", "Time : 05/06/2021 00:36:28 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:28 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:28 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:28 MYT\nang updated the priority from 0 to 0", "Time : 05/06/2021 00:36:28 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:28 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:28 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:36 MYT\nang updated the priority from 0 to 1", "Time : 05/06/2021 00:36:36 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:36 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:36 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:36 MYT\nang updated the priority from 1 to 1", "Time : 05/06/2021 00:36:36 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags]\n\n", "Time : 05/06/2021 00:36:36 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:36 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:49 MYT\nang updated the priority from 1 to 1", "Time : 05/06/2021 00:36:49 MYT\nang updated the tags.Original: [Enter tags]\nEdited: [Enter tags, tafs]\n\n", "Time : 05/06/2021 00:36:49 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:49 MYT\nang updated the status from In Progress to In Progress", "Time : 05/06/2021 00:36:49 MYT\nang updated the priority from 1 to 1", "Time : 05/06/2021 00:36:49 MYT\nang updated the tags.Original: [Enter tags, tafs]\nEdited: [Enter tags, tafs]\n\n", "Time : 05/06/2021 00:36:49 MYT\nang updated the description text.", "Time : 05/06/2021 00:36:49 MYT\nang updated the status from In Progress to In Progress" ],
-      "title" : "Enter issue name",
-      "descriptionText" : "Add description there",
-      "creator" : "ang",
-      "assignee" : "ang",
-      "comments" : [ {
-        "createdBy" : "ang",
-        "text" : "comment one ",
-        "timestamp" : "05/06/2021 00:31:18 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 1
-      }, {
-        "createdBy" : "ang",
-        "text" : "commeny 3",
-        "timestamp" : "05/06/2021 00:34:24 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 2
-      } ],
-      "numberOfComments" : 2,
-      "tag" : [ "Enter tags", "tafs" ],
-      "priority" : 1,
-      "status" : "In Progress",
-      "timestamp" : "05/06/2021 00:24:24 MYT",
-      "image_file" : null,
-      "id" : 2,
-      "numbercomment" : 2
-    } ],
-    "numissue" : 3,
-    "name" : "project one",
-    "owner" : "pua",
-    "id" : 4
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "Prog1",
-    "owner" : "ang",
-    "id" : 5
   } ],
-  "numberproject" : 6,
+  "numberproject" : 4,
   "people_Array_replica" : {
     "list" : [ {
       "newAssignedNotification" : [ {
@@ -369,19 +300,10 @@
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 3
     }, {
-      "newAssignedNotification" : [ {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     4Project Name:          project one\nIssue ID:     0Issue Name:     Enter issue name\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     4Project Name:          project one\nIssue ID:     1Issue Name:     Enter issue name\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     4Project Name:          project one\nIssue ID:     2Issue Name:     Enter issue name\nAssigned by:                  ang\n"
-      } ],
+      "newAssignedNotification" : [ ],
       "password" : "password",
       "name" : "ang",
-      "assigned" : 4,
+      "assigned" : 1,
       "number_solved" : 0,
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 4
@@ -393,24 +315,8 @@
       "number_solved" : 0,
       "gmail" : "mandysoo665@gmail.com",
       "id" : 5
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "@Zhixian8189",
-      "name" : "pua",
-      "assigned" : 0,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001@gmail.com",
-      "id" : 6
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "@Zhixian8189",
-      "name" : "darren",
-      "assigned" : 0,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001@gmail.com",
-      "id" : 7
     } ]
   },
-  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report", "Enter tags" ],
-  "numberOfUsers" : 7
+  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report" ],
+  "numberOfUsers" : 5
 }

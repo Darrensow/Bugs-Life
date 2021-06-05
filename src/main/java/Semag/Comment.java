@@ -49,6 +49,7 @@ public class Comment implements Serializable {
         if (createdBy == null) {
             throw new NullPointerException("Person cannot be anonymous");
         }
+        this.image_file = image_file;
         this.ID = ID;
         this.createdBy = createdBy;
         this.text = text;
@@ -65,13 +66,6 @@ public class Comment implements Serializable {
         counter.replace(reaction, counter.get(reaction) + 1);
     }
 
-    public void setImage_file(File image_file) {
-        this.image_file = image_file;
-    }
-
-    public File getImage_file() {
-        return image_file;
-    }
 
     public String getText() {
         return this.text;
@@ -100,6 +94,23 @@ public class Comment implements Serializable {
         return sb.toString();
     }
 
+    public int happycount() {
+        return counter.get("happy");
+    }
+
+    public int dislikecount() {
+        return counter.get("dislikes");
+    }
+
+    public int angrycount() {
+        return counter.get("angry");
+    }
+
+    public int likecount() {
+        return counter.get("likes");
+    }
+
+
     //methods that may be used for GUI implementation - KIV first
 //    public String displayLikes()
 //    public String displayDislikes()
@@ -120,6 +131,7 @@ public class Comment implements Serializable {
 
     public void loadData() {
         Comment temp = dm.readCommentData();
+        this.image_file = temp.image_file;
         this.ID = temp.ID;
         this.text = temp.text;
         this.counter = temp.counter;
@@ -146,6 +158,9 @@ public class Comment implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public File getImage_file() {
+        return image_file;
+    }
     /*
         --- Accessor methods ---
      */
@@ -169,6 +184,10 @@ public class Comment implements Serializable {
 
     public void setCounter(HashMap<String, Integer> counter) {
         this.counter = counter;
+    }
+
+    public void setImage_file(File image_file) {
+        this.image_file = image_file;
     }
 
 
