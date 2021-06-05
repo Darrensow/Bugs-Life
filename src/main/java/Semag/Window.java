@@ -35,7 +35,10 @@ public class Window implements Serializable, ActionListener {
 
     //ignore as don't want to override user logged in
     private People current_people;                                      // current user logged
-
+    /**
+     * project_Array that will be shown on the table
+     */
+    private ArrayList<Project> current_project_Array;
 
     private Comparator<Project> comparatorInUse;                        // ID, Name, IssueCount
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -122,7 +125,8 @@ public class Window implements Serializable, ActionListener {
             public void run() {
                 while (true) {
                     if (frame.isVisible() == false) {
-                        reset_table(project_Array);
+                        current_project_Array = project_Array;
+                        reset_table(current_project_Array);
                     }
                     try {
                         Thread.sleep(1000);
@@ -139,7 +143,15 @@ public class Window implements Serializable, ActionListener {
         if (isnumberic(input)) {
             entertheprojext(Integer.parseInt(input.substring(1)));
         } else {
-            printsearchResult(input);
+            current_project_Array = printsearchResult(input);
+            if (current_project_Array.size() > 0) {
+                Collections.sort(current_project_Array, comparatorInUse);
+                for (int i = 0; i < current_project_Array.size(); i++) {
+                    print(current_project_Array);
+                }
+            }
+            else
+                print(current_project_Array);
         }
     }
 
@@ -147,33 +159,21 @@ public class Window implements Serializable, ActionListener {
      * @param seachkeyword
      * @return true if have that project
      */
-    public void printsearchResult(String seachkeyword) {
-
+    public ArrayList<Project> printsearchResult(String seachkeyword) {
+        if (seachkeyword.equals("") || seachkeyword.equals("search")) {
+            return current_project_Array;
+        }
         ArrayList<Project> temp = new ArrayList<>();
-        String[] token = seachkeyword.split(" ");
+        String[] token = seachkeyword.toLowerCase().split(" ");
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-                if (project_Array.get(i).getName().contains(token[j])) {
-                    temp.add(project_Array.get(i));
-                    break;
-                } else if (project_Array.get(i).getName().contains(token[j] + " ")) {
-                    temp.add(project_Array.get(i));
-                    break;
-                } else if (project_Array.get(i).getName().contains(" " + token[j] + " ")) {
-                    temp.add(project_Array.get(i));
-                    break;
-                } else if (project_Array.get(i).getName().contains(" " + token[j])) {
+                if (project_Array.get(i).getName().toLowerCase().contains(token[j])) {
                     temp.add(project_Array.get(i));
                     break;
                 }
             }
         }
-        if (temp.size() > 0) {
-            Collections.sort(temp, comparatorInUse);
-            for (int i = 0; i < temp.size(); i++) {
-                print(temp);
-            }
-        }
+        return temp;
     }
 
     /**
@@ -214,7 +214,6 @@ public class Window implements Serializable, ActionListener {
      *               returned as int
      */
     public void sortBased(int option) {
-        ArrayList<Project> sortedProjectList = new ArrayList<>(project_Array);
         switch (option) {
             case 0: //0 is the first option, ID
                 comparatorInUse = Project.IDComparator;
@@ -226,8 +225,8 @@ public class Window implements Serializable, ActionListener {
                 comparatorInUse = Project.IssueCountComparator;
                 break;
         }
-        Collections.sort(sortedProjectList, comparatorInUse);
-        reset_table(sortedProjectList);
+        Collections.sort(current_project_Array, comparatorInUse);
+        reset_table(current_project_Array);
     }
 
     /**
@@ -241,7 +240,6 @@ public class Window implements Serializable, ActionListener {
                 break;
             }
         }
-        reset_table(project_Array);
     }
 
     /**
@@ -277,16 +275,8 @@ public class Window implements Serializable, ActionListener {
      * Dashboard, this method is called by
      * {@code print(ArrayList<Project> toPrint)}
      */
-    public String[] printOneProject(Project o) {
-        String[] arow = new String[3];
-        arow[0] = o.getID() + "";
-        arow[1] = o.getName();
-        arow[2] = o.getIssue().size() + "";
-//        StringBuilder str = new StringBuilder();
-//        str.append(String.format(" %3d", o.getID()));
-//        str.append(String.format(" %-30s", o.getName()));
-//        str.append(String.format(" %-15d", o.getIssue().size()));
-        return arow;
+    public void printOneProject(Project o) {
+        System.out.println(o.getID() + o.getName());
     }
 
     // 1 = txt , 2 = csv
@@ -517,8 +507,9 @@ public class Window implements Serializable, ActionListener {
                     entertheprojext(value);
                 } else {
                     deleteProject(value);
+                    current_project_Array = project_Array;
+                    reset_table(current_project_Array);
                 }
-
             }
         });
 //set collum width
@@ -738,7 +729,7 @@ public class Window implements Serializable, ActionListener {
         frame.repaint();
     }
 
-    public static void reset_table(ArrayList<Project> data) {
+    public void reset_table(ArrayList<Project> data) {
         tableModel.setRowCount(0);
         for (int i = 0; i < data.size(); i++) {
             String[] arow = new String[3];
@@ -786,7 +777,8 @@ public class Window implements Serializable, ActionListener {
 //            System.out.println(text2.getText());
             addproject(project_name);
             panel1.setVisible(false);
-            reset_table(project_Array);
+            current_project_Array = project_Array;
+            reset_table(current_project_Array);
         }
         if (e.getSource() == button3) {
             if (panel_notification.isShowing() == true) {
@@ -842,7 +834,7 @@ public class Window implements Serializable, ActionListener {
             if (in_delete_mode == true) {
                 in_delete_mode = false;
                 JOptionPane.showMessageDialog(null, "you are out from deleting project mode", "delete project", JOptionPane.WARNING_MESSAGE);
-                reset_table(project_Array);
+                reset_table(current_project_Array);
             } else {
                 in_delete_mode = true;
                 JOptionPane.showMessageDialog(null, "you are in deleting project mode", "delete project", JOptionPane.WARNING_MESSAGE);
@@ -936,6 +928,7 @@ public class Window implements Serializable, ActionListener {
         this.people_Array_replica = temp.people_Array_replica;
         this.tagsOption_replica = temp.tagsOption_replica;
         this.numberOfUsers = temp.numberOfUsers;
+        this.current_project_Array = project_Array;
         NonStaticToStatic();
     }
 

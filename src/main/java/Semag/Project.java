@@ -3,40 +3,17 @@ package Semag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.Serializable;
-
-import static java.lang.Thread.sleep;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
 public class Project implements Serializable, ActionListener,Comparator<Project> {
@@ -50,6 +27,11 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     private String name;                                    // project name
     private String owner;                                   // project owner
     private Comparator<Issue> comparatorInUse;              // ID, Title, Priority, Timestamp
+
+    /**
+     * issue that will be shown on the table
+     */
+    private ArrayList<Issue> current_issue;
 
     //gui
     JFrame frame = new JFrame();
@@ -95,7 +77,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     JButton reundo = new JButton();
     String[] list_priority = {"1", "2", "3", "4", "5"};
     JButton submit = new JButton("SUBMIT");
-    String[] sort_option = {"Sort based ID", "Sort based priority", "Sort based issuecount"};
+    String[] sort_option = {"Sort based ID", "Sort based priority", "Sort based timestamp"};
 
     String[] column = {"ID", "Title", "Status", "Tag", "Priority", "Time", "Assignee", "CreatedBy"};
     boolean exit = false;
@@ -137,6 +119,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
      */
     public void projectwindow(People current_people, JFrame frame) {
         this.current_people = current_people;
+        this.current_issue = issue;
         window_frame = frame;
         setupwindow();
         sortIssueBased(0);
@@ -151,7 +134,8 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             public void run() {
                 while (true) {
                     if (frame.isVisible() == false) {
-                        reset_table(issue);
+                        current_issue = issue;
+                        reset_table(current_issue);
                     }
                     try {
                         Thread.sleep(1000);
@@ -194,13 +178,13 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     /**
      * @param input keyword search search issue
      */
-    public void search(String input, ArrayList<Issue> issue_arr) { //  only input number will directly assume as ID
+    public void search(String input) { //  only input number will directly assume as ID
         if (isnumberic(input)) {
             entertheissue(Integer.parseInt(input.substring(1)));
         } else {
-            printsearchResult(input, issue_arr);
-//            entertheissue(id);
-
+            current_issue = printsearchResult(input);
+            Collections.sort(current_issue,comparatorInUse);
+            reset_table(current_issue);
         }
     }
 
@@ -208,95 +192,27 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
      * @param seachkeyword print issue
      * @return true if have isseu
      */
-    public void printsearchResult(String seachkeyword, ArrayList<Issue> issue_arr) {
+    public ArrayList<Issue> printsearchResult(String seachkeyword) {
         if (seachkeyword.equals("") || seachkeyword.equals("search")) {
-            reset_table(issue_arr);
-            return;
+            return current_issue;
         }
         ArrayList<Issue> temp = new ArrayList<>();
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
-        String[] token = seachkeyword.split("#");
-        for (int i = 0; i < issue_arr.size(); i++) {
+        String[] token = seachkeyword.toLowerCase().split("#");
+        for (int i = 0; i < current_issue.size(); i++) {
             for (int j = 0; j < token.length; j++) {
-                if (issue_arr.get(i).getTitle().contains(token[j] + " ")) {
-                    temp.add(issue_arr.get(i));
+               if (current_issue.get(i).getTitle().toLowerCase().equals(token[j])) {
+                    temp.add(current_issue.get(i));
                     break;
-                } else if (issue_arr.get(i).getTitle().contains(" " + token[j] + " ")) {
-                    temp.add(issue_arr.get(i));
+                } else if (current_issue.get(i).getDescriptionText().toLowerCase().equals(token[j])) {
+                    temp.add(current_issue.get(i));
                     break;
-                } else if (issue_arr.get(i).getTitle().contains(" " + token[j])) {
-                    temp.add(issue_arr.get(i));
-                    break;
-                } else if (issue_arr.get(i).getTitle().equals(token[j])) {
-                    temp.add(issue_arr.get(i));
-                    break;
-                } else if (issue_arr.get(i).getDescriptionText().contains(" " + token[j])) {
-                    temp.add(issue_arr.get(i));
-                } else if (issue_arr.get(i).getDescriptionText().contains(token[j] + " ")) {
-                    temp.add(issue_arr.get(i));
-                } else if (issue_arr.get(i).getDescriptionText().equals(token[j])) {
-                    temp.add(issue_arr.get(i));
-                } else if (issue_arr.get(i).getDescriptionText().contains(" " + token[j] + " ")) {
-                    temp.add(issue_arr.get(i));
-                } else if (checkcomment(issue_arr.get(i).getComments(), token[j])) {
-                    temp.add(issue_arr.get(i));
+                } else if (checkcomment(current_issue.get(i).getComments(), token[j])) {
+                    temp.add(current_issue.get(i));
                     break;
                 }
             }
         }
-
-        for (int i = 0; i < temp.size(); i++) {
-            pq.add(temp.get(i));
-        }
-        ArrayList<Issue> issue_table = new ArrayList<>();
-        for (int i = 0; i < temp.size(); i++) {
-            issue_table.add(pq.poll());
-        }
-        reset_table(issue_table);
-    }
-
-    /**
-     * @param seachkeyword print issue
-     * @return true if have isseu
-     */
-    public boolean printsearchResult(String seachkeyword) {
-        ArrayList<Issue> temp = new ArrayList<>();
-        PriorityQueue<Issue> pq = new PriorityQueue<>();
-        String[] token = seachkeyword.split(" ");
-        for (int i = 0; i < issue.size(); i++) {
-            for (int j = 0; j < token.length; j++) {
-                if (issue.get(i).getTitle().contains(token[j] + " ")) {
-                    temp.add(issue.get(i));
-                    break;
-                } else if (issue.get(i).getTitle().contains(" " + token[j] + " ")) {
-                    temp.add(issue.get(i));
-                    break;
-                } else if (issue.get(i).getTitle().contains(" " + token[j])) {
-                    temp.add(issue.get(i));
-                    break;
-                } else if (issue.get(i).getDescriptionText().contains(" " + token[j])) {
-                    temp.add(issue.get(i));
-                } else if (issue.get(i).getDescriptionText().contains(token[j] + " ")) {
-                    temp.add(issue.get(i));
-                } else if (issue.get(i).getDescriptionText().contains(" " + token[j] + " ")) {
-                    temp.add(issue.get(i));
-                } else if (checkcomment(issue.get(i).getComments(), token[j])) {
-                    temp.add(issue.get(i));
-                    break;
-                }
-            }
-        }
-        for (int i = 0; i < temp.size(); i++) {
-            pq.add(temp.get(i));
-        }
-        for (int i = 0; i < temp.size(); i++) {
-            System.out.println(pq.poll());
-        }
-        if (temp.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return temp;
     }
 
     /**
@@ -306,11 +222,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
      */
     private boolean checkcomment(ArrayList<Comment> arr, String token) {
         for (int i = 0; i < arr.size(); i++) {
-            if (arr.get(i).getText().contains(token + " ")) {
-                return true;
-            } else if (arr.get(i).getText().contains(" " + token)) {
-                return true;
-            } else if (arr.get(i).getText().contains(" " + token + " ")) {
+            if (arr.get(i).getText().toLowerCase().contains(token)) {
                 return true;
             }
         }
@@ -345,7 +257,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
      *               int
      */
     public void sortIssueBased(int choose) {
-        ArrayList<Issue> sortedIssueList = new ArrayList<>(issue);
         switch (choose) {
             case 0: //0 is the first option, ID
                 comparatorInUse = Issue.IDComparator;
@@ -357,8 +268,9 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                 comparatorInUse = Issue.timeComparator;
                 break;
         }
-        Collections.sort(sortedIssueList, comparatorInUse);
-        reset_table(sortedIssueList);
+        Collections.sort(current_issue, comparatorInUse);
+        reset_table(current_issue);
+        System.out.println(current_issue.size());
     }
 
 
@@ -385,11 +297,11 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
     /*
   include  filter kind
      */
-    private ArrayList<Issue> filterin(String tag, String state, ArrayList<Issue> issue_array) {
+    private ArrayList<Issue> filterin(String tag, String state) {
         if (tag.equals("") && state.equals("")) {
-            return issue_array;
+            return current_issue;
         }
-        ArrayList<Issue> pq = new ArrayList<>();
+        ArrayList<Issue> temp = new ArrayList<>();
         String[] tags = tag.split("#");
         String[] states ;
         if(state.length()==0){
@@ -397,7 +309,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         }else{
             states = state.substring(1).split("#");
         }
-        for (int i = 0; i < issue_array.size(); i++) {
+        for (int i = 0; i < current_issue.size(); i++) {
             label:
             {
                 /*
@@ -405,25 +317,28 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                     I think it's the states.length > j and tags.length > j problem, could you check it out further? Thanks
                  */
                 for (int j = 0; j < Math.max(states.length, tags.length); j++) {
-                    if (j < states.length && issue_array.get(i).getStatus().equals(states[j])) {
-                        pq.add(issue_array.get(i));
+                    if (j < states.length && current_issue.get(i).getStatus().equals(states[j])) {
+                        temp.add(current_issue.get(i));
                         break label;
                     }
-                    String[] tagsArray = issue_array.get(i).getTag();
+                    String[] tagsArray = current_issue.get(i).getTag();
                     for (int k = 0; k < tagsArray.length; k++) { //compares tags[i] with tagsArray[k]
                         if (tags.length > j && tagsArray[k].equals(tags[j])) {
-                            pq.add(issue_array.get(i));
+                            temp.add(current_issue.get(i));
                             break label;
                         }
                     }
                 }
             }
         }
-        return pq;
+        return temp;
     }
 
-    private ArrayList<Issue> filterout_withreturn(String tag, String state) {
-        ArrayList<Issue> ay = new ArrayList<>();
+    private ArrayList<Issue> filterout(String tag, String state) {
+        if (tag.equals("") && state.equals("")) {
+            return current_issue;
+        }
+        ArrayList<Issue> temp = new ArrayList<>();
         String[] tags = tag.split("#");
         String[] states;
         if (state.length() <= 0) {
@@ -444,12 +359,12 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                             break label;
                         }
                     }
-                    ay.add(issue.get(i));
+                    temp.add(issue.get(i));
                 }
             }
 
         }
-        return ay;
+        return temp;
     }
 
     private People searchpeople(String name) {
@@ -762,6 +677,8 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                     entertheissue(value);
                 } else {
                     deleteIssue(value);
+                    current_issue = issue;
+                    reset_table(current_issue);
                 }
 
             }
@@ -1025,10 +942,10 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             if (issue.get(i).getID() == ID) {
                 Window.getPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
                 issue.remove(i);
+                in_delete_mode = false;
                 break;
             }
         }
-        in_delete_mode = false;
     }
 
     //    name, tags ,priority, assignee
@@ -1054,7 +971,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
             if (in_delete_mode == true) {
                 in_delete_mode = false;
                 JOptionPane.showMessageDialog(null, "you are out from deleting issue mode", "delete issue", JOptionPane.WARNING_MESSAGE);
-                reset_table(issue);
+                reset_table(current_issue);
             } else {
                 in_delete_mode = true;
                 JOptionPane.showMessageDialog(null, "you are in deleting issue mode", "delete issue", JOptionPane.WARNING_MESSAGE);
@@ -1134,11 +1051,12 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                 exit = true;
                 include_and_exluded(Issue.tagsOption);
                 System.out.println("issue added");
-                reset_table(issue);
+                current_issue = issue;
+                reset_table(current_issue);
             }
         }
         if (e.getSource() == sreach) {
-            System.out.println("sreach");
+            System.out.println("search");
             search_situation();
         }
     }
@@ -1149,9 +1067,7 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         String includestate = "";
         String excludestate = "";
         String keyword = search_issue.getText();
-        if (keyword.equals("search")) {
-            keyword = "";
-        }
+
         for (int i = 0; i < include.size(); i++) {
             if (include.get(i).isSelected()) {
                 include_tags += "#" + include.get(i).getText();
@@ -1172,10 +1088,9 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
                 excludestate += "#" + exclude_state.get(i).getText();
             }
         }
-        ArrayList<Issue> issue_table = filterout_withreturn(exclude_tags, excludestate);
-        issue_table = filterin(include_tags, includestate, issue_table);
-        search(keyword, issue_table);
-
+        current_issue = filterout(exclude_tags, excludestate);
+        current_issue = filterin(include_tags, includestate);
+        search(keyword);
     }
 
     public void popwindow(String title, String content) {
