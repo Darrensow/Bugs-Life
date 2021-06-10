@@ -12,7 +12,7 @@ import java.util.LinkedList;
  *
  * @author xianp
  */
-public class chat_queue<E> implements Serializable {
+public class chat_queue<E>  {
 
     private LinkedList<E> list = new LinkedList<>();
 

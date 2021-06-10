@@ -1,6 +1,7 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -8,9 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class User implements Serializable, ActionListener {
+public class User implements ActionListener {
 
     private PeopleADT people_array = new PeopleADT();
 
@@ -64,37 +62,6 @@ public class User implements Serializable, ActionListener {
     public User() {
     }
 
-    /* public People register() {
-        System.out.println("Enter gmail");
-        String gmail = sc.nextLine();
-        String title = "Vertified code by Doge";
-        Password password_obj = new Password();
-        String verified = password_obj.getPass();
-        String content = "Hi this is the vertified code : " + verified;
-        gmail_sender obj = new gmail_sender(gmail, title, content);
-        obj.send();
-        System.out.println("enter the verified code : ");
-        String num = sc.nextLine();
-        while (!num.equals(verified)) {
-            System.out.println("enter the verified code : ");
-        }
-        System.out.println("enter name");
-        String name = sc.nextLine();
-        while (people_array.contain(name) == true) {
-            System.out.println("enter name");
-            name = sc.nextLine();
-        }
-        System.out.println("enter password:");
-        String password = sc.nextLine();
-        while (!password_obj.isValid(password)) {
-            System.out.println("re-enter password, password not secure:");
-            password = sc.nextLine();
-        }
-        People people_obj = new People(password, name, ID);
-        ID++;
-        people_array.add(people_obj);
-        return people_obj;
-}*/
     public People register() throws InterruptedException {
         people_obj = null;
         window_setup();
@@ -125,27 +92,6 @@ public class User implements Serializable, ActionListener {
         obj.send();
     }
 
-//    public People login() { // only three time try , return to previous window if failed.
-//        int b = -1;
-//        String text = "";
-//        while (b == -1) {
-//            System.out.println(text + "enter username");
-//            String name = sc.nextLine();
-//            b = getindex(name);
-//            text = "wrong username. please re-";
-//        }
-//        String text2 = "";
-//        for (int i = 0; i < 3; i++) {
-//            System.out.println("enter password. " + (3 - i) + " time try left.");
-//            String a = sc.next();
-//            if (people_array.get(b).getPassword().equals(a)) {
-//                System.out.println("Welcome. " + people_array.get(b).getName());
-//                return people_array.get(b);
-//            }
-//            text2 = "wrong password. please re-";
-//        }
-//        return null;
-//    }
     public int getindex(String name) {
         System.out.println(people_array.size() + " size");
         for (int i = 0; i < people_array.size(); i++) {

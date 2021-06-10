@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
-public class Issue implements Serializable, ActionListener, MouseListener, Comparator<Issue> {
+public class Issue implements  ActionListener, MouseListener, Comparator<Issue> {
 
     private ArrayList<String> changelog = new ArrayList<>();
     private Integer ID;
@@ -93,7 +93,6 @@ public class Issue implements Serializable, ActionListener, MouseListener, Compa
 
     JButton done_edit = new JButton();
     JButton insert_image_button = new JButton("Insert image");
-    String insert_image_path;
     ImageIcon insert_image;
     ImageIcon edit = new ImageIcon("edit_icon.png");
     JButton edit_issue = new JButton();

@@ -38,7 +38,7 @@ import javax.swing.text.StyleConstants;
  *
  * @author xianp
  */
-public class chat_window implements ActionListener, MouseListener, Serializable {
+public class chat_window implements ActionListener, MouseListener {
 
     private String str = "";
     private boolean entered = false;
@@ -61,8 +61,6 @@ public class chat_window implements ActionListener, MouseListener, Serializable 
     DataInputStream dis;
     DataOutputStream dos;
     read read;
-//    private DataInputStream dis;
-//    private DataOutputStream dos;
 
     public chat_window(int num) {
 
@@ -254,15 +252,12 @@ public class chat_window implements ActionListener, MouseListener, Serializable 
         if (token.length() == 0) {
             token = " ";
         }
-//        System.out.println("token.length: "+token.length());
         String[] tokens = token.split(" ");
 
         chat_queue<String> tokens_queue = new chat_queue<>();
         String temp = "";
         String special_header = "";
-//        System.out.println("tokens.length :" +tokens.length);
         for (int i = 0; i < tokens.length; i++) {
-//             System.out.println(tokens[i]);
             if (tokens[i].length() > 0 && !special.contains(tokens[i].charAt(0)) && temp.equals("")) {
                 tokens_queue.enqueue(" " + tokens[i] + " ");
             } else if (tokens[i].equals("\n")) {
@@ -303,16 +298,13 @@ public class chat_window implements ActionListener, MouseListener, Serializable 
         while (!tokens_queue.isEmpty()) {
             String pass = tokens_queue.dequeue();
             if (pass.length() >= 3) {
-//                System.out.println(pass.substring(1, pass.length() - 1));
                 style(pass.substring(1, pass.length() - 1));
             } else {
-//                System.out.println(pass);
                 if (pass.length() == 0) {
                     style(" ");
                 }
                 style(pass);
             }
-//            System.out.println(tokens_queue.dequeue());
         }
         print("\n");
 

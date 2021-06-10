@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"people_Array", "comparatorInUse", "tagsOption", "current_people", "catFont", "redFont", "subFont", "smallBold", "user_obj"})
-public class Window implements Serializable, ActionListener {
+public class Window implements  ActionListener {
 
 
     private ArrayList<Project> project_Array = new ArrayList<>();       // store project
@@ -31,7 +31,6 @@ public class Window implements Serializable, ActionListener {
     private PeopleADT people_Array_replica = new PeopleADT();           // store people
     private ArrayList<String> tagsOption_replica = new ArrayList<>();   // store tags
     private int numberOfUsers;
-    //    private ArrayList<people> people_Array = new ArrayList<>();
 
     //ignore as don't want to override user logged in
     private People current_people;                                      // current user logged
@@ -104,7 +103,6 @@ public class Window implements Serializable, ActionListener {
         setupwindow();
         keeprenew();
         reset_table(project_Array);
-        //        Thread.sleep(30000);
         checkpeople();//cheack icon
         sp_notification.setVisible(false);
     }
@@ -279,7 +277,6 @@ public class Window implements Serializable, ActionListener {
 
     // 1 = txt , 2 = csv
     public void selectfile(int num) throws IOException {  //select file location and set file name
-//        System.out.println("the number is "+num);
         JFileChooser choose = new JFileChooser();
         choose.setCurrentDirectory(new File("."));  // select where the file window start
         if (num == 1) {

@@ -2,11 +2,10 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class People implements Serializable {
+public class People  {
 
     /**
      * {@code list} is the user's newly assigned Issue

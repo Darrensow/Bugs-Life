@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
-public class Project implements Serializable, ActionListener,Comparator<Project>,Comparable<Project> {
+public class Project implements  ActionListener,Comparator<Project>,Comparable<Project> {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
     private int numissue = 0;                               // issue id
@@ -392,19 +392,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         sort_issue.setVisible(true);
         sort_issue.addActionListener(this);
 
-
-        //add the setting button or quit
-//        setting_button.removeAllItems();
-//        for (int i = 0; i < setting_option.length; i++) {
-//            setting_button.addItem(setting_option[i]);
-//        }
-//        setting_button.setVisible(true);
-//        setting_button.setBounds(1000, 35, 150, 35);
-//        setting_button.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-//        setting_button.addActionListener(this);
-//        setting_button.setBackground(Color.CYAN);
-//        setting_button.setOpaque(true);
-
         // build the included title and button
         //title
         include_text.setText("Include Tags");
@@ -415,14 +402,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         include_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
         include_text.setBounds(0, 0, 160, 35);
         include_text.setBorder(BorderFactory.createEmptyBorder());
-//        //button
-//        include_go.setText("Go");
-//        include_go.setVisible(true);
-//        include_go.setBounds(280, 0, 50, 35);
-//        include_go.addActionListener(this);
-//        include_go.setFocusable(true);
-//        include_go.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-
         //title panel
         include_title = new JPanel();
         include_title.setBackground(Color.black);
@@ -431,7 +410,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         include_title.setLayout(null);
         include_title.setBounds(1000, 100, 160, 50);
         include_title.add(include_text);
-//        include_title.add(include_go);
 
         //build exclude title and button
         exclude_text.setText("Enclude Tags");
@@ -442,13 +420,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         exclude_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
         exclude_text.setBounds(0, 0, 160, 35);
         exclude_text.setBorder(BorderFactory.createEmptyBorder());
-//        //button
-//        exclude_go.setText("Go");
-//        exclude_go.setVisible(true);
-//        exclude_go.setBounds(280, 0, 50, 35);
-//        exclude_go.addActionListener(this);
-//        exclude_go.setFocusable(true);
-//        exclude_go.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         //title panel
         exluded_title = new JPanel();
         exluded_title.setBackground(Color.black);
@@ -457,7 +428,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         exluded_title.setLayout(null);
         exluded_title.setBounds(1160, 100, 160, 50);
         exluded_title.add(exclude_text);
-//        exluded_title.add(exclude_go);
         //build the right_up black panel
         //build panel
         black_panel_up.setBackground(Color.black);
@@ -499,7 +469,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         include_state_title.setLayout(null);
         include_state_title.setBounds(1000, 400, 160, 50);
         include_state_title.add(include_state_text);
-//        include_title.add(include_go);
 
         //build exclude title and button
         exclude_state_text.setText("Enclude State");
@@ -518,7 +487,6 @@ public class Project implements Serializable, ActionListener,Comparator<Project>
         exluded_state_title.setLayout(null);
         exluded_state_title.setBounds(1160, 400, 160, 50);
         exluded_state_title.add(exclude_state_text);
-//        exluded_title.add(exclude_go);
         //build the right_up black panel
         //build panel
         green_panel_up.setBackground(Color.GREEN);

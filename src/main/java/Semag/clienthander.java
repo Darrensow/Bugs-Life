@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author xianp
  */
-public class clienthander implements Runnable, Serializable {
+public class clienthander implements Runnable {
 
    
     transient Scanner scn = new Scanner(System.in);
@@ -70,12 +70,9 @@ public class clienthander implements Runnable, Serializable {
                             }
                         }
                         this.isloggedin = false;
-//                        this.s.close();
                         break;
                     }
                 }
-//                System.out.println(received);
-
                 // break the string into message and recipient part 
                 // search for the recipient in the connected devices list. 
                 // ar is the vector storing client of active users
@@ -87,26 +84,9 @@ public class clienthander implements Runnable, Serializable {
                     }
                 }
                 readname = true;
-//                for (ClientHandler mc : S3.ar) {
-//                    // if the recipient is found, write on its 
-//                    // output stream 
-//                    if (mc.name.equals(towho) && mc.isloggedin == true) {
-//                        mc.dos.writeUTF(this.name + " : " + information);
-//                        break;
-//                    }
-//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-//        try {
-////             closing resources 
-//            this.dis.close();
-//            this.dos.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }

@@ -7,13 +7,12 @@ package Semag;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  *
  * @author xianp
  */
-public class read implements Runnable , Serializable {
+public class read implements Runnable {
     
      private DataInputStream dis;
     Thread t;

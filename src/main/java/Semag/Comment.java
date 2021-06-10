@@ -7,13 +7,10 @@ import java.io.File;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Scanner;
 
 @JsonIgnoreProperties(value = {"reaction"})
-public class Comment implements Serializable {
+public class Comment{
 
     private int ID;
     private String createdBy;
@@ -109,12 +106,6 @@ public class Comment implements Serializable {
     public int likecount() {
         return counter.get("likes");
     }
-
-
-    //methods that may be used for GUI implementation - KIV first
-//    public String displayLikes()
-//    public String displayDislikes()
-//    public String displayReactions()
 
     /*
         -- Save and read data -- Jackson -- JSON --

@@ -2,10 +2,9 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PeopleADT implements Serializable {
+public class PeopleADT  {
 
     private ArrayList<People> list = new ArrayList<>();
 

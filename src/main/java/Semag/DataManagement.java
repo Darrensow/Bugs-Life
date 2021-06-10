@@ -19,7 +19,7 @@ import java.io.Serializable;
      * Once done, call the saveData() in the specific classes to load the data into the JSON file.
  */
 
-public class DataManagement implements Serializable {
+public class DataManagement {
 
     /*
      * Below are all methods to save data into JSON File.

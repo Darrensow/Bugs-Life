@@ -13,7 +13,7 @@ import java.io.Serializable;
  *
  * @author xianp
  */
-public class labelCounter implements Comparable<labelCounter> , Serializable {
+public class labelCounter implements Comparable<labelCounter>  {
     
     private String name;
     private Integer total = 0;

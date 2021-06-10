@@ -21,7 +21,7 @@ import java.util.Properties;
  *
  * @author xianp
  */
-public class gmail_sender implements Serializable {
+public class gmail_sender {
 
     private String send_to;
     private String send_by = "xianpua2001.sim02@gmail.com";
@@ -96,10 +96,9 @@ public class gmail_sender implements Serializable {
 
             message.setContent(multipart);
 
-            System.out.println("sending...");
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
+//            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
@@ -145,10 +144,9 @@ public class gmail_sender implements Serializable {
             // Now set the actual message
             message.setText(content);
 
-            System.out.println("sending...");
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
+//            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }

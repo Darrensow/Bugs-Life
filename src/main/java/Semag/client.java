@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author xianp
  */
-public class client implements Serializable {
+public class client  {
 
     final static int ServerPort = 1234;
 

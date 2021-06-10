@@ -1,9 +1,8 @@
 package Semag;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Text<E> implements Serializable {
+public class Text<E> {
 
     private ArrayList<E> list = new ArrayList<>();
 
@@ -49,12 +48,9 @@ public class Text<E> implements Serializable {
     //StringBuilder can KIV first, can consider changing to better optimize the memory
     public String getString() {
         String result = "";
-//        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             result += list.get(i) + "\n";
-//            sb.append(list.get(i) + "\n");
         }
-//        return sb.toString();
         return result;
     }
 }
