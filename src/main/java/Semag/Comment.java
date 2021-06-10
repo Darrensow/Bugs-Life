@@ -60,14 +60,13 @@ public class Comment {
     }
 
     /**
-     * @return String representation of the comment + its own replies section
+     * @return String representation of the comment
      */
     @Override
     public String toString() {
         String str = "#" + this.ID;
-        str += "\t" + timestamp + " By : " + this.createdBy;
+        str += "\tCreated on: " + timestamp + " \tBy: " + this.createdBy;
         str += "\n" + this.text;
-        str += reactionsToString();
         return str + "\n";
     }
 

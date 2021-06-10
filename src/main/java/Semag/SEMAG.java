@@ -10,7 +10,6 @@ public class SEMAG{
 
     public static void main(String[] args) throws InterruptedException {
         //load json
-
         SEMAG o = new SEMAG();
         o.obj.loadData();
         o.obj.ac();

@@ -25,6 +25,10 @@ public class labelCounter implements Comparable<labelCounter>  {
         this.name = name;
         add();
     }
+    public labelCounter(String name,int num) {
+        this.name = name;
+        this.total = num;
+    }
     
     public void add() {
         total++;

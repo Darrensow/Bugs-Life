@@ -78,10 +78,10 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     ImageIcon like_image = new ImageIcon("like_icon.png");
     ImageIcon dislike_image = new ImageIcon("dislike_icon.png");
 
-    ImageIcon happy_icon_blue = new ImageIcon("happy_icon_blue.png");
-    ImageIcon angry_icon_blue = new ImageIcon("angry_icon_blue.png");
+    ImageIcon happy_icon_blue = new ImageIcon("happy_icon_blue.jpg");
+    ImageIcon angry_icon_blue = new ImageIcon("angry_icon_blue.jpg");
     ImageIcon like_image_blue = new ImageIcon("like_icon_blue.png");
-    ImageIcon dislike_image_blue = new ImageIcon("dislike_icon_blue.png");
+    ImageIcon dislike_image_blue = new ImageIcon("dislike_icon_blue.jpg");
 
 
     ArrayList<JTextPane> comment = new ArrayList<>();
@@ -227,19 +227,19 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             happy.get(index).setIcon(happy_icon);
         }
         if (com.get(index).reactedBefore("angry", current_people.getName())) {
-            happy.get(index).setIcon(angry_icon_blue);
+            angry.get(index).setIcon(angry_icon_blue);
         } else {
-            happy.get(index).setIcon(angry_icon);
+            angry.get(index).setIcon(angry_icon);
         }
-        if (com.get(index).reactedBefore("like", current_people.getName())) {
-            happy.get(index).setIcon(like_image_blue);
+        if (com.get(index).reactedBefore("likes", current_people.getName())) {
+            like.get(index).setIcon(like_image_blue);
         } else {
-            happy.get(index).setIcon(like_image);
+            like.get(index).setIcon(like_image);
         }
-        if (com.get(index).reactedBefore("dislike", current_people.getName())) {
-            happy.get(index).setIcon(dislike_image_blue);
+        if (com.get(index).reactedBefore("dislikes", current_people.getName())) {
+            dislike.get(index).setIcon(dislike_image_blue);
         } else {
-            happy.get(index).setIcon(dislike_image);
+            dislike.get(index).setIcon(dislike_image);
         }
     }
 
@@ -961,13 +961,12 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             comment_panel.get(i).setVisible(true);
             //build comment
             comment.add(new JTextPane());
-            System.out.println("comment " + i + " : " + com.get(i).displayComment());
             if (com.get(i).getImage_file() != null) {
                 System.out.println("have enter");
                 comment.get(i).insertIcon(new ImageIcon(com.get(i).getImage_file().toString()));
                 append("\n", comment.get(i));
             }
-            append(com.get(i).getText(), comment.get(i));
+            append(com.get(i).toString(), comment.get(i));
             comment.get(i).setVisible(true);
             comment.get(i).setPreferredSize(new Dimension(900, 20000));
             comment.get(i).setEditable(false);
@@ -1055,12 +1054,12 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         if (e.getSource() == add_comment) {
             System.out.println("adding comment");
             add_comment_panel.setVisible(true);
-
             edit_issue.setVisible(false);
             issue_scroll.setVisible(false);
             issue_des_panel.setVisible(false);
             open_changelog.setVisible(false);
             add_comment.setVisible(false);
+            handle_thread();
         }
         if (e.getSource() == add_comment_submit) {
             exit = true;

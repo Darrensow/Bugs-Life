@@ -82,6 +82,8 @@ public class Window implements ActionListener {
     String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file"};
     boolean in_delete_mode = false;
 
+    private Report report;
+
 
     public Window() {
     }
@@ -304,9 +306,9 @@ public class Window implements ActionListener {
     }
 
     public void createtextfile(File file_name, int num) throws IOException {
-        int resolved = 0;
-        int unresolved = 0;
-        int in_progress = 0;
+        int resolved = 0;   //cum resolved
+        int unresolved = 0;   //cum unresolved
+        int in_progress = 0;   //in_progress
         ArrayList<labelCounter> label = new ArrayList<>();
         int num_label = 0;
         ArrayList<labelCounter> top_label = new ArrayList<>();
@@ -352,48 +354,93 @@ public class Window implements ActionListener {
                 }
             }
         }
-        int max_tags = -1;  // find maximum number of tags
-        for (int i = 0; i < label.size(); i++) {
-            if (label.get(i).getTotal() > max_tags) {
-                top_label.clear();
-                max_tags = label.get(i).getTotal();
-                top_label.add(label.get(i));
-            } else if (label.get(i).getTotal() == max_tags) {
-                top_label.add(label.get(i));
-            }
-        }
-        int max = -1;  // check maximum number of perform team
-        String top_perform = "";
+
+
+        ArrayList<people_int> people_int_obj = new ArrayList<>();
         for (int i = 0; i < people_Array.size(); i++) {
-            if (people_Array.get(i).getNumber_solved() > max) {
-                max = people_Array.get(i).getNumber_solved();
-                top_perform = people_Array.get(i).getName();
-            } else if (people_Array.get(i).getNumber_solved() == max) {
-                top_perform += people_Array.get(i).getName() + "; ";
+            people_int_obj.add(new people_int(people_Array.get(i).getName(), people_Array.get(i).getNumber_solved()));
+        }
+        String cum_topperform = "";
+        int cum_toperform_max = -1;
+        for (int i = 0; i < people_int_obj.size(); i++) {
+            if (people_int_obj.get(i).getNum_resolved() > cum_toperform_max) {
+                cum_toperform_max = people_int_obj.get(i).getNum_resolved();
+                cum_topperform = people_int_obj.get(i).getName();
+            } else if (people_int_obj.get(i).getNum_resolved() == cum_toperform_max && cum_toperform_max > 0) {
+                cum_topperform += people_int_obj.get(i).getName() + "; ";
             }
         }
-        top_perform = "[" + top_perform + "]";
-        String str = "[";
-        for (int i = 0; i < top_label.size(); i++) {
-            str += top_label.get(i).getName() + "; ";
+
+        String cum_toptags = "";
+        int cum_maxtags = -1;
+        for (int i = 0; i < label.size(); i++) {
+            if (label.get(i).getTotal() > cum_maxtags) {
+                cum_maxtags = label.get(i).getTotal();
+                cum_toptags = label.get(i).getName();
+            } else if (label.get(i).getTotal() == cum_maxtags && cum_maxtags > 0) {
+                cum_toptags += label.get(i).getName() + "; ";
+            }
         }
-        str = str.substring(0, str.length() - 2) + "]";
+
+
+        Report current = new Report(people_int_obj, resolved, unresolved, in_progress, label);
+        current.finddifferent(report);
+
+
+        String top_perform = current.getTop_perform();
+        int max = current.getMax();
+
+        String str = current.getTags();
+        int max_tags = current.getMax_tags();
+
         if (num == 1) {
             try {
                 PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
-                out.println("Number of resolved issue : " + resolved);
-                out.println("Number of unresolved issue : " + unresolved);
-                out.println("Number of in progress issue : " + in_progress);
+                out.println("Weekly Report of Doge \n" +
+                        "\n" +
+                        "To whom it may concern, \n" +
+                        "\n" +
+                        "Below are the reports and statistics of the team's performance in the past and their weekly output. \n" +
+                        "\n" +
+                        "===== Cummulative data analysis =====");
+                out.println("- Number of issues resolved: " + resolved);
+                out.println("- Number of issues unresolved: " + unresolved);
+                out.println("- Number of issues in progress: " + in_progress);
+                if (cum_topperform.equals("")) {
+                    out.println("Top performer in team: null");
+                } else {
+                    out.println("Top performer in team: [ " + cum_topperform + " ] (total: " + cum_toperform_max + " )");
+                }
+                if (cum_maxtags <= 0) {
+                    out.println("Most frequent label : null");
+                } else {
+                    out.println("Most frequent label : " + cum_toptags + " (total: " + cum_maxtags + " )");
+                }
+                out.println();
+                out.println("===== Weekly performance analysis =====");
+                out.println();
+                out.println("- Number of issues resolved: " + current.getNum_solve());
+                out.println("- Number of issues unresolved: " + current.getNum_nosolved());
+                out.println("- Number of issues in progress: " + current.getInprogress());
+
+                if (top_perform.equals("")) {
+                    out.println("Top performer in team: null");
+                } else {
+                    out.println("Top performer in team: [ " + top_perform + " ] (total: " + max + " )");
+                }
                 if (max_tags <= 0) {
                     out.println("Most frequent label : null");
                 } else {
                     out.println("Most frequent label : " + str + " (total: " + max_tags + " )");
                 }
-                if (max <= 0) {
-                    out.println("Top performer in team: null");
-                } else {
-                    out.println("Top performer in team: " + top_perform + "(total: " + max + " )");
-                }
+                out.println("We hope that this report is able to aid you in determining future goals plan for the betterment of the team. \n" +
+                        "\n" +
+                        "Thank you. \n" +
+                        "\n" +
+                        "Yours sincerely, \n" +
+                        "\n" +
+                        "Admin \n" +
+                        "Doge");
                 out.close();
             } catch (IOException e) {
                 System.out.println("Problem with file output");
@@ -401,40 +448,80 @@ public class Window implements ActionListener {
         } else if (num == 2) {
             try {
                 PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
-                out.println("Number of resolved issue, Number of unresolved issue, Number of in progress issue, Most frequent label, Top performer in team");
-                String top_people;
-                if (max <= 0) {
-                    top_people = "null";
+                out.println("Number of issues resolved, Number of issues unresolved, Number of issues in progress, Top performer in the team, Most frequently used tags, Number of issues resolved(weekly), Number of issues unresolved(weekly), Number of issues in progress(weekly), Top performer in the team(weekly), Most frequently used tags(weekly)");
+                String temp_string = "";
+                temp_string += resolved + ", " + unresolved + ", " + in_progress + ", ";
+                if (cum_topperform.equals("")) {
+                    temp_string += "null, ";
                 } else {
-                    top_people = top_perform + " (" + max + ") ";
+                    temp_string += cum_topperform + "( " + cum_toperform_max + " )";
+                }
+                if (cum_maxtags <= 0) {
+                    temp_string += "null, ";
+                } else {
+                    temp_string += cum_toptags + "(" + cum_maxtags + ")";
+                }
+                temp_string += current.getNum_solve() + ", " + current.getNum_nosolved() + ", " + current.getInprogress() + ", ";
+                if (top_perform.equals("")) {
+                    temp_string += "null, ";
+                } else {
+                    temp_string += top_perform + " (" + max + ") ";
                 }
                 if (max_tags < 0) {
-                    out.println(resolved + "," + unresolved + "," + in_progress + ",null," + top_people);
+                    temp_string += "null";
                 } else {
-                    out.println(resolved + "," + unresolved + "," + in_progress + ", " + str + " (" + max_tags + ")," + top_people);
+                    temp_string += str + " ( " + max_tags + " )";
                 }
+                out.println(temp_string);
                 out.close();
             } catch (IOException e) {
                 System.out.println("Problem with file output");
             }
         } else if (num == 3) {
             ArrayList<String> text = new ArrayList<>();
-            text.add("Number of resolved issue : " + resolved);
-            text.add("Number of unresolved issue : " + unresolved);
-            text.add("Number of in progress issue : " + in_progress);
+            text.add("To whom it may concern, ");
+            text.add("Below are the reports and statistics of the team's performance in the past and their weekly output.");
+            text.add("===== Cummulative data analysis =====");
+            text.add("- Number of issues resolved: " + resolved);
+            text.add("- Number of issues unresolved: " + unresolved);
+            text.add("- Number of issues in progress: " + in_progress);
+            if (cum_topperform.equals("")) {
+                text.add("Top performer in team: null");
+            } else {
+                text.add("Top performer in team: [ " + cum_topperform + " ] (total: " + cum_toperform_max + " )");
+            }
+            if (cum_maxtags < 0) {
+                text.add("Most frequent label : null");
+            } else {
+                text.add("Most frequent label : " + cum_toptags + " (total: " + cum_maxtags + " )");
+            }
+            text.add("===== Weekly performance analysis =====");
+            text.add("- Number of issues resolved: " + current.getNum_solve());
+            text.add("- Number of issues unresolved: " + current.getNum_nosolved());
+            text.add("- Number of issues in progress: " + current.getInprogress());
+            if (top_perform.equals("")) {
+                text.add("Top performer in team: null");
+            } else {
+                text.add("Top performer in team: [ " + top_perform + " ] (total: " + max + " )");
+            }
             if (max_tags < 0) {
                 text.add("Most frequent label : null");
             } else {
                 text.add("Most frequent label : " + str + " (total: " + max_tags + " )");
             }
-            if (max <= 0) {
-                text.add("Top performer in team: null");
-            } else {
-                text.add("Top performer in team: " + top_perform + "(total: " + max + " )");
-            }
+            text.add("We hope that this report is able to aid you in determining future goals plan for the betterment of the team. ");
+            text.add("");
+            text.add("Thank you. ");
+            text.add("");
+            text.add("Yours sincerely, ");
+            text.add("");
+            text.add("Admin ");
+            text.add("Doge");
+
 
             createpdf(file_name, text);
         }
+        report = current;
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
 
@@ -472,7 +559,7 @@ public class Window implements ActionListener {
         // We add one empty line
         addEmptyLine(preface, 1);
         // Lets write a big header
-        preface.add(new Paragraph("Report of Doge Buys life", catFont));
+        preface.add(new Paragraph("Weekly Report of Doge", catFont));
 
         addEmptyLine(preface, 1);
         // Will create: Report generated by: _name, _date
