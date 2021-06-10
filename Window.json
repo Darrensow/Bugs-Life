@@ -1,629 +1,350 @@
 {
-  "project_Array" : [ {
-    "issue" : [ {
-      "changelog" : [ ],
-      "title" : "Issue with blocks ",
-      "descriptionText" : "head",
-      "creator" : "mandy",
-      "assignee" : "jhoe",
-      "comments" : [ {
-        "createdBy" : "ang",
-        "text" : "passasdasd",
-        "timestamp" : "05/06/2021 03:44:51 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 8,
-          "dislikes" : 18,
-          "angry" : 2,
-          "likes" : 4
+  "project_Array": [
+    {
+      "issue": [
+        {
+          "changelog": null,
+          "title": "Can't display the table",
+          "descriptionText": "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
+          "creator": "jhoe",
+          "assignee": "btan",
+          "comments": [
+            {
+              "createdBy": "liew",
+              "text": "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
+              "timestamp": "08/08/2019 00:20:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 2,
+                "dislikes": 0,
+                "angry": 1,
+                "likes": 5
+              },
+              "id": 0
+            },
+            {
+              "createdBy": "ang",
+              "text": "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
+              "timestamp": "01/09/2019 20:22:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 10,
+                "dislikes": 0,
+                "angry": 1,
+                "likes": 8
+              },
+              "id": 1
+            }
+          ],
+          "numberOfComments": 2,
+          "tag": [ "Frontend" ],
+          "priority": 4,
+          "status": "In Progress",
+          "timestamp": "07/08/2019 23:44:00 GMT+08:00",
+          "image_file": null,
+          "id": 0,
+          "numbercomment": 2
         },
-        "id" : 1
-      } ],
-      "numberOfComments" : 1,
-      "tag" : [ "tough" ],
-      "priority" : 1,
-      "status" : "open",
-      "timestamp" : "04/06/2021 04:34:19 GMT+08:00",
-      "image_file" : null,
-      "id" : 0,
-      "numbercomment" : 1
-    } ],
-    "numissue" : 1,
-    "name" : "Minecraft ",
-    "owner" : "mandy",
-    "id" : 3
-  }, {
-    "issue" : [ {
-      "changelog" : [ ],
-      "title" : "Can't display the table",
-      "descriptionText" : "Hi, \n\nI'm receiving the \"Can't display the data because Power BI can't determine the relationship between two or more fields.\" error message and I do not understand why. I have searched the net for help but can't find a post that answers my question.\n\nIt may well be a straight modelling restriction but best to check.\n\nI have two datasources (Sheet 1 and Sheet 2). Both are Excel files.",
-      "creator" : "jhoe",
-      "assignee" : "btan",
-      "comments" : [ {
-        "createdBy" : "liew",
-        "text" : "Please find below links to the two .pbix files I've created in an attempt toconquer this error I'm receiving.",
-        "timestamp" : "08/08/2019 00:20:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 2,
-          "dislikes" : 0,
-          "angry" : 1,
-          "likes" : 5
+        {
+          "changelog": null,
+          "title": "Can't open file",
+          "descriptionText": "Windows 10 Photo will not open a jpg file. I get \"We can't open this file.\" error message.\n\nThey're family photo that I sure would like to salvage.  Thanks",
+          "creator": "btan",
+          "assignee": "jhoe",
+          "comments": [
+            {
+              "createdBy": "liew",
+              "text": "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
+              "timestamp": "09/08/2019 00:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 10,
+                "dislikes": 1,
+                "angry": 2,
+                "likes": 5
+              },
+              "id": 0
+            },
+            {
+              "createdBy": "btan",
+              "text": "lad photos of windows 8 & 10 are worst possible application ever developed!\n\n                    just change default view to \"windows photo viewer\" if you dont have any other application",
+              "timestamp": "09/08/2019 05:55:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 14,
+                "dislikes": 0,
+                "angry": 1,
+                "likes": 8
+              },
+              "id": 1
+            },
+            {
+              "createdBy": "ang",
+              "text": "Window 10 can but window vista does not work",
+              "timestamp": "10/08/2019 09:41:40 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 0,
+                "dislikes": 0,
+                "angry": 1,
+                "likes": 0
+              },
+              "id": 2
+            }
+          ],
+          "numberOfComments": 3,
+          "tag": [ "Backend" ],
+          "priority": 3,
+          "status": "Open",
+          "timestamp": "08/08/2019 23:44:00 GMT+08:00",
+          "image_file": null,
+          "id": 1,
+          "numbercomment": 3
+        }
+      ],
+      "numissue": 2,
+      "name": "Nuxtjs",
+      "owner": "jhoe",
+      "id": 0
+    },
+    {
+      "issue": [
+        {
+          "changelog": null,
+          "title": "Flash of unstyled content",
+          "descriptionText": "What is expected ?\nExpected correct scrollspy active link highlighting and all links work.\n\nWhat is actually happening?\nPage jumps to top before smooth scroll, which leads to weird links highlighting. Also, sometimes some links doesn't highlight (like Server Rendered in demo video)\n\nAdditional comments?\nDemonstration - https://imgur.com/a/GGvITVB",
+          "creator": "btan",
+          "assignee": "ang",
+          "comments": [
+            {
+              "createdBy": "liew",
+              "text": "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
+              "timestamp": "07/10/2019 13:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 23,
+                "dislikes": 7,
+                "angry": 1,
+                "likes": 9
+              },
+              "id": 0
+            },
+            {
+              "createdBy": "ang",
+              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+              "timestamp": "07/10/2019 17:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 100,
+                "dislikes": 7,
+                "angry": 10,
+                "likes": 8
+              },
+              "id": 1
+            },
+            {
+              "createdBy": "jhoe",
+              "text": "Thanks for everything",
+              "timestamp": "07/10/2019 19:46:40 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 20,
+                "dislikes": 9,
+                "angry": 19,
+                "likes": 8
+              },
+              "id": 2
+            }
+          ],
+          "numberOfComments": 3,
+          "tag": [ "cmty:bug-report" ],
+          "priority": 6,
+          "status": "Open",
+          "timestamp": "01/10/2019 17:00:00 GMT+08:00",
+          "image_file": null,
+          "id": 0,
+          "numbercomment": 3
         },
-        "id" : 0
-      }, {
-        "createdBy" : "ang",
-        "text" : "Try this https://www.dropbox.com/home?preview=Relationships.pbix\n\nJust I removed the relationship between sheet1 and sheet1BridgingTable, sheet2 and sheet2BrdgingTable",
-        "timestamp" : "01/09/2019 20:22:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 10,
-          "dislikes" : 0,
-          "angry" : 1,
-          "likes" : 8
-        },
-        "id" : 1
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:45:59 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 3
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:46:42 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 4
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:46:44 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 5
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:46:45 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 6
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:46:48 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 7
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:46:57 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 8
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:47:01 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 9
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:50:33 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 10
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:50:35 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 11
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:50:37 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 12
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:55:59 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 13
-      } ],
-      "numberOfComments" : 13,
-      "tag" : [ "Frontend" ],
-      "priority" : 4,
-      "status" : "In Progress",
-      "timestamp" : "07/08/2019 23:44:00 GMT+08:00",
-      "image_file" : null,
-      "id" : 0,
-      "numbercomment" : 13
-    }, {
-      "changelog" : null,
-      "title" : "Can't open file",
-      "descriptionText" : "Windows 10 Photo will not open a jpg file. I get \"We can't open this file.\" error message.\n\nThey're family photo that I sure would like to salvage.  Thanks",
-      "creator" : "btan",
-      "assignee" : "jhoe",
-      "comments" : [ {
-        "createdBy" : "liew",
-        "text" : "I am having the same issue with a disc of photos from Christmas given to me by my sister. I have tried opening all of the photos with all of my available opening options and still get the same message as above poster. ",
-        "timestamp" : "09/08/2019 00:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 10,
-          "dislikes" : 1,
-          "angry" : 2,
-          "likes" : 5
-        },
-        "id" : 0
-      }, {
-        "createdBy" : "btan",
-        "text" : "lad photos of windows 8 & 10 are worst possible application ever developed!\n\n                    just change default view to \"windows photo viewer\" if you dont have any other application",
-        "timestamp" : "09/08/2019 05:55:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 14,
-          "dislikes" : 0,
-          "angry" : 1,
-          "likes" : 8
-        },
-        "id" : 1
-      }, {
-        "createdBy" : "ang",
-        "text" : "Window 10 can but window vista does not work",
-        "timestamp" : "10/08/2019 09:41:40 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 1,
-          "likes" : 0
-        },
-        "id" : 2
-      } ],
-      "numberOfComments" : 3,
-      "tag" : [ "Backend" ],
-      "priority" : 3,
-      "status" : "Open",
-      "timestamp" : "08/08/2019 23:44:00 GMT+08:00",
-      "image_file" : null,
-      "id" : 1,
-      "numbercomment" : 3
-    }, {
-      "changelog" : [ ],
-      "title" : "issue one",
-      "descriptionText" : "Add description there",
-      "creator" : "ang",
-      "assignee" : "pua",
-      "comments" : [ {
-        "createdBy" : "jhoe",
-        "text" : "Enter comment there",
-        "timestamp" : "06/06/2021 03:56:11 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 1
-      } ],
-      "numberOfComments" : 1,
-      "tag" : [ "", "tags2", "adsad" ],
-      "priority" : 1,
-      "status" : "open",
-      "timestamp" : "06/06/2021 03:33:09 MYT",
-      "image_file" : null,
-      "id" : 2,
-      "numbercomment" : 1
-    }, {
-      "changelog" : [ ],
-      "title" : "asdasd",
-      "descriptionText" : "Add description there",
-      "creator" : "ang",
-      "assignee" : "pua",
-      "comments" : [ ],
-      "numberOfComments" : 0,
-      "tag" : [ "", "tags", "ras" ],
-      "priority" : 1,
-      "status" : "open",
-      "timestamp" : "06/06/2021 03:33:33 MYT",
-      "image_file" : null,
-      "id" : 3,
-      "numbercomment" : 0
-    } ],
-    "numissue" : 4,
-    "name" : "Nuxtjs",
-    "owner" : "jhoe",
-    "id" : 0
-  }, {
-    "issue" : [ {
-      "changelog" : null,
-      "title" : "Flash of unstyled content",
-      "descriptionText" : "What is expected ?\nThere is no flash of unstyled content            \n\nWhat is actually happening?\nThere is a brief flash of unstyled content\n\nAdditional comments? \nDoesn't occur in Chrome",
-      "creator" : "liew",
-      "assignee" : "btan",
-      "comments" : [ {
-        "createdBy" : "liew",
-        "text" : "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
-        "timestamp" : "07/09/2019 19:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 14,
-          "dislikes" : 7,
-          "angry" : 27,
-          "likes" : 10
-        },
-        "id" : 0
-      }, {
-        "createdBy" : "ang",
-        "text" : "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
-        "timestamp" : "10/03/2020 23:56:06 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 17,
-          "dislikes" : 11,
-          "angry" : 5,
-          "likes" : 9
-        },
-        "id" : 1
-      } ],
-      "numberOfComments" : 2,
-      "tag" : [ "cmty:bug-report" ],
-      "priority" : 1,
-      "status" : "Open",
-      "timestamp" : "01/09/2019 20:00:00 GMT+08:00",
-      "image_file" : null,
-      "id" : 0,
-      "numbercomment" : 2
-    } ],
-    "numissue" : 1,
-    "name" : "Reactjs",
-    "owner" : "liew",
-    "id" : 2
-  }, {
-    "issue" : [ {
-      "changelog" : null,
-      "title" : "Flash of unstyled content",
-      "descriptionText" : "What is expected ?\nExpected correct scrollspy active link highlighting and all links work.\n\nWhat is actually happening?\nPage jumps to top before smooth scroll, which leads to weird links highlighting. Also, sometimes some links doesn't highlight (like Server Rendered in demo video)\n\nAdditional comments?\nDemonstration - https://imgur.com/a/GGvITVB",
-      "creator" : "btan",
-      "assignee" : "ang",
-      "comments" : [ {
-        "createdBy" : "liew",
-        "text" : "Here is what I am referring to: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue! ",
-        "timestamp" : "07/10/2019 13:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 23,
-          "dislikes" : 7,
-          "angry" : 1,
-          "likes" : 9
-        },
-        "id" : 0
-      }, {
-        "createdBy" : "ang",
-        "text" : "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
-        "timestamp" : "07/10/2019 17:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 100,
-          "dislikes" : 7,
-          "angry" : 10,
-          "likes" : 8
-        },
-        "id" : 1
-      }, {
-        "createdBy" : "jhoe",
-        "text" : "Thanks for everything",
-        "timestamp" : "07/10/2019 19:46:40 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 20,
-          "dislikes" : 9,
-          "angry" : 19,
-          "likes" : 8
-        },
-        "id" : 2
-      } ],
-      "numberOfComments" : 3,
-      "tag" : [ "cmty:bug-report" ],
-      "priority" : 6,
-      "status" : "Open",
-      "timestamp" : "01/10/2019 17:00:00 GMT+08:00",
-      "image_file" : null,
-      "id" : 0,
-      "numbercomment" : 3
-    }, {
-      "changelog" : null,
-      "title" : "User is \"trapped\" on 404 page",
-      "descriptionText" : "When hitting the 404 page, the Nuxt layout isn't applied correctly.",
-      "creator" : "ang",
-      "assignee" : "jhoe",
-      "comments" : [ {
-        "createdBy" : "btan",
-        "text" : "Still a problem. ",
-        "timestamp" : "08/10/2019 17:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 15,
-          "dislikes" : 4,
-          "angry" : 1,
-          "likes" : 10
-        },
-        "id" : 0
-      }, {
-        "createdBy" : "ang",
-        "text" : "/cc @clarkdo",
-        "timestamp" : "08/10/2019 20:00:00 GMT+08:00",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 12,
-          "dislikes" : 1,
-          "angry" : 11,
-          "likes" : 5
-        },
-        "id" : 1
-      } ],
-      "numberOfComments" : 2,
-      "tag" : [ "Backend" ],
-      "priority" : 8,
-      "status" : "Closed",
-      "timestamp" : "08/10/2019 12:00:00 GMT+08:00",
-      "image_file" : null,
-      "id" : 1,
-      "numbercomment" : 2
-    } ],
-    "numissue" : 2,
-    "name" : "Vuejs",
-    "owner" : "btan",
-    "id" : 1
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "asdnad",
-    "owner" : "ang",
-    "id" : 6
-  }, {
-    "issue" : [ {
-      "changelog" : [ ],
-      "title" : "issue one",
-      "descriptionText" : "asdasdasd",
-      "creator" : "pua",
-      "assignee" : "ang",
-      "comments" : [ {
-        "createdBy" : "pua",
-        "text" : "asdasd",
-        "timestamp" : "05/06/2021 23:11:56 MYT",
-        "image_file" : null,
-        "counter" : {
-          "happy" : 4,
-          "dislikes" : 3,
-          "angry" : 3,
-          "likes" : 3
-        },
-        "id" : 1
-      }, {
-        "createdBy" : "pua",
-        "text" : "asdasd",
-        "timestamp" : "05/06/2021 23:12:18 MYT",
-        "image_file" : "C:\\Users\\xianp\\IdeaProjects\\Bugs-life(maven)\\Bugs-Life\\add.jpg",
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 2
-      }, {
-        "createdBy" : "pua",
-        "text" : "Enter comment there",
-        "timestamp" : "05/06/2021 23:12:19 MYT",
-        "image_file" : "C:\\Users\\xianp\\IdeaProjects\\Bugs-life(maven)\\Bugs-Life\\add.jpg",
-        "counter" : {
-          "happy" : 0,
-          "dislikes" : 0,
-          "angry" : 0,
-          "likes" : 0
-        },
-        "id" : 3
-      } ],
-      "numberOfComments" : 3,
-      "tag" : [ "", "tagsd" ],
-      "priority" : 4,
-      "status" : "open",
-      "timestamp" : "05/06/2021 23:11:30 MYT",
-      "image_file" : "C:\\Users\\xianp\\IdeaProjects\\Bugs-life(maven)\\Bugs-Life\\add.jpg",
-      "id" : 0,
-      "numbercomment" : 3
-    }, {
-      "changelog" : [ ],
-      "title" : "issue name",
-      "descriptionText" : "description",
-      "creator" : "ang",
-      "assignee" : "pua",
-      "comments" : [ ],
-      "numberOfComments" : 0,
-      "tag" : [ "", "tags" ],
-      "priority" : 9,
-      "status" : "open",
-      "timestamp" : "06/06/2021 02:19:13 MYT",
-      "image_file" : null,
-      "id" : 1,
-      "numbercomment" : 0
-    }, {
-      "changelog" : [ ],
-      "title" : "issue name",
-      "descriptionText" : "add description ",
-      "creator" : "ang",
-      "assignee" : "pua",
-      "comments" : [ ],
-      "numberOfComments" : 0,
-      "tag" : [ "tags one" ],
-      "priority" : 4,
-      "status" : "open",
-      "timestamp" : "06/06/2021 02:19:59 MYT",
-      "image_file" : null,
-      "id" : 2,
-      "numbercomment" : 0
-    } ],
-    "numissue" : 3,
-    "name" : "project name",
-    "owner" : "pua",
-    "id" : 4
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "project name one",
-    "owner" : "ang",
-    "id" : 5
-  } ],
-  "numberproject" : 8,
-  "people_Array_replica" : {
-    "list" : [ {
-      "newAssignedNotification" : [ {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
-      } ],
-      "password" : "password",
-      "name" : "jhoe",
-      "assigned" : 3,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001.sim03@gmail.com",
-      "id" : 1
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "password",
-      "name" : "btan",
-      "assigned" : 2,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001.sim03@gmail.com",
-      "id" : 2
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "password",
-      "name" : "liew",
-      "assigned" : 0,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001.sim03@gmail.com",
-      "id" : 3
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "password",
-      "name" : "ang",
-      "assigned" : 2,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001.sim03@gmail.com",
-      "id" : 4
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "Letmein@1234",
-      "name" : "ally",
-      "assigned" : 0,
-      "number_solved" : 0,
-      "gmail" : "mandysoo665@gmail.com",
-      "id" : 5
-    }, {
-      "newAssignedNotification" : [ {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     4Project Name:         project name\nIssue ID:     1Issue Name:           issue name\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     4Project Name:         project name\nIssue ID:     2Issue Name:           issue name\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     7Project Name:          project one\nIssue ID:     0Issue Name:           issue name\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     7Project Name:          project one\nIssue ID:     1Issue Name:                  asd\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     0Project Name:               Nuxtjs\nIssue ID:     2Issue Name:            issue one\nAssigned by:                  ang\n"
-      }, {
-        "accepted" : false,
-        "issueInfo" : "Project ID:     0Project Name:               Nuxtjs\nIssue ID:     3Issue Name:               asdasd\nAssigned by:                  ang\n"
-      } ],
-      "password" : "@Zhixian8189",
-      "name" : "pua",
-      "assigned" : 4,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001@gmail.com",
-      "id" : 6
-    }, {
-      "newAssignedNotification" : [ ],
-      "password" : "@Zhixian8189",
-      "name" : "darren",
-      "assigned" : 0,
-      "number_solved" : 0,
-      "gmail" : "xianpua2001@gmail.com",
-      "id" : 7
-    } ]
+        {
+          "changelog": null,
+          "title": "User is \"trapped\" on 404 page",
+          "descriptionText": "When hitting the 404 page, the Nuxt layout isn't applied correctly.",
+          "creator": "ang",
+          "assignee": "jhoe",
+          "comments": [
+            {
+              "createdBy": "btan",
+              "text": "Still a problem. ",
+              "timestamp": "08/10/2019 17:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 15,
+                "dislikes": 4,
+                "angry": 1,
+                "likes": 10
+              },
+              "id": 0
+            },
+            {
+              "createdBy": "ang",
+              "text": "/cc @clarkdo",
+              "timestamp": "08/10/2019 20:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 12,
+                "dislikes": 1,
+                "angry": 11,
+                "likes": 5
+              },
+              "id": 1
+            }
+          ],
+          "numberOfComments": 2,
+          "tag": [ "Backend" ],
+          "priority": 8,
+          "status": "Closed",
+          "timestamp": "08/10/2019 12:00:00 GMT+08:00",
+          "image_file": null,
+          "id": 1,
+          "numbercomment": 2
+        }
+      ],
+      "numissue": 2,
+      "name": "Vuejs",
+      "owner": "btan",
+      "id": 1
+    },
+    {
+      "issue": [
+        {
+          "changelog": null,
+          "title": "Flash of unstyled content",
+          "descriptionText": "What is expected ?\nThere is no flash of unstyled content            \n\nWhat is actually happening?\nThere is a brief flash of unstyled content\n\nAdditional comments? \nDoesn't occur in Chrome",
+          "creator": "liew",
+          "assignee": "btan",
+          "comments": [
+            {
+              "createdBy": "liew",
+              "text": "To: https://streamable.com/hkyg3 Apologies for not posting a video when creating the issue!",
+              "timestamp": "07/09/2019 19:00:00 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 11,
+                "dislikes": 7,
+                "angry": 24,
+                "likes": 10
+              },
+              "id": 0
+            },
+            {
+              "createdBy": "ang",
+              "text": "Thanks for video, seems interesting, weirdly enough I couldn't reproduce.\nWill see what can be done.",
+              "timestamp": "10/03/2020 23:56:06 GMT+08:00",
+              "image_file": null,
+              "counter": {
+                "happy": 17,
+                "dislikes": 11,
+                "angry": 5,
+                "likes": 9
+              },
+              "id": 1
+            }
+          ],
+          "numberOfComments": 2,
+          "tag": [ "cmty:bug-report" ],
+          "priority": 1,
+          "status": "Open",
+          "timestamp": "01/09/2019 20:00:00 GMT+08:00",
+          "image_file": null,
+          "id": 0,
+          "numbercomment": 2
+        }
+      ],
+      "numissue": 1,
+      "name": "Reactjs",
+      "owner": "liew",
+      "id": 2
+    },
+    {
+      "issue": [
+        {
+          "changelog": [],
+          "title": "Issue with blocks ",
+          "descriptionText": "head",
+          "creator": "mandy",
+          "assignee": "jhoe",
+          "comments": [],
+          "numberOfComments": 0,
+          "tag": [ "tough" ],
+          "priority": 1,
+          "status": "open",
+          "timestamp": "04/06/2021 04:34:19 GMT+08:00",
+          "image_file": null,
+          "id": 0,
+          "numbercomment": 0
+        }
+      ],
+      "numissue": 1,
+      "name": "Minecraft ",
+      "owner": "mandy",
+      "id": 3
+    }
+  ],
+  "numberOfUsers": 5,
+  "numberproject": 4,
+  "people_Array_replica": {
+    "list": [
+      {
+        "newAssignedNotification": [
+          {
+            "accepted": false,
+            "issueInfo": "Project ID:     3Project Name:           Minecraft \nIssue ID:     0Issue Name:   Issue with blocks \nAssigned by:                mandy\n"
+          }
+        ],
+        "password": "password",
+        "name": "jhoe",
+        "assigned": 3,
+        "number_solved": 0,
+        "gmail": "xianpua2001.sim03@gmail.com",
+        "id": 1
+      },
+      {
+        "newAssignedNotification": [],
+        "password": "password",
+        "name": "btan",
+        "assigned": 2,
+        "number_solved": 0,
+        "gmail": "xianpua2001.sim03@gmail.com",
+        "id": 2
+      },
+      {
+        "newAssignedNotification": [],
+        "password": "password",
+        "name": "liew",
+        "assigned": 0,
+        "number_solved": 0,
+        "gmail": "xianpua2001.sim03@gmail.com",
+        "id": 3
+      },
+      {
+        "newAssignedNotification": [],
+        "password": "password",
+        "name": "ang",
+        "assigned": 1,
+        "number_solved": 0,
+        "gmail": "xianpua2001.sim03@gmail.com",
+        "id": 4
+      },
+      {
+        "newAssignedNotification": [],
+        "password": "Letmein@1234",
+        "name": "ally",
+        "assigned": 0,
+        "number_solved": 0,
+        "gmail": "mandysoo665@gmail.com",
+        "id": 5
+      }
+    ]
   },
-  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report", "", "tagsd", "tags", "tags one", "not tags", "asd", "tags2", "adsad", "ras" ],
-  "numberOfUsers" : 7
+  "tagsOption_replica": [ "tough", "Frontend", "Backend", "cmty:bug-report" ]
 }
