@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"people_Array", "comparatorInUse", "tagsOption", "current_people", "catFont", "redFont", "subFont", "smallBold", "user_obj"})
-public class Window implements  ActionListener {
+public class Window implements ActionListener {
 
 
     private ArrayList<Project> project_Array = new ArrayList<>();       // store project
@@ -79,7 +79,7 @@ public class Window implements  ActionListener {
     ArrayList<JPanel> each_notification_panel_a = new ArrayList<>();
     JButton call;
     JComboBox setting_option_button = new JComboBox();
-    String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file", "Quit"};
+    String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file"};
     boolean in_delete_mode = false;
 
 
@@ -241,9 +241,18 @@ public class Window implements  ActionListener {
     /**
      * @param index project index enter project window
      */
-    public void entertheprojext(int index) {
+    public void entertheprojext(int ID) {
         frame.setVisible(false);
-        project_Array.get(index).projectwindow(current_people, frame);
+        getProjectOfID(ID).projectwindow(current_people, frame);
+    }
+
+    private Project getProjectOfID(int ID) {
+        for (int i = 0; i < project_Array.size(); i++) {
+            if (project_Array.get(i).getID() == ID) {
+                return project_Array.get(i);
+            }
+        }
+        return null;
     }
 
     /**
@@ -426,7 +435,7 @@ public class Window implements  ActionListener {
 
             createpdf(file_name, text);
         }
-        gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi" + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
+        gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
 
         //open the file
@@ -519,7 +528,12 @@ public class Window implements  ActionListener {
         ImageIcon konoha = new ImageIcon("doge_image.jpg");
         frame.setLayout(null);
         frame.setTitle("Doge");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                frame.setVisible(false);
+                System.exit(0);
+            }
+        });
         frame.setIconImage(konoha.getImage());
         frame.setResizable(true);
         frame.setSize(1350, 730);
@@ -553,6 +567,7 @@ public class Window implements  ActionListener {
                     deleteProject(value);
                     current_project_Array = project_Array;
                     reset_table(current_project_Array);
+                    JOptionPane.showMessageDialog(null, "you are out from deleting project mode", "delete project", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -931,11 +946,7 @@ public class Window implements  ActionListener {
                 }
                 System.out.println("json file printing");
                 break;
-                case 4:
-                    frame.setVisible(false);
-                    System.out.println("user quiting ");
-                    System.exit(0);
-                    break;
+
             }
         }
     }
@@ -943,6 +954,7 @@ public class Window implements  ActionListener {
     /**
      * Method to increase the number of issues resolved of a particular person.
      * Occurs when an issue is set to 'Resolved' status.
+     *
      * @param people The person assigned to the issue
      */
     public static void resolvedAnIssue(People people) {
@@ -956,6 +968,7 @@ public class Window implements  ActionListener {
     /**
      * Method to decrease the number of issues resolved of a particular person.
      * Occurs when a resolved issue is set to 'Reopen' state.
+     *
      * @param people The person assigned to the issue.
      */
     public static void reopenedAnIssue(People people) {

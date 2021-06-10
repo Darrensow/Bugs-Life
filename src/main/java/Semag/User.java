@@ -365,7 +365,7 @@ public class User implements ActionListener {
             String password = new String(login_pass_text.getPassword());
             int b = getindex(name);
             if (b < 0) {
-                popwindow("login issue", "wrong username");
+                popwindow("login issue", "Invalid username or password. Please try again");
                 login_username.setText("Enter username");
                 login_pass_text.setText("");
             } else {
@@ -375,7 +375,7 @@ public class User implements ActionListener {
                     login_panel.setVisible(false);
                     frame.setVisible(false);
                 } else {
-                    popwindow("password issue", "wrong password");
+                    popwindow("password issue", "Invalid username or password. Please try again");
                     login_username.setText("Enter username");
                     login_pass_text.setText("");
                 }

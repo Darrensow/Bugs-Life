@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @JsonIgnoreProperties(value = {"current_people", "comparatorInUse"})
-public class Project implements  ActionListener,Comparator<Project>,Comparable<Project> {
+public class Project implements ActionListener, Comparator<Project>, Comparable<Project> {
 
     private ArrayList<Issue> issue = new ArrayList<>();     // store issue
     private int numissue = 0;                               // issue id
@@ -173,8 +173,6 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
     }
 
 
-
-
     /**
      * @param arr   comment arraylist
      * @param token keyword check a wword in the comment
@@ -254,8 +252,6 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
     }
 
 
-
-
     private People searchpeople(String name) {
         for (int i = 0; i < Window.people_Array.size(); i++) {
             if (name.equals(Window.people_Array.get(i).getName())) {
@@ -268,9 +264,9 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
     /**
      * @param index issue index enter issue window
      */
-    public void entertheissue(int index) {
+    public void entertheissue(int ID) {
         this.frame.setVisible(false);
-        issue.get(index).issuewindow(current_people, frame);
+        getIssueOfID(ID).issuewindow(current_people, frame);
     }
 
     private Issue getIssueOfID(int ID) {
@@ -333,7 +329,6 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
         frame.setTitle("Doge");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-                System.out.println("the window is closing");
                 window_frame.setVisible(true);
             }
         });
@@ -541,6 +536,7 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
                     deleteIssue(value);
                     current_issue = issue;
                     reset_table(current_issue);
+                    JOptionPane.showMessageDialog(null, "you are out from deleting issue mode", "delete issue", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
@@ -724,7 +720,7 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
     }
 
     public void include_and_exluded_state(ArrayList<String> arr) {
-        for (int i = 0;i<include_state.size();i++){
+        for (int i = 0; i < include_state.size(); i++) {
             green_panel_up.remove(include_state.get(i));
             green_panel_down.remove(exclude_state.get(i));
         }
@@ -955,7 +951,7 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
                     }
                 }
             }
-            if(can_search){
+            if (can_search) {
                 for (int i = 0; i < exclude_state.size(); i++) {
                     if (exclude_state.get(i).isSelected()) {
                         excludestate += "#" + exclude_state.get(i).getText();
@@ -976,30 +972,30 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
             return issue;
         }
         String[] tags;
-        String [] states;
+        String[] states;
 
-        if (tag.length() == 0){
+        if (tag.length() == 0) {
             tags = new String[0];
-        }else
+        } else
             tags = tag.substring(1).split("#");
 
-        if (state.length() == 0){
+        if (state.length() == 0) {
             states = new String[0];
-        }else
+        } else
             states = state.substring(1).split("#");
 
 //        System.out.println(Arrays.toString(tags));
 //        System.out.println(Arrays.toString(states));
 
-        boolean[] kenaExclude =new boolean[issue.size()];   //acts like an index pointer
+        boolean[] kenaExclude = new boolean[issue.size()];   //acts like an index pointer
         for (int i = 0; i < issue.size(); i++) {
 
             if (tags.length != 0) {     //only compare tag if there's tag
-            for (int j = 0; j < issue.get(i).getTag().length ; j++) {
+                for (int j = 0; j < issue.get(i).getTag().length; j++) {
                     String currentIssueTag = issue.get(i).getTag()[j];
 
                     for (int k = 0; k < tags.length; k++) {
-                        if(tags[k].equalsIgnoreCase(currentIssueTag)){
+                        if (tags[k].equalsIgnoreCase(currentIssueTag)) {
                             kenaExclude[i] = true;              //if kena mark true, means it will be excluded
                             j = issue.get(i).getTag().length;   //:)) sorry I don't know how to use label
                             break;
@@ -1011,28 +1007,26 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
             }
 
             if (states.length != 0) {     //only compare status if there's status
-                    String currentIssueStatus = issue.get(i).getStatus();
-                    for (int k = 0; k < states.length; k++) {
-                        if(states[k].equalsIgnoreCase(currentIssueStatus)){
+                String currentIssueStatus = issue.get(i).getStatus();
+                for (int k = 0; k < states.length; k++) {
+                    if (states[k].equalsIgnoreCase(currentIssueStatus)) {
 //                            System.out.println("I kena exclude: " + issue.get(i).getTitle());
-                            kenaExclude[i] = true;
-                            break;
-                        }
+                        kenaExclude[i] = true;
+                        break;
                     }
+                }
             }
         }
         ArrayList<Issue> temp = new ArrayList<>();
         System.out.println(Arrays.toString(kenaExclude));
         for (int i = 0; i < kenaExclude.length; i++) {
-            if(!kenaExclude[i]){
+            if (!kenaExclude[i]) {
 //                System.out.println("I dinnot kena exclude: " + issue.get(i).getTitle());
                 temp.add(issue.get(i));
             }
         }
         return temp;
     }
-
-
 
 
     /*
@@ -1043,29 +1037,29 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
             return current_issue;
         }
         String[] tags;
-        String [] states;
+        String[] states;
 
-        if (tag.length() == 0){
+        if (tag.length() == 0) {
             tags = new String[0];
-        }else
+        } else
             tags = tag.substring(1).split("#");
 
-        if (state.length() == 0){
+        if (state.length() == 0) {
             states = new String[0];
-        }else
+        } else
             states = state.substring(1).split("#");
 
 //        System.out.println(Arrays.toString(tags));
 //        System.out.println(Arrays.toString(states));
 
-        boolean[] willInclude =new boolean[current_issue.size()];   //acts like an index pointer
+        boolean[] willInclude = new boolean[current_issue.size()];   //acts like an index pointer
         for (int i = 0; i < current_issue.size(); i++) {
             if (tags.length != 0) {     //only compare tag if there's tag
-                for (int j = 0; j <current_issue.get(i).getTag().length ; j++) {
+                for (int j = 0; j < current_issue.get(i).getTag().length; j++) {
                     String currentIssueTag = current_issue.get(i).getTag()[j];
 
                     for (int k = 0; k < tags.length; k++) {
-                        if(tags[k].equalsIgnoreCase(currentIssueTag)){
+                        if (tags[k].equalsIgnoreCase(currentIssueTag)) {
                             willInclude[i] = true;              //if kena mark true, means it will be excluded
                             j = issue.get(i).getTag().length;   //:)) sorry I don't know how to use label
                             break;
@@ -1078,7 +1072,7 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
             if (states.length != 0) {     //only compare status if there's status
                 String currentIssueStatus = current_issue.get(i).getStatus();
                 for (int k = 0; k < states.length; k++) {
-                    if(states[k].equalsIgnoreCase(currentIssueStatus)){
+                    if (states[k].equalsIgnoreCase(currentIssueStatus)) {
                         System.out.println("I kena include: " + current_issue.get(i).getTitle());
                         willInclude[i] = true;
                         break;
@@ -1089,7 +1083,7 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
         ArrayList<Issue> temp = new ArrayList<>();
         System.out.println(Arrays.toString(willInclude));
         for (int i = 0; i < willInclude.length; i++) {
-            if(willInclude[i]){
+            if (willInclude[i]) {
                 System.out.println("I kena include: " + current_issue.get(i).getTitle());
                 temp.add(current_issue.get(i));
             }
@@ -1105,8 +1099,8 @@ public class Project implements  ActionListener,Comparator<Project>,Comparable<P
             entertheissue(Integer.parseInt(input.substring(1)));
         } else {
             current_issue = printsearchResult(input);
-            System.out.println("issue size after filter and searchkeyword: "+ current_issue.size());
-            Collections.sort(current_issue,comparatorInUse);
+            System.out.println("issue size after filter and searchkeyword: " + current_issue.size());
+            Collections.sort(current_issue, comparatorInUse);
             reset_table(current_issue);
         }
     }

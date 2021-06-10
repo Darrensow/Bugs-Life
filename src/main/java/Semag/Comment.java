@@ -7,10 +7,11 @@ import java.io.File;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @JsonIgnoreProperties(value = {"reaction"})
-public class Comment{
+public class Comment {
 
     private int ID;
     private String createdBy;
@@ -21,12 +22,13 @@ public class Comment{
     private final String[] reaction = {"happy", "angry", "likes", "dislikes"};
 
     /**
-     * This is a Hashmap that links the reaction and its count
+     * This is a Hashmap that links the reaction and the users that reacted
      */
-    private HashMap<String, Integer> counter = new HashMap<String, Integer>() {
+    private HashMap<String, ArrayList<String>> counter = new HashMap<>() {
+        //Initialisation block
         {
             for (int i = 0; i < reaction.length; i++) {
-                put(reaction[i], 0);
+                put(reaction[i], new ArrayList<>());
             }
         }
     };
@@ -52,17 +54,6 @@ public class Comment{
         this.text = text;
         this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
-
-    /**
-     * This method will add reaction count through Hashmap
-     *
-     * @param reaction is the reaction in String, option is like, dislike, happy
-     *                 and angry
-     */
-    public void addReaction(String reaction) {
-        counter.replace(reaction, counter.get(reaction) + 1);
-    }
-
 
     public String getText() {
         return this.text;
@@ -92,19 +83,28 @@ public class Comment{
     }
 
     public int happycount() {
-        return counter.get("happy");
+        return counter.get("happy").size();
     }
 
     public int dislikecount() {
-        return counter.get("dislikes");
+        return counter.get("dislikes").size();
     }
 
     public int angrycount() {
-        return counter.get("angry");
+        return counter.get("angry").size();
     }
 
     public int likecount() {
-        return counter.get("likes");
+        return counter.get("likes").size();
+    }
+
+    public String displayComment() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#").append(getID()).append("\t");
+        sb.append("Created on: ").append(getTimestamp()).append("\t");
+        sb.append("By: ").append(getCreatedBy()).append("\n");
+        sb.append(getText());
+        return sb.toString();
     }
 
     /*
@@ -128,6 +128,73 @@ public class Comment{
         this.counter = temp.counter;
         this.timestamp = temp.timestamp;
     }
+
+    public boolean reactedBefore(String reaction, String username) {
+        if (reaction == null) {
+            throw new NullPointerException("Reaction cannot be null");
+        }
+        if (username == null) {
+            throw new NullPointerException("Username cannot be null");
+        }
+        return counter.get(reaction).contains(username);
+    }
+
+    public boolean canReact(String username) {
+        return !reactedBefore("happy", username) && !reactedBefore("angry", username)
+                && !reactedBefore("likes", username) && !reactedBefore("dislikes", username);
+    }
+
+    //Helper method to return the reaction that the user reacted on. Used to check for unreacting reactino feature
+    private String reactedReaction(String username) {
+        if (reactedBefore("happy", username)) {
+            return "happy";
+        } else if (reactedBefore("angry", username)) {
+            return "angry";
+        } else if (reactedBefore("likes", username)) {
+            return "likes";
+        } else if (reactedBefore("dislikes", username)) {
+            return "dislikes";
+        }
+        return "";
+    }
+
+    /**
+     * This method will remove the reaction through hashmap
+     *
+     * @param reaction
+     * @param username
+     */
+    public void addReaction(String reaction, String username) {
+//        System.out.println("Username " + username);
+        if (canReact(username)) {                                           // User has no reaction to a particular comment
+//            System.out.println("Username react " + canReact(username) + " " + reaction);
+            counter.get(reaction).add(username);                            // Add the reaction
+        } else {
+            if (reactedReaction(username).equals(reaction)) {               // User clicks on the same button
+                counter.get(reactedReaction(username)).remove(username);    // Removes the reaction
+            } else {                                                        // User clicks on other buttons
+//                System.out.println("Username removed " + canReact(username) + " " + reaction);
+                counter.get(reactedReaction(username)).remove(username);    // Removes
+                counter.get(reaction).add(username);                        // Add new reaction
+            }
+        }
+    }
+
+
+    public boolean a(String now, String name) {
+        String[] a = {"happy", "angry", "dislike", "like"};
+        for (int i = 0; i < a.length; i++) {
+            if (!now.equals(a[i])) {
+                if (reactedBefore(a[i], name)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+
 
     /*
         --- Mutator methods ---
@@ -169,11 +236,11 @@ public class Comment{
         return timestamp;
     }
 
-    public HashMap<String, Integer> getCounter() {
+    public HashMap<String, ArrayList<String>> getCounter() {
         return counter;
     }
 
-    public void setCounter(HashMap<String, Integer> counter) {
+    public void setCounter(HashMap<String, ArrayList<String>> counter) {
         this.counter = counter;
     }
 
