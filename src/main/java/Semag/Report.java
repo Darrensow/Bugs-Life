@@ -1,18 +1,20 @@
 package Semag;
-
 import java.util.ArrayList;
 
 public class Report {
 
     private ArrayList<people_int> ADT = new ArrayList<>();
     private ArrayList<labelCounter> label = new ArrayList<>();
-    private int num_solve;
-    private int num_nosolved;
-    private int inprogress;
+    private Integer num_solve;
+    private Integer num_nosolved;
+    private Integer inprogress;
     private String top_perform = "";  // no need store
-    private int max = -1;             //no
+    private Integer max = -1;             //no
     private String tags = "";         // no
-    private int max_tags = -1;        //no
+    private Integer max_tags = -1;        //no
+
+    public Report() {
+    }
 
     public Report(ArrayList<people_int> ADT, int num_solve, int num_nosolved, int inprogress, ArrayList<labelCounter> label) {
         this.ADT = ADT;
@@ -133,11 +135,30 @@ public class Report {
     public Report(ArrayList<people_int> ADT) {
         this.ADT = ADT;
     }
+
+    public void setLabel(ArrayList<labelCounter> label) {
+        this.label = label;
+    }
+
+    public void setNum_solve(Integer num_solve) {
+        this.num_solve = num_solve;
+    }
+
+    public void setNum_nosolved(Integer num_nosolved) {
+        this.num_nosolved = num_nosolved;
+    }
+
+    public void setInprogress(Integer inprogress) {
+        this.inprogress = inprogress;
+    }
 }
 
 class people_int {
     private String name;
-    private int num_resolved;
+    private Integer num_resolved;
+
+    public people_int() {
+    }
 
     public people_int(String name, int num_resolved) {
         this.name = name;
@@ -152,11 +173,15 @@ class people_int {
         this.name = name;
     }
 
-    public int getNum_resolved() {
+    public Integer getNum_resolved() {
         return num_resolved;
     }
 
     public void setNum_resolved(int num_resolved) {
+        this.num_resolved = num_resolved;
+    }
+
+    public void setNum_resolved(Integer num_resolved) {
         this.num_resolved = num_resolved;
     }
 }

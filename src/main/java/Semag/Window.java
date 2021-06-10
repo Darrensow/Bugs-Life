@@ -454,23 +454,23 @@ public class Window implements ActionListener {
                 if (cum_topperform.equals("")) {
                     temp_string += "null, ";
                 } else {
-                    temp_string += cum_topperform + "( " + cum_toperform_max + " )";
+                    temp_string += cum_topperform + "( " + cum_toperform_max + " ), ";
                 }
                 if (cum_maxtags <= 0) {
                     temp_string += "null, ";
                 } else {
-                    temp_string += cum_toptags + "(" + cum_maxtags + ")";
+                    temp_string += cum_toptags + "(" + cum_maxtags + "), ";
                 }
                 temp_string += current.getNum_solve() + ", " + current.getNum_nosolved() + ", " + current.getInprogress() + ", ";
                 if (top_perform.equals("")) {
                     temp_string += "null, ";
                 } else {
-                    temp_string += top_perform + " (" + max + ") ";
+                    temp_string += top_perform + " (" + max + ") , ";
                 }
                 if (max_tags < 0) {
-                    temp_string += "null";
+                    temp_string += "null, ";
                 } else {
-                    temp_string += str + " ( " + max_tags + " )";
+                    temp_string += str + " ( " + max_tags + " ) , ";
                 }
                 out.println(temp_string);
                 out.close();
@@ -521,7 +521,7 @@ public class Window implements ActionListener {
 
             createpdf(file_name, text);
         }
-        report = current;
+//        report = current;
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
 
@@ -1099,6 +1099,7 @@ public class Window implements ActionListener {
 
     public void loadData() {
         Window temp = dm.readWindowData();
+        this.report = temp.report;
         this.project_Array = temp.project_Array;
         this.numberproject = temp.numberproject;
         this.people_Array_replica = temp.people_Array_replica;
@@ -1186,5 +1187,13 @@ public class Window implements ActionListener {
 
     public void setNumberOfUsers(int numberOfUsers) {
         this.numberOfUsers = numberOfUsers;
+    }
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
     }
 }

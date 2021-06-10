@@ -7,14 +7,12 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.io.Serializable;
-
 /**
  *
  * @author xianp
  */
 public class labelCounter implements Comparable<labelCounter>  {
-    
+
     private String name;
     private Integer total = 0;
 
@@ -25,11 +23,12 @@ public class labelCounter implements Comparable<labelCounter>  {
         this.name = name;
         add();
     }
+
     public labelCounter(String name,int num) {
         this.name = name;
         this.total = num;
     }
-    
+
     public void add() {
         total++;
     }
@@ -38,7 +37,7 @@ public class labelCounter implements Comparable<labelCounter>  {
     public String getName() {
         return name;
     }
-    
+
     public int getTotal() {
         return total;
     }
@@ -60,16 +59,4 @@ public class labelCounter implements Comparable<labelCounter>  {
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
 
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData(){
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        labelCounter temp = dm.readLabelCounterData();
-        this.name = temp.name;
-        this.total = temp.total;
-    }
 }
