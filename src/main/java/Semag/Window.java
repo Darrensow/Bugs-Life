@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import me.xdrop.fuzzywuzzy.algorithms.TokenSet;
+import me.xdrop.fuzzywuzzy.ratios.PartialRatio;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -26,7 +28,6 @@ public class Window implements ActionListener {
     private ArrayList<Project> project_Array = new ArrayList<>();       // store project
     //static variables for usage in classes
     public static PeopleADT people_Array = new PeopleADT();
-    public static ArrayList<String> tagsOption = new ArrayList<String>();
     private int numberproject;                                          // to keep track of project id
     private PeopleADT people_Array_replica = new PeopleADT();           // store people
     private ArrayList<String> tagsOption_replica = new ArrayList<>();   // store tags
@@ -38,6 +39,8 @@ public class Window implements ActionListener {
      * project_Array that will be shown on the table
      */
     private ArrayList<Project> current_project_Array;
+
+    private Report report;
 
     private Comparator<Project> comparatorInUse;                        // ID, Name, IssueCount
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -82,7 +85,7 @@ public class Window implements ActionListener {
     String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file"};
     boolean in_delete_mode = false;
 
-    private Report report;
+
 
 
     public Window() {
@@ -139,57 +142,99 @@ public class Window implements ActionListener {
     }
 
     public void search(String input) {
-        if (isnumberic(input)) {
-            entertheprojext(Integer.parseInt(input.substring(1)));
-        } else {
-            current_project_Array = printsearchResult(input);
-            if (current_project_Array.size() > 0) {
+        if (input.equals("") || input.equals("search")) {
+            try {
+                current_project_Array = project_Array;
                 Collections.sort(current_project_Array, comparatorInUse);
-                for (int i = 0; i < current_project_Array.size(); i++) {
-                    reset_table(current_project_Array);
-                }
-            } else
                 reset_table(current_project_Array);
+            } catch (Exception e) {
+                System.out.println("catching error in @search method");
+            }
+            return;                 //str8 away end, no need check
+
+        }else {
+            Project toAppend = null;
+            boolean contains = false;
+
+            //this step is to check if the user wants to find by #ID
+            if (isID(input)) {
+                toAppend = getProjectOfID(Integer.parseInt(input.substring(1)));
+                if (toAppend != null) {
+                    contains = true;
+                }
+            }
+
+            current_project_Array = fuzzySearch(input);
+            if (contains) {
+                current_project_Array.add(0, toAppend);
+            }
+            reset_table(current_project_Array);
         }
     }
 
-    /**
-     * @param seachkeyword
-     * @return true if have that project
-     */
-    public ArrayList<Project> printsearchResult(String seachkeyword) {
-        if (seachkeyword.equals("") || seachkeyword.equals("search")) {
-            return project_Array;
-        }
+
+    public ArrayList<Project> fuzzySearch(String seachkeyword) {
+        int cutOffRatio = 60;
+
+        PriorityQueue<projectWithScore> temporary = new PriorityQueue<>(RatioComparator);
         ArrayList<Project> temp = new ArrayList<>();
-        String[] token = seachkeyword.toLowerCase().split(" ");
+
         for (int i = 0; i < project_Array.size(); i++) {
-            for (int j = 0; j < token.length; j++) {
-                if (project_Array.get(i).getName().toLowerCase().contains(token[j])) {
-                    temp.add(project_Array.get(i));
-                    break;
-                }
+            Project current = project_Array.get(i);
+            int score = tokenSetPartialRatio(seachkeyword, current.getName());
+            if (score > cutOffRatio) {
+                temporary.add(new projectWithScore(current,score));
+                continue;
             }
+
+        }
+        while (!temporary.isEmpty()) {
+            temp.add(temporary.poll().getElement());
         }
         return temp;
     }
+
+    private Comparator<projectWithScore> RatioComparator = new Comparator<projectWithScore>() {
+        @Override
+        public int compare(projectWithScore o1, projectWithScore o2) {
+            return o2.getScore() - o1.getScore();
+        }
+    };
+
+    private class projectWithScore {
+        private Project element;
+        private int score;
+
+        public projectWithScore(Project element, int score) {
+            this.element = element;
+            this.score = score;
+        }
+
+        public Project getElement() {
+            return element;
+        }
+        public int getScore() {
+            return score;
+        }
+    }
+
+
+
+    public static int tokenSetPartialRatio(String s1, String s2) {
+        return new TokenSet().apply(s1, s2, new PartialRatio());
+    }
+
 
     /**
      * @param sen keyword
      * @return true if it is an id
      */
-    public boolean isnumberic(String sen) {
-        if (sen.length() < 1) {
+    public boolean isID(String sen) {
+        if (sen.charAt(0) != '#') {
             return false;
         }
         try {
-            if (sen.charAt(0) != '#') {
-                return false;
-            }
-            double d = Double.parseDouble(sen.substring(1));
-            if (d >= numberproject) {
-                return false;
-            }
+            Integer d = Integer.parseInt(sen.substring(1));
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -241,7 +286,7 @@ public class Window implements ActionListener {
     }
 
     /**
-     * @param index project index enter project window
+     * @param ID project index enter project window
      */
     public void entertheprojext(int ID) {
         frame.setVisible(false);
@@ -257,34 +302,8 @@ public class Window implements ActionListener {
         return null;
     }
 
-    /**
-     * print Project list, this method is an overloading method
-     */
-    public void print() {
-        this.print(project_Array);
-    }
 
-    /**
-     * print selected list
-     */
-    public void print(ArrayList<Project> toPrint) {
-        String[][] atable = new String[toPrint.size()][3];
-        for (int i = 0; i < toPrint.size(); i++) {
-            atable[i][0] = toPrint.get(i).getID() + "";
-            atable[i][1] = toPrint.get(i).getName();
-            atable[i][2] = toPrint.get(i).getIssue().size() + "";
-        }
-        reset_table(atable);
-    }
 
-    /**
-     * This method return string representation of one Project in the Project
-     * Dashboard, this method is called by
-     * {@code print(ArrayList<Project> toPrint)}
-     */
-    public void printOneProject(Project o) {
-        System.out.println(o.getID() + o.getName());
-    }
 
     // 1 = txt , 2 = csv
     public void selectfile(int num) throws IOException {  //select file location and set file name
@@ -773,15 +792,7 @@ public class Window implements ActionListener {
     }
 
 
-    public ArrayList<String> showProjectThatCanDelete() {
-        ArrayList<String> temp = new ArrayList<>();
-        for (int i = 0; i < project_Array.size(); i++) {
-            if (project_Array.get(i).getOwner().equals(current_people.getName())) {
-                temp.add(project_Array.get(i).getName());
-            }
-        }
-        return temp;
-    }
+
 
     public static People getPeopleByUsername(String username) {
         for (int i = 0; i < Window.people_Array.size(); i++) {
@@ -856,13 +867,6 @@ public class Window implements ActionListener {
         check_icon(this.notification.size());
     }
 
-    public void reset_table(String[][] data) {
-        tableModel.setRowCount(0);
-        for (int i = 0; i < data.length; i++) {
-            tableModel.addRow(data[i]);
-        }
-        frame.repaint();
-    }
 
     public void reset_table(ArrayList<Project> data) {
         tableModel.setRowCount(0);

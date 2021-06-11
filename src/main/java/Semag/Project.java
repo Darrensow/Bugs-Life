@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,19 +187,12 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     }
 
     //check whether is id or not
-    private boolean isnumberic(String sen) {
+    private boolean isID(String sen) {
+        if (sen.charAt(0) != '#') {
+            return false;
+        }
         try {
-            if (sen.length() > 1) {
-                if (sen.charAt(0) != '#') {
-                    return false;
-                }
-                double d = Double.parseDouble(sen.substring(1));
-                if (d > issue.size()) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+            Integer d = Integer.parseInt(sen.substring(1));
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -262,7 +254,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     }
 
     /**
-     * @param index issue index enter issue window
+     * @param ID issue index enter issue window
      */
     public void entertheissue(int ID) {
         this.frame.setVisible(false);
@@ -1091,49 +1083,118 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         return temp;
     }
 
+
     /**
      * @param input keyword search search issue
      */
-    public void search(String input) { //  only input number will directly assume as ID
-        if (isnumberic(input)) {
-            entertheissue(Integer.parseInt(input.substring(1)));
+    public void search(String input) {//  only input number will directly assume as ID
+        if (input.equals("") || input.equals("search")) {
+            try {
+                Collections.sort(current_issue, comparatorInUse);
+                reset_table(current_issue);
+            } catch (Exception e) {
+                System.out.println("catching error in @search method");
+            }
+            return;         //str8 away end, no need check
+
         } else {
-            current_issue = printsearchResult(input);
-            System.out.println("issue size after filter and searchkeyword: " + current_issue.size());
-            Collections.sort(current_issue, comparatorInUse);
+            Issue toAppend = null;
+            boolean contains = false;   //if there is this Issue with this ID, then true
+
+
+            //this step is to check if the user wants to find by #ID
+            if (isID(input)) {
+                toAppend = getIssueOfID(Integer.parseInt(input.substring(1)));
+                if (toAppend != null) {
+                    contains = true;
+                }
+            }
+            current_issue = fuzzySearch(input);
+            if (contains) {
+                current_issue.add(0, toAppend);
+            }
             reset_table(current_issue);
         }
     }
 
-    /**
-     * @param seachkeyword print issue
-     * @return true if have isseu
-     */
-    public ArrayList<Issue> printsearchResult(String seachkeyword) {
-        if (seachkeyword.equals("") || seachkeyword.equals("search")) {
-            return current_issue;
-        }
-        ArrayList<Issue> temp = new ArrayList<>();
-        String[] token = seachkeyword.toLowerCase().split("#");
-        System.out.println(Arrays.toString(token));
+    public ArrayList<Issue> fuzzySearch(String seachkeyword) {
 
-        for (int i = 0; i < current_issue.size(); i++) {
-            for (int j = 0; j < token.length; j++) {
-                if (current_issue.get(i).getTitle().toLowerCase().contains(token[j])) {
-                    temp.add(current_issue.get(i));
-                    System.out.println("I got match with title");
-                    break;
-                } else if (current_issue.get(i).getDescriptionText().toLowerCase().contains(token[j])) {
-                    temp.add(current_issue.get(i));
-                    break;
-                } else if (checkcomment(current_issue.get(i).getComments(), token[j])) {
-                    temp.add(current_issue.get(i));
-                    break;
-                }
+        int cutOffRatio = 60;
+
+        PriorityQueue<issueWithScore> temporary = new PriorityQueue<>(RatioComparator);
+        ArrayList<Issue> temp = new ArrayList<>();
+
+        Issue current;
+        int score;
+        for (int i = 0; i < issue.size(); i++) {
+            current = issue.get(i);
+
+
+            score = Window.tokenSetPartialRatio(seachkeyword, current.getTitle());
+            if (score > cutOffRatio) {
+                temporary.add(new issueWithScore(current, score));
+                continue;
             }
+
+            score = Window.tokenSetPartialRatio(seachkeyword, current.getDescriptionText());
+            if (score > cutOffRatio) {
+                temporary.add(new issueWithScore(current, score));
+                continue;
+            }
+
+            score = checkComment(seachkeyword, current.getComments(), cutOffRatio);
+            if (score >= 0) {
+                temporary.add(new issueWithScore(current, score));
+                continue;
+            }
+
         }
+
+        while (!temporary.isEmpty()) {
+            temp.add(temporary.poll().getElement());
+        }
+
         return temp;
     }
+
+    private Comparator<issueWithScore> RatioComparator = new Comparator<issueWithScore>() {
+        @Override
+        public int compare(issueWithScore o1, issueWithScore o2) {
+            return o2.getScore() - o1.getScore();
+        }
+    };
+
+    private class issueWithScore {
+        private Issue element;
+        private int score;
+
+        public issueWithScore(Issue element, int score) {
+            this.element = element;
+            this.score = score;
+        }
+
+        public Issue getElement() {
+            return element;
+        }
+
+        public int getScore() {
+            return score;
+        }
+    }
+
+    private int checkComment(String searchkeyword, ArrayList<Comment> comments, int cutOffRatio) {
+        Comment current;
+        int score;
+        for (int i = 0; i < comments.size(); i++) {
+            current = comments.get(i);
+            score = Window.tokenSetPartialRatio(searchkeyword, current.getText());
+            if (score > cutOffRatio) {
+                return score;
+            }
+        }
+        return 0;
+    }
+
 
     public void popwindow(String title, String content) {
         JOptionPane.showMessageDialog(null, content, title, JOptionPane.WARNING_MESSAGE);
