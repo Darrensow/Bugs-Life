@@ -74,7 +74,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     JButton reundo = new JButton();
     String[] list_priority = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     JButton submit = new JButton("SUBMIT");
-    String[] sort_option = {"Sort based ID", "Sort based priority", "Sort based timestamp"};
+    String[] sort_option = {"Sort based ID","Sort based Title", "Sort based priority", "Sort based timestamp"};
 
     String[] column = {"ID", "Title", "Status", "Tag", "Priority", "Time", "Assignee", "CreatedBy"};
     boolean exit = false;
@@ -111,14 +111,16 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         this.owner = owner;
     }
 
+
+
     /**
      * @param current_people determine whether is owner or not
      */
-    public void projectwindow(People current_people, JFrame frame) {
+    public void projectWindow(People current_people, JFrame frame) {
         this.current_people = current_people;
         this.current_issue = issue;
         window_frame = frame;
-        setupwindow();
+        setupWindow();
         sortIssueBased(0);
         keeprenew();
         ArrayList<String> status = new ArrayList<>(Arrays.asList(Issue.statusOption));
@@ -126,194 +128,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_and_exluded_state(status);
     }
 
-    public void keeprenew() {
-        Thread thread = new Thread() {
-            public void run() {
-                while (true) {
-                    if (frame.isVisible() == false) {
-                        current_issue = issue;
-                        reset_table(current_issue);
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        thread.start();
-    }
-
-    /**
-     * check if the tags is registered, if not, add it to the tag option and
-     * return This method is only called in @{addIssue}
-     */
-    public String[] addTag(String[] tag) {
-        String[] toAdd = new String[tag.length];
-
-        for (int i = 0; i < tag.length; i++) {
-            boolean exist = false;
-            for (int j = 0; j < Issue.tagsOption.size(); j++) {
-                //check if the tag is available, if yes, copy and break
-                if (Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
-                    toAdd[i] = Issue.tagsOption.get(j);
-                    exist = true;
-                    break;
-                }
-            }
-            if (!exist) {
-                //if no, add the tag option and copy
-                Issue.tagsOption.add(tag[i]);
-                toAdd[i] = tag[i];
-            }
-        }
-        return toAdd;
-    }
-
-
-    /**
-     * @param arr   comment arraylist
-     * @param token keyword check a wword in the comment
-     * @return
-     */
-    private boolean checkcomment(ArrayList<Comment> arr, String token) {
-        for (int i = 0; i < arr.size(); i++) {
-            if (arr.get(i).getText().toLowerCase().contains(token)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //check whether is id or not
-    private boolean isID(String sen) {
-        if (sen.charAt(0) != '#') {
-            return false;
-        }
-        try {
-            Integer d = Integer.parseInt(sen.substring(1));
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * This method will sort the Issue with the column that the user wish, and
-     * str8 print it out
-     *
-     * @param choose is the attribute of the Issue, eg ID, Title, returned as
-     *               int
-     */
-    public void sortIssueBased(int choose) {
-        switch (choose) {
-            case 0: //0 is the first option, ID
-                comparatorInUse = Issue.IDComparator;
-                break;
-            case 1: //1 is the sec option, Priority
-                comparatorInUse = Issue.priorityComparator;
-                break;
-            case 2: //2 is the third option, Timestamp
-                comparatorInUse = Issue.timeComparator;
-                break;
-        }
-        Collections.sort(current_issue, comparatorInUse);
-        reset_table(current_issue);
-        System.out.println(current_issue.size());
-    }
-
-
-    /**
-     * d
-     * This method return string representation of one Issue in the Issue
-     * Dashboard, this method is called by
-     * {@code print(ArrayList<Issue> toPrint)}
-     */
-    public String printOneIssue(Issue o) {
-        StringBuilder str = new StringBuilder();
-        str.append(String.format(" %3d", o.getID()));
-        str.append(String.format(" %-30s", o.getTitle()));
-        str.append(String.format(" %-15s", o.getStatus()));
-        str.append(String.format(" %-15s", o.getTag()));
-        str.append(String.format(" %10d", o.getPriority()));
-        str.append(String.format(" %-30s", o.getTimestamp()));
-        str.append(String.format(" %-20s", o.getAssignee()));
-        str.append(String.format(" %-20s", o.getCreator()));
-        return str.toString();
-    }
-
-
-    private People searchpeople(String name) {
-        for (int i = 0; i < Window.people_Array.size(); i++) {
-            if (name.equals(Window.people_Array.get(i).getName())) {
-                return Window.people_Array.get(i);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param ID issue index enter issue window
-     */
-    public void entertheissue(int ID) {
-        this.frame.setVisible(false);
-        getIssueOfID(ID).issuewindow(current_people, frame);
-    }
-
-    private Issue getIssueOfID(int ID) {
-        for (int i = 0; i < issue.size(); i++) {
-            if (issue.get(i).getID() == ID) {
-                return issue.get(i);
-            }
-        }
-        return null;
-    }
-
-    public int issue_Arraysize() {
-        return issue.size();
-    }
-
-    public Issue issuegetindex(int index) {
-        return issue.get(index);
-    }
-
-    //--Comparator--
-    /**
-     * Comparator for sorting the list by Project ID
-     */
-    public static Comparator<Project> IDComparator = new Comparator<Project>() {
-        @Override
-        public int compare(Project o1, Project o2) {
-            //for ascending order
-            return o1.getID() - o2.getID();
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Project Name
-     */
-    public static Comparator<Project> NameComparator = new Comparator<Project>() {
-        @Override
-        public int compare(Project o1, Project o2) {
-            //for ascending order
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Issues count
-     */
-    public static Comparator<Project> IssueCountComparator = new Comparator<Project>() {
-        @Override
-        public int compare(Project o1, Project o2) {
-            //for ascending order
-            return o1.issue_Arraysize() - o2.issue_Arraysize();
-        }
-    };
-
     //gui
-    public void setupwindow() {
+    public void setupWindow() {
 
         //build window
         ImageIcon konoha = new ImageIcon("doge_image.jpg");
@@ -349,7 +165,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         Action action1 = new AbstractAction() { // after enter pressed
             @Override
             public void actionPerformed(ActionEvent e) {
-                search_situation();
+                searchSituation();
             }
         };
         search_issue.addActionListener(action1);
@@ -523,7 +339,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
                 if (in_delete_mode == false) {
-                    entertheissue(value);
+                    enterTheIssue(value);
                 } else {
                     deleteIssue(value);
                     current_issue = issue;
@@ -679,6 +495,10 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
     }
 
+    public void popwindow(String title, String content) {
+        JOptionPane.showMessageDialog(null, content, title, JOptionPane.WARNING_MESSAGE);
+    }
+
     public void include_and_exluded(ArrayList<String> arr) {
         for (int i = 0; i < include.size(); i++) {
             black_panel_up.remove(include.get(i));
@@ -741,14 +561,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         }
     }
 
-    public void reset_table(String[][] data) {
-        tableModel.setRowCount(0);
-        for (int i = 0; i < data.length; i++) {
-            tableModel.addRow(data[i]);
-        }
-        frame.repaint();
-    }
-
     public void reset_table(ArrayList<Issue> data) {
         tableModel.setRowCount(0);
         for (int i = 0; i < data.size(); i++) {
@@ -766,6 +578,24 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         frame.repaint();
     }
 
+    public void keeprenew() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                    if (frame.isVisible() == false) {
+                        current_issue = issue;
+                        reset_table(current_issue);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
 
     public void handle_thread() {
         Thread thread = new Thread() {
@@ -783,41 +613,11 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         thread.start();
     }
 
-    /**
-     * This is a method to just remove one issue from issue dashboard, called by
-     * Issue class
-     *
-     * @param ID issue to be removed
-     */
-    public void deleteIssue(int ID) {
-
-        for (int i = 0; i < issue.size(); i++) {
-            if (issue.get(i).getID() == ID) {
-                Window.getPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
-                issue.remove(i);
-                in_delete_mode = false;
-                break;
-            }
-        }
-    }
-
-    //    name, tags ,priority, assignee
-    public ArrayList<Issue> returnCanDeleteIssue() {
-        ArrayList<Issue> temp = new ArrayList<>();
-        for (int i = 0; i < issue.size(); i++) {
-            if (current_people.getName().equals(issue.get(i).getCreator())) {
-                temp.add(issue.get(i));
-            }
-        }
-        return temp;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add_issue) {
             add_issue_panel.setVisible(true);
             table_scroll.setVisible(false);
-            System.out.println("add issue button pressed");
             handle_thread();
         }
         if (e.getSource() == delete_project) {
@@ -831,21 +631,9 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 reset_table(returnCanDeleteIssue());
             }
 
-            System.out.println("delete project button pressed");
         }
-        if (e.getSource() == sort_issue) {  // this can short but left first
-            if (sort_issue.getSelectedIndex() == 0) {
-                sortIssueBased(0);
-                System.out.println("sort based on ID selected");
-            }
-            if (sort_issue.getSelectedIndex() == 1) {
-                sortIssueBased(1);
-                System.out.println("sort based on Priority selected");
-            }
-            if (sort_issue.getSelectedIndex() == 2) {
-                sortIssueBased(2);
-                System.out.println("sort based on Timestemp selected");
-            }
+        if (e.getSource() == sort_issue) {
+            sortIssueBased(sort_issue.getSelectedIndex());
         }
         if (e.getSource() == undo) {
             if (!text_undo.isEmpty()) {
@@ -864,7 +652,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 exit = true;
                 text_undo.push(text_redo.peek());
                 descrip.setText(text_redo.pop());
-                System.out.println("reundo");
+                System.out.println("redo");
             }
         }
         if (e.getSource() == submit) {
@@ -881,7 +669,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             tags_text.setText("Enter tags");
             descrip.setText("Add description there");
             assignee_text.setText("Enter assignee");
-            People assignee_obj = searchpeople(assignee);
+            People assignee_obj = Window.getPeopleByUsername(assignee);
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
             } else if (issue_name.equals("Enter issue name") || issue_name.equals("")) {
@@ -904,12 +692,90 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             }
         }
         if (e.getSource() == sreach) {
-            System.out.println("searchafasd");
-            search_situation();
+            searchSituation();
         }
     }
 
-    public void search_situation() {
+    /**
+     * check if the tags is registered, if not, add it to the tag option and
+     * return This method is only called in @{addIssue}
+     */
+    private String[] addTag(String[] tag) {
+        String[] toAdd = new String[tag.length];
+
+        for (int i = 0; i < tag.length; i++) {
+            boolean exist = false;
+            for (int j = 0; j < Issue.tagsOption.size(); j++) {
+                //check if the tag is available, if yes, copy and break
+                if (Issue.tagsOption.get(j).equalsIgnoreCase(tag[i])) {
+                    toAdd[i] = Issue.tagsOption.get(j);
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                //if no, add the tag option and copy
+                Issue.tagsOption.add(tag[i]);
+                toAdd[i] = tag[i];
+            }
+        }
+        return toAdd;
+    }
+
+    /**
+     * @param ID issue to be removed
+     */
+    public void deleteIssue(int ID) {
+
+        for (int i = 0; i < issue.size(); i++) {
+            if (issue.get(i).getID() == ID) {
+                Window.getPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
+                issue.remove(i);
+                in_delete_mode = false;
+                break;
+            }
+        }
+    }
+
+    //    name, tags ,priority, assignee
+    private ArrayList<Issue> returnCanDeleteIssue() {
+        ArrayList<Issue> temp = new ArrayList<>();
+        for (int i = 0; i < issue.size(); i++) {
+            if (current_people.getName().equals(issue.get(i).getCreator())) {
+                temp.add(issue.get(i));
+            }
+        }
+        return temp;
+    }
+
+
+    /**
+     * This method will sort the Issue with the column that the user wish, and
+     * str8 print it out
+     *
+     * @param choose is the attribute of the Issue, eg ID, Title, returned as
+     *               int
+     */
+    public void sortIssueBased(int choose) {
+        switch (choose) {
+            case 0: //0 is the first option, ID
+                comparatorInUse = Issue.IDComparator;
+                break;
+            case 1:
+                comparatorInUse = Issue.TitleComparator;
+                break;
+            case 2: //2 is the sec option, Priority
+                comparatorInUse = Issue.priorityComparator;
+                break;
+            case 3: //3 is the third option, Timestamp
+                comparatorInUse = Issue.timeComparator;
+                break;
+        }
+        Collections.sort(current_issue, comparatorInUse);
+        reset_table(current_issue);
+    }
+
+    public void searchSituation() {
         String include_tags = "";
         String exclude_tags = "";
         String includestate = "";
@@ -952,14 +818,14 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             }
         }
         if (can_search) {
-            current_issue = filterout(exclude_tags, excludestate);//        System.out.println("issue size after filterout:" + current_issue.size());
-            current_issue = filterin(include_tags, includestate);//        System.out.println("issue size after filterin:" + current_issue.size());
+            current_issue = filterOut(exclude_tags, excludestate);
+            current_issue = filterIn(include_tags, includestate);
             search(keyword);
         }
 
     }
 
-    private ArrayList<Issue> filterout(String tag, String state) {
+    private ArrayList<Issue> filterOut(String tag, String state) {
         if (tag.equals("") && state.equals("")) {
             return issue;
         }
@@ -976,8 +842,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         } else
             states = state.substring(1).split("#");
 
-//        System.out.println(Arrays.toString(tags));
-//        System.out.println(Arrays.toString(states));
 
         boolean[] kenaExclude = new boolean[issue.size()];   //acts like an index pointer
         for (int i = 0; i < issue.size(); i++) {
@@ -1002,7 +866,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 String currentIssueStatus = issue.get(i).getStatus();
                 for (int k = 0; k < states.length; k++) {
                     if (states[k].equalsIgnoreCase(currentIssueStatus)) {
-//                            System.out.println("I kena exclude: " + issue.get(i).getTitle());
                         kenaExclude[i] = true;
                         break;
                     }
@@ -1010,10 +873,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             }
         }
         ArrayList<Issue> temp = new ArrayList<>();
-        System.out.println(Arrays.toString(kenaExclude));
         for (int i = 0; i < kenaExclude.length; i++) {
             if (!kenaExclude[i]) {
-//                System.out.println("I dinnot kena exclude: " + issue.get(i).getTitle());
                 temp.add(issue.get(i));
             }
         }
@@ -1024,7 +885,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     /*
     include  filter kind
     */
-    private ArrayList<Issue> filterin(String tag, String state) {
+    private ArrayList<Issue> filterIn(String tag, String state) {
         if (current_issue.isEmpty() || (tag.equals("") && state.equals(""))) {
             return current_issue;
         }
@@ -1041,8 +902,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         } else
             states = state.substring(1).split("#");
 
-//        System.out.println(Arrays.toString(tags));
-//        System.out.println(Arrays.toString(states));
 
         boolean[] willInclude = new boolean[current_issue.size()];   //acts like an index pointer
         for (int i = 0; i < current_issue.size(); i++) {
@@ -1065,7 +924,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 String currentIssueStatus = current_issue.get(i).getStatus();
                 for (int k = 0; k < states.length; k++) {
                     if (states[k].equalsIgnoreCase(currentIssueStatus)) {
-                        System.out.println("I kena include: " + current_issue.get(i).getTitle());
                         willInclude[i] = true;
                         break;
                     }
@@ -1073,10 +931,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             }
         }
         ArrayList<Issue> temp = new ArrayList<>();
-        System.out.println(Arrays.toString(willInclude));
         for (int i = 0; i < willInclude.length; i++) {
             if (willInclude[i]) {
-                System.out.println("I kena include: " + current_issue.get(i).getTitle());
                 temp.add(current_issue.get(i));
             }
         }
@@ -1087,7 +943,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     /**
      * @param input keyword search search issue
      */
-    public void search(String input) {//  only input number will directly assume as ID
+    private void search(String input) {//  only input number will directly assume as ID
         if (input.equals("") || input.equals("search")) {
             try {
                 Collections.sort(current_issue, comparatorInUse);
@@ -1117,7 +973,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         }
     }
 
-    public ArrayList<Issue> fuzzySearch(String seachkeyword) {
+    private ArrayList<Issue> fuzzySearch(String seachkeyword) {
 
         int cutOffRatio = 60;
 
@@ -1195,10 +1051,76 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         return 0;
     }
 
-
-    public void popwindow(String title, String content) {
-        JOptionPane.showMessageDialog(null, content, title, JOptionPane.WARNING_MESSAGE);
+    //check whether is id or not
+    private boolean isID(String sen) {
+        if (sen.charAt(0) != '#') {
+            return false;
+        }
+        try {
+            Integer d = Integer.parseInt(sen.substring(1));
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
+
+
+    //--Comparator--
+    /**
+     * Comparator for sorting the list by Project ID
+     */
+    public static Comparator<Project> IDComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.getID() - o2.getID();
+        }
+    };
+
+
+    public int getIssueArraySize() {
+        return issue.size();
+    }
+
+    public Issue getIssueOfID(int ID) {
+        for (int i = 0; i < issue.size(); i++) {
+            if (issue.get(i).getID() == ID) {
+                return issue.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Comparator for sorting the list by Project Name
+     */
+    public static Comparator<Project> NameComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Issues count
+     */
+    public static Comparator<Project> IssueCountComparator = new Comparator<Project>() {
+        @Override
+        public int compare(Project o1, Project o2) {
+            //for ascending order
+            return o1.getIssueArraySize() - o2.getIssueArraySize();
+        }
+    };
+
+    /**
+     * @param ID issue index enter issue window
+     */
+    public void enterTheIssue(int ID) {
+        this.frame.setVisible(false);
+        getIssueOfID(ID).issueWindow(current_people, frame);
+    }
+
 
     // -- Getter methods --
     public ArrayList<Issue> getIssue() {
@@ -1242,10 +1164,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
     public void setNumissue(int numissue) {
         this.numissue = numissue;
-    }
-
-    public static void main(String[] args) {
-
     }
 
     @Override

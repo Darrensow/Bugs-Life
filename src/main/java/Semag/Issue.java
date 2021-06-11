@@ -1,6 +1,5 @@
 package Semag;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.swing.*;
@@ -10,7 +9,6 @@ import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
@@ -19,27 +17,27 @@ import java.util.logging.Logger;
 @JsonIgnoreProperties(value = {"current_people", "timeComparator", "priorityComparator", "idComparator", "titleComparator", "statusComparator", "tagComparator", "TitleComparator", "IDComparator", "project_belongsTo"})
 public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
-    private ArrayList<String> changelog = new ArrayList<>();
+
     private Integer ID;
     private String title;
     private String descriptionText;
     private String creator;
     private String assignee;
-    private ArrayList<Comment> comments = new ArrayList<>();
-    private int numberOfComments;
-    private String[] tag;
     private Integer priority;
-    private String status;
     private String timestamp;
-    transient Scanner sc = new Scanner(System.in);
-    private People current_people;
-    private File image_file;
+    private ArrayList<String> changelog = new ArrayList<>();
 
     public static ArrayList<String> tagsOption = new ArrayList<>();
+    private String[] tag;
 
     public static final String[] statusOption = {"Open", "In Progress", "Solved", "Closed"};
+    private String status;
 
-    private Project project_belongsTo;      //for the delete function
+    private ArrayList<Comment> comments = new ArrayList<>();
+    private int numberOfComments;
+
+    private People current_people;          //current user
+    private File image_file;
 
     //gui
     JFrame frame = new JFrame();
@@ -121,9 +119,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     public Issue() {
     }
 
-    public String getAssignee() {
-        return assignee;
-    }
+
 
     public Issue(Integer ID, String title, String text, String creator, String assignee, String[] tag, int priop, Project project_belongsTo) {
         changelog = new ArrayList<>();  //only create the changelog Arraylist when a Issue is created
@@ -135,24 +131,23 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         this.status = "Open";
         this.priority = priop;
         this.tag = tag;
-        this.project_belongsTo = project_belongsTo;
         this.timestamp = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000));
     }
 //add comment  // change properties //react done //quit // variable bolean,arraylist<integer>
 
 
-    public void issuewindow(People current_people, JFrame frame) {  //return one index ,int 0,1  arraylist<integer>
+    public void issueWindow(People current_people, JFrame frame) {  //return one index ,int 0,1  arraylist<integer>
         this.current_people = current_people;
         project_frame = frame;
 
-        setupwindow();
+        setupWindow();
         set_comment(comments);
-        print();//while(boolean)
-        cheacowner();
+        display_issue_page(this);//while(boolean)
+        checkOwner();
         keeprenew();
     }
 
-    public void cheacowner() {
+    public void checkOwner() {
         if (this.creator.equals(current_people.getName()) || this.assignee.equals(current_people.getName())) {
             isowner = true;
             edit_issue.setVisible(true);
@@ -166,7 +161,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         Thread thread = new Thread() {
             public void run() {
                 while (true) {
-                    print();
+                    display_issue_page();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -178,436 +173,26 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         thread.start();
     }
 
-
-    /**
-     * Reacting to a comment. Reacts by first checking that whether the user has reacted before
-     * @param commentID Comment that was reacted on
-     * @param reaction Reaction that was pressed
-     * @param current_people The user who reacted
-     */
-    public void reactComment(int commentID, String reaction, People current_people) {
-        this.comments.get(commentID).addReaction(reaction, current_people.getName());
-    }
-
-    public void first_run_setcommentcolor(ArrayList<Comment> com) {
-        for (int i = 0; i < happy.size(); i++) {
-            if (com.get(i).reactedBefore("happy", current_people.getName())) {
-                happy.get(i).setIcon(happy_icon_blue);
-            } else {
-                happy.get(i).setIcon(happy_icon);
+    public void handle_thread() {
+        Thread thread = new Thread() {
+            public void run() {
+                while (exit == false) {
+                    text_undo.push(add_comment_text.getText());
+                    try {
+                        sleep(5000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-        }
-        for (int i = 0; i < angry.size(); i++) {
-            if (com.get(i).reactedBefore("angry", current_people.getName())) {
-                angry.get(i).setIcon(angry_icon_blue);
-            } else {
-                angry.get(i).setIcon(angry_icon);
-            }
-        }
-        for (int i = 0; i < like.size(); i++) {
-            if (com.get(i).reactedBefore("like", current_people.getName())) {
-                like.get(i).setIcon(like_image_blue);
-            } else {
-                happy.get(i).setIcon(like_image);
-            }
-        }
-        for (int i = 0; i < dislike.size(); i++) {
-            if (com.get(i).reactedBefore("dislike", current_people.getName())) {
-                happy.get(i).setIcon(dislike_image_blue);
-            } else {
-                happy.get(i).setIcon(dislike_image);
-            }
-        }
-    }
-
-    public void cheack_reaction_color(int index, ArrayList<Comment> com) {
-        if (com.get(index).reactedBefore("happy", current_people.getName())) {
-            happy.get(index).setIcon(happy_icon_blue);
-        } else {
-            happy.get(index).setIcon(happy_icon);
-        }
-        if (com.get(index).reactedBefore("angry", current_people.getName())) {
-            angry.get(index).setIcon(angry_icon_blue);
-        } else {
-            angry.get(index).setIcon(angry_icon);
-        }
-        if (com.get(index).reactedBefore("likes", current_people.getName())) {
-            like.get(index).setIcon(like_image_blue);
-        } else {
-            like.get(index).setIcon(like_image);
-        }
-        if (com.get(index).reactedBefore("dislikes", current_people.getName())) {
-            dislike.get(index).setIcon(dislike_image_blue);
-        } else {
-            dislike.get(index).setIcon(dislike_image);
-        }
+        };
+        thread.start();
     }
 
 
-    /**
-     * Method to update tags
-     *
-     * @return A message that will be added to the change log regarding the
-     * change of tags
-     */
-    private String updateTag() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(current_people.getName()).append(" updated the tags at ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append("\n");
-        sb.append("Original: ").append(showAllTags(this.tag)).append("\n");  //append original tags
-
-        System.out.println("Please input the tags you want to update. (Format: 'Tag1 Tag2 Tag3 ... TagN'");
-        String input = sc.nextLine();
-        String[] tagsArray = input.split(" ");      //might have logic error if user give "abcabcabc" or "", might not be a problem
-        this.tag = tagsArray;
-
-        sb.append("Edited: ").append(showAllTags(tagsArray)).append("\n");   //append new tags
-
-        return sb.toString();
-    }
-
-    //helper method to return String representation of all the tags
-    private String showAllTags(String[] tagsArray) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < tagsArray.length; i++) {
-            if (i < tagsArray.length - 1) {
-                sb.append(tagsArray[i]).append(", ");
-            } else {
-                sb.append(tagsArray[i]).append("]");
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Method to return a String of the tags in '#Tag1#Tag2#Tag3' format for GUI
-     * implementation
-     *
-     * @return String of the tags array
-     */
-    private String returnTagsGUI() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < this.tag.length; i++) {
-            sb.append("#").append(this.tag[i]);
-        }
-        return sb.toString();
-    }
-
-
-    /*
-        The method below is to update the variables returned by the GUI.
-        The String format of one of the change log is as of below.
-
-        -----
-        "========= Time: dd/MM/yyyy HH:mm:ss z =========="
-        "<Change description>\n"
-        "\n"
-        -----
-
-     */
-
-
-    //Method to add the changes made to the ChangeLog
-    private void updateChangeLog(int priorityFromGUI, String tagsFromGUI, String descriptionFromGUI, String statusFromGUI) {
-        StringBuilder sb = new StringBuilder();
-
-        String priorityStr = updatePriorityGUI(priorityFromGUI);
-        String tagsStr = updateTagsGUI(tagsFromGUI);
-        String textStr = updateTextGUI(descriptionFromGUI);
-        String statusStr = updateStatusGUI(statusFromGUI);
-
-        if (!priorityStr.equals("") || !tagsStr.equals("") || !textStr.equals("") || !statusStr.equals("")) {
-            sb.append("========= Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append(" ==========\n");
-        }
-
-        //If "", then points out that no changes were made.
-        if (!priorityStr.equals("")) {
-            sb.append("   - ").append(priorityStr);
-        }
-        if (!tagsStr.equals("")) {
-            sb.append("   - ").append(tagsStr);
-        }
-        if (!textStr.equals("")) {
-            sb.append("   - ").append(textStr);
-        }
-        if (!statusStr.equals("")) {
-            sb.append("   - ").append(statusStr);
-        }
-        sb.append("\n");
-        this.changelog.add(sb.toString());
-    }
-
-    /**
-     * Helper method for updateChangeLog().
-     *
-     * @param fromGUI String input from GUI
-     * @return String to be updated, if "", then means no changes were made.
-     */
-    private String updateTagsGUI(String fromGUI) {
-        String[] updatedTags = fromGUI.substring(1).split("#");                // tags returned from GUI
-        StringBuilder sb = new StringBuilder();
-
-        if (this.tag.length == updatedTags.length) {
-            if (sameTags(this.tag, updatedTags)) {
-                System.out.println("Same tags, don't need to anything");
-                return "";                                  // don't update and add to changelog
-            } else {
-                System.out.println("Same array length but different tags inside");
-                sb.append(pushTagsUpdate(updatedTags));     // can delete sb.append after debugging
-            }
-        } else {
-            System.out.println("Different array length");
-            sb.append(pushTagsUpdate(updatedTags));         // can delete sb.append after debugging
-        }
-        System.out.println("Inside updateTagsGUI");
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
-
-    //Helper method for updateTagsGUI() to check if the tags are the same when both array size are equals
-    private boolean sameTags(String[] array1, String[] array2) {
-        if (array1.length != array2.length) {
-            return false;
-        }
-
-        // Hash map
-        Map<String, Integer> map = new HashMap<>();
-        int count = 0;
-        // Store arr1[] elements and their counts in
-        for (int i = 0; i < array1.length; i++) {
-            if (map.get(array1[i]) == null)             // no key exists in the map
-                map.put(array1[i], 1);
-            else {
-                count = map.get(array1[i]);
-                count++;
-                map.put(array1[i], count);
-            }
-        }
-
-        // Traverse array2 to check if all the elements in it has the same count as array1
-        for (int i = 0; i < array1.length; i++) {
-            if (!map.containsKey(array2[i]))            // There exists no key of array2[i] inside array1
-                return false;
-
-            if (map.get(array2[i]) == 0)                // If an element of array2 appears more times than it appears in array1
-                return false;
-
-            count = map.get(array2[i]);                 // Get the count of array2[i] from the Map
-            --count;                                    // Subtract by 1
-            map.put(array2[i], count);                  // Update the value into the Map
-        }
-        return true;
-    }
-
-    //Helper method for updateTagsGUI() to push updates onto changelog
-    private String pushTagsUpdate(String[] updatedTags) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(current_people.getName()).append(" updated the tags.").append("\n");
-        sb.append("      Original : ").append(showAllTags(this.tag)).append("\n");         // append original tags
-        sb.append("      Edited   : ").append(showAllTags(updatedTags)).append("\n");      // append new tags
-        this.tag = updatedTags;                                                     // update the tags array with the new tags
-        return sb.toString();
-    }
-
-    /**
-     * Helper method for updateChangeLog().
-     *
-     * @param fromGUI String input from GUI
-     * @return String to be updated, if "", then means no changes were made.
-     */
-    private String updatePriorityGUI(int fromGUI) {
-        StringBuilder sb = new StringBuilder();
-        if (this.priority != fromGUI) {
-            sb.append(current_people.getName()).append(" updated the priority from ").append(this.priority).append(" to ").append(fromGUI).append(".\n");
-            this.priority = fromGUI;                                             // update priority with new priority from GUI
-        }
-        System.out.println("Inside Priority GUI");
-        System.out.println(sb.toString());
-        return sb.toString();                                                   // default value is "" if no changes were made
-    }
-
-    /**
-     * Helper method for updateChangeLog().
-     *
-     * @param fromGUI String input from GUI
-     * @return String to be updated, if "", then means no changes were made.
-     */
-    private String updateStatusGUI(String fromGUI) {
-        StringBuilder sb = new StringBuilder();
-        // Add or deduct resolved
-        if (fromGUI.equals("Resolved")) {                                       // increase the number of issues solved for current_people
-            Window.resolvedAnIssue(current_people);
-        } else if (fromGUI.equals("Reopen")) {
-            Window.reopenedAnIssue(current_people);                             // decrease the number of issues solved for current_people
-        }
-
-        if (!this.status.equals(fromGUI)) {
-            if (fromGUI.equals("Reopen")) {                                     // special case when status is 'Reopened'
-                fromGUI = "Open";                                               // "Reopen -> Open", so that won't have issues with the algo
-                sb.append(current_people.getName()).append(" reopened the issue.").append(".\n");
-            } else {
-                sb.append(current_people.getName()).append(" updated the status from '").append(this.status).append("' to '").append(fromGUI).append("'").append(".\n");
-            }
-            this.status = fromGUI;                                               // update status with new status from GUI
-//            this.changelog.add(sb.toString());                                   // add change description changelog
-        }
-        System.out.println("Inside updateStatusGUI");
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
-
-    /**
-     * Helper method for updateChangeLog().
-     *
-     * @param fromGUI String input from GUI
-     * @return String to be updated, if "", then means no changes were made.
-     */
-    private String updateTextGUI(String fromGUI) {
-        StringBuilder sb = new StringBuilder();
-        if (!this.descriptionText.equals(fromGUI)) {
-            sb.append(current_people.getName()).append(" updated the description text.").append("\n");
-            this.descriptionText = fromGUI;                                      // update the Description text with the new input from GUI
-//            this.changelog.add(sb.toString());                                   // add change description changelog
-        }
-        System.out.println("Inside updateTextGUI");
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
-
-
-    //Display the options that the user is able to choose to update the status of the issue
-    public void return_option() {
-        String originalStatus = this.getStatus();
-        ArrayList<String> option_state = new ArrayList<>();
-        option_state.add(originalStatus);
-        if (originalStatus.equalsIgnoreCase("Open")) {
-            option_state.add("In Progress");
-            option_state.add("Resolved");
-            option_state.add("Closed");
-        } else if (originalStatus.equalsIgnoreCase("In Progress")) {
-            option_state.add("Closed");
-            option_state.add("Resolved");
-        } else if (originalStatus.equalsIgnoreCase("Resolved")) {
-            option_state.add("Closed");
-            option_state.add("Reopen");
-        } else if (originalStatus.equalsIgnoreCase("Closed")) {
-            option_state.add("Reopen");
-        }
-        set_status(option_state);
-    }
-
-
-
-
-
-    public void print() {
-        print(this);
-    }
-
-    /**
-     * Show full Issue page details
-     */
-    public void print(Issue o) {
-        StringBuilder sb = new StringBuilder();
-
-        String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n"
-                        + "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n"
-                        + "Title: %-40s\n"
-                        + "Assigned to: %-20sCreated by: %-20s\n\n",
-                o.getID(), o.getStatus(),
-                o.returnAllTags(o), o.getPriority(), o.getTimestamp(),
-                o.getTitle(),
-                o.getAssignee(), o.getCreator());
-        sb.append(issueInfo);
-        sb.append("Issue Description\n-----------");
-        sb.append("\n" + o.getDescriptionText());
-        issue_descrip.setText(sb.toString());
-    }
-
-    //Helper method to print(Issue o), returns all the tags in String format
-    private String returnAllTags(Issue o) {
-        StringBuilder sb = new StringBuilder();
-        String[] tagsArray = o.getTag();
-        for (int i = 0; i < tagsArray.length; i++) {
-            if (i < tagsArray.length - 1) {
-                sb.append(tagsArray[i]).append(", ");
-            } else {
-                sb.append(tagsArray[i]);
-
-            }
-        }
-        return sb.toString();
-    }
-
-
-    /*
-        -- Comparator Object --
-     */
-    /**
-     * Comparator for sorting the list by Priority
-     */
-    public static Comparator<Issue> priorityComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            //for descending order
-            return o2.getPriority() - o1.getPriority();
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Time
-     */
-    public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            return o1.getID().compareTo(o2.getID());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Project ID
-     */
-    public static Comparator<Issue> IDComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            //for ascending order
-            return o1.getID() - o2.getID();
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Title
-     */
-    public Comparator<Issue> TitleComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            //for ascending order
-            return o1.getTitle().compareTo(o2.getTitle());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Status Alphabetical
-     */
-    public Comparator<Issue> statusComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            return o1.getStatus().compareTo(o2.getStatus());
-        }
-    };
-
-    /**
-     * Comparator for sorting the list by Tag
-     */
-    public Comparator<Issue> tagComparator = new Comparator<Issue>() {
-        @Override
-        public int compare(Issue o1, Issue o2) {
-            return o1.getStatus().compareTo(o2.getStatus());
-        }
-    };
 
     //gui method
-    public void setupwindow() {
+    public void setupWindow() {
 
         //build window
         ImageIcon konoha = new ImageIcon("doge_image.jpg");
@@ -825,7 +410,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         edit_panel.add(edit_descrip_scroll);
         edit_panel.add(done_edit);
 
-//build quit changelog button
+        //build quit changelog button
         quitchangelog.setBounds(1150, 0, 150, 50);
         quitchangelog.setFocusable(true);
         quitchangelog.addActionListener(this);
@@ -842,7 +427,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         changelog_textsp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         changelog_textsp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
 
-        first_run_setcommentcolor(comments);
+        first_run_set_commentcolor(comments);
 
         //add component to frame
         frame.add(quitchangelog);
@@ -859,6 +444,58 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     }
 
+    public void display_issue_page() {
+        display_issue_page(this);
+    }
+
+    /**
+     * Show full Issue page details
+     */
+    public void display_issue_page(Issue o) {
+        StringBuilder sb = new StringBuilder();
+
+        String issueInfo = String.format("Issue ID: %-20sStatus: %-20s\n"
+                        + "Tag: %-50s\nPriority: %-20sCreated On: %-20s\n"
+                        + "Title: %-40s\n"
+                        + "Assigned to: %-20sCreated by: %-20s\n\n",
+                o.getID(), o.getStatus(),
+                o.return_all_tags(o), o.getPriority(), o.getTimestamp(),
+                o.getTitle(),
+                o.getAssignee(), o.getCreator());
+        sb.append(issueInfo);
+        sb.append("Issue Description\n-----------");
+        sb.append("\n" + o.getDescriptionText());
+        issue_descrip.setText(sb.toString());
+    }
+
+    //Helper method to print(Issue o), returns all the tags in String format
+    private String return_all_tags(Issue o) {
+        StringBuilder sb = new StringBuilder();
+        String[] tagsArray = o.getTag();
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]);
+
+            }
+        }
+        return sb.toString();
+    }
+
+    public void append(String s, JTextPane textPane) {
+        try {
+            Document doc = textPane.getDocument();
+            doc.insertString(doc.getLength(), s, null);
+        } catch (BadLocationException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    public void insert_image_topanel() {
+        image.setIcon(insert_image);
+    }
+
     public void set_status(ArrayList<String> status) {
         edit_status.removeAllItems();
         for (int i = 0; i < status.size(); i++) {
@@ -866,7 +503,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         }
     }
 
-    public void setchangelogtext(ArrayList<String> changelogetext) {
+    public void set_change_log_text(ArrayList<String> changelogetext) {
         changelog_textarea.setText("");
         for (int i = 0; i < changelogetext.size(); i++) {
             changelog_textarea.append(changelogetext.get(i));
@@ -1022,7 +659,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             for (int i = 0; i < like.size(); i++) {
                 if (e.getSource() == like.get(i)) {
                     reactComment(i, "likes",current_people);
-                    cheack_reaction_color(i, comments);
+                    check_reaction_color(i, comments);
                 }
             }
         }
@@ -1030,7 +667,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             for (int i = 0; i < dislike.size(); i++) {
                 if (e.getSource() == dislike.get(i)) {
                     reactComment(i, "dislikes",current_people);
-                    cheack_reaction_color(i, comments);
+                    check_reaction_color(i, comments);
                 }
             }
         }
@@ -1038,7 +675,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             for (int i = 0; i < happy.size(); i++) {
                 if (e.getSource() == happy.get(i)) {
                     reactComment(i, "happy",current_people);
-                    cheack_reaction_color(i, comments);
+                    check_reaction_color(i, comments);
                 }
             }
         }
@@ -1046,13 +683,13 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             for (int i = 0; i < angry.size(); i++) {
                 if (e.getSource() == angry.get(i)) {
                     reactComment(i, "angry",current_people);
-                    cheack_reaction_color(i, comments);
+                    check_reaction_color(i, comments);
                 }
             }
         }
         if (e.getSource() == open_changelog) {
             System.out.println("changlog");
-            setchangelogtext(getChangelog());
+            set_change_log_text(getChangelog());
             quitchangelog.setVisible(true);
             changelog_textsp.setVisible(true);
             edit_issue.setVisible(false);
@@ -1121,7 +758,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             issue_scroll.setVisible(false);
             open_changelog.setVisible(false);
             add_comment.setVisible(false);
-            return_option(); //set the option
+            return_status_option(); //set the option
             edit_descrip.setText(this.getDescriptionText()); //set descrip text
             set_tags(this.returnTagsGUI()); //set tags
         }
@@ -1139,18 +776,305 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     }
 
-    public void append(String s, JTextPane textPane) {
-        try {
-            Document doc = textPane.getDocument();
-            doc.insertString(doc.getLength(), s, null);
-        } catch (BadLocationException exc) {
-            exc.printStackTrace();
+
+
+    public void first_run_set_commentcolor(ArrayList<Comment> com) {
+        for (int i = 0; i < happy.size(); i++) {
+            if (com.get(i).reactedBefore("happy", current_people.getName())) {
+                happy.get(i).setIcon(happy_icon_blue);
+            } else {
+                happy.get(i).setIcon(happy_icon);
+            }
+        }
+        for (int i = 0; i < angry.size(); i++) {
+            if (com.get(i).reactedBefore("angry", current_people.getName())) {
+                angry.get(i).setIcon(angry_icon_blue);
+            } else {
+                angry.get(i).setIcon(angry_icon);
+            }
+        }
+        for (int i = 0; i < like.size(); i++) {
+            if (com.get(i).reactedBefore("like", current_people.getName())) {
+                like.get(i).setIcon(like_image_blue);
+            } else {
+                happy.get(i).setIcon(like_image);
+            }
+        }
+        for (int i = 0; i < dislike.size(); i++) {
+            if (com.get(i).reactedBefore("dislike", current_people.getName())) {
+                happy.get(i).setIcon(dislike_image_blue);
+            } else {
+                happy.get(i).setIcon(dislike_image);
+            }
         }
     }
 
-    public void insert_image_topanel() {
-        image.setIcon(insert_image);
-//        add_comment_text.insertIcon(insert_image);
+    public void check_reaction_color(int index, ArrayList<Comment> com) {
+        if (com.get(index).reactedBefore("happy", current_people.getName())) {
+            happy.get(index).setIcon(happy_icon_blue);
+        } else {
+            happy.get(index).setIcon(happy_icon);
+        }
+        if (com.get(index).reactedBefore("angry", current_people.getName())) {
+            angry.get(index).setIcon(angry_icon_blue);
+        } else {
+            angry.get(index).setIcon(angry_icon);
+        }
+        if (com.get(index).reactedBefore("likes", current_people.getName())) {
+            like.get(index).setIcon(like_image_blue);
+        } else {
+            like.get(index).setIcon(like_image);
+        }
+        if (com.get(index).reactedBefore("dislikes", current_people.getName())) {
+            dislike.get(index).setIcon(dislike_image_blue);
+        } else {
+            dislike.get(index).setIcon(dislike_image);
+        }
+    }
+
+
+
+
+
+    //helper method to code@{pushTagsUpdate}
+    private String showAllTags(String[] tagsArray) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < tagsArray.length; i++) {
+            if (i < tagsArray.length - 1) {
+                sb.append(tagsArray[i]).append(", ");
+            } else {
+                sb.append(tagsArray[i]).append("]");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Method to return a String of the tags in '#Tag1#Tag2#Tag3' format for GUI
+     * implementation
+     *
+     * @return String of the tags array
+     */
+    private String returnTagsGUI() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.tag.length; i++) {
+            sb.append("#").append(this.tag[i]);
+        }
+        return sb.toString();
+    }
+
+
+    /*
+        The method below is to update the variables returned by the GUI.
+        The String format of one of the change log is as of below.
+
+        -----
+        "========= Time: dd/MM/yyyy HH:mm:ss z =========="
+        "<Change description>\n"
+        "\n"
+        -----
+
+     */
+
+
+    //Method to add the changes made to the ChangeLog
+    private void updateChangeLog(int priorityFromGUI, String tagsFromGUI, String descriptionFromGUI, String statusFromGUI) {
+        StringBuilder sb = new StringBuilder();
+
+        String priorityStr = updatePriorityGUI(priorityFromGUI);
+        String tagsStr = updateTagsGUI(tagsFromGUI);
+        String textStr = updateTextGUI(descriptionFromGUI);
+        String statusStr = updateStatusGUI(statusFromGUI);
+
+        if (!priorityStr.equals("") || !tagsStr.equals("") || !textStr.equals("") || !statusStr.equals("")) {
+            sb.append("========= Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append(" ==========\n");
+        }
+
+        //If "", then points out that no changes were made.
+        if (!priorityStr.equals("")) {
+            sb.append("   - ").append(priorityStr);
+        }
+        if (!tagsStr.equals("")) {
+            sb.append("   - ").append(tagsStr);
+        }
+        if (!textStr.equals("")) {
+            sb.append("   - ").append(textStr);
+        }
+        if (!statusStr.equals("")) {
+            sb.append("   - ").append(statusStr);
+        }
+        sb.append("\n");
+        this.changelog.add(sb.toString());
+    }
+
+    /**
+     * Helper method for updateChangeLog().
+     *
+     * @param fromGUI String input from GUI
+     * @return String to be updated, if "", then means no changes were made.
+     */
+    private String updateTagsGUI(String fromGUI) {
+        String[] updatedTags = fromGUI.substring(1).split("#");                // tags returned from GUI
+        StringBuilder sb = new StringBuilder();
+
+        if (this.tag.length == updatedTags.length) {
+            if (sameTags(this.tag, updatedTags)) {
+                System.out.println("Same tags, don't need to anything");
+                return "";                                  // don't update and add to changelog
+            } else {
+                System.out.println("Same array length but different tags inside");
+                sb.append(pushTagsUpdate(updatedTags));     // can delete sb.append after debugging
+            }
+        } else {
+            System.out.println("Different array length");
+            sb.append(pushTagsUpdate(updatedTags));         // can delete sb.append after debugging
+        }
+        System.out.println("Inside updateTagsGUI");
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    //Helper method for updateTagsGUI() to check if the tags are the same when both array size are equals
+    private boolean sameTags(String[] array1, String[] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        // Hash map
+        Map<String, Integer> map = new HashMap<>();
+        int count = 0;
+        // Store arr1[] elements and their counts in
+        for (int i = 0; i < array1.length; i++) {
+            if (map.get(array1[i]) == null)             // no key exists in the map
+                map.put(array1[i], 1);
+            else {
+                count = map.get(array1[i]);
+                count++;
+                map.put(array1[i], count);
+            }
+        }
+
+        // Traverse array2 to check if all the elements in it has the same count as array1
+        for (int i = 0; i < array1.length; i++) {
+            if (!map.containsKey(array2[i]))            // There exists no key of array2[i] inside array1
+                return false;
+
+            if (map.get(array2[i]) == 0)                // If an element of array2 appears more times than it appears in array1
+                return false;
+
+            count = map.get(array2[i]);                 // Get the count of array2[i] from the Map
+            --count;                                    // Subtract by 1
+            map.put(array2[i], count);                  // Update the value into the Map
+        }
+        return true;
+    }
+
+    //Helper method for updateTagsGUI() to push updates onto changelog
+    private String pushTagsUpdate(String[] updatedTags) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(current_people.getName()).append(" updated the tags.").append("\n");
+        sb.append("      Original : ").append(showAllTags(this.tag)).append("\n");         // append original tags
+        sb.append("      Edited   : ").append(showAllTags(updatedTags)).append("\n");      // append new tags
+        this.tag = updatedTags;                                                     // update the tags array with the new tags
+        return sb.toString();
+    }
+
+    /**
+     * Helper method for updateChangeLog().
+     *
+     * @param fromGUI String input from GUI
+     * @return String to be updated, if "", then means no changes were made.
+     */
+    private String updatePriorityGUI(int fromGUI) {
+        StringBuilder sb = new StringBuilder();
+        if (this.priority != fromGUI) {
+            sb.append(current_people.getName()).append(" updated the priority from ").append(this.priority).append(" to ").append(fromGUI).append(".\n");
+            this.priority = fromGUI;                                             // update priority with new priority from GUI
+        }
+        System.out.println("Inside Priority GUI");
+        System.out.println(sb.toString());
+        return sb.toString();                                                   // default value is "" if no changes were made
+    }
+
+    /**
+     * Helper method for updateChangeLog().
+     *
+     * @param fromGUI String input from GUI
+     * @return String to be updated, if "", then means no changes were made.
+     */
+    private String updateStatusGUI(String fromGUI) {
+        StringBuilder sb = new StringBuilder();
+        // Add or deduct resolved
+        if (fromGUI.equals("Resolved")) {                                       // increase the number of issues solved for current_people
+            Window.resolvedAnIssue(current_people);
+        } else if (fromGUI.equals("Reopen")) {
+            Window.reopenedAnIssue(current_people);                             // decrease the number of issues solved for current_people
+        }
+
+        if (!this.status.equals(fromGUI)) {
+            if (fromGUI.equals("Reopen")) {                                     // special case when status is 'Reopened'
+                fromGUI = "Open";                                               // "Reopen -> Open", so that won't have issues with the algo
+                sb.append(current_people.getName()).append(" reopened the issue.").append(".\n");
+            } else {
+                sb.append(current_people.getName()).append(" updated the status from '").append(this.status).append("' to '").append(fromGUI).append("'").append(".\n");
+            }
+            this.status = fromGUI;                                               // update status with new status from GUI
+//            this.changelog.add(sb.toString());                                   // add change description changelog
+        }
+        System.out.println("Inside updateStatusGUI");
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    /**
+     * Helper method for updateChangeLog().
+     *
+     * @param fromGUI String input from GUI
+     * @return String to be updated, if "", then means no changes were made.
+     */
+    private String updateTextGUI(String fromGUI) {
+        StringBuilder sb = new StringBuilder();
+        if (!this.descriptionText.equals(fromGUI)) {
+            sb.append(current_people.getName()).append(" updated the description text.").append("\n");
+            this.descriptionText = fromGUI;                                      // update the Description text with the new input from GUI
+//            this.changelog.add(sb.toString());                                   // add change description changelog
+        }
+        System.out.println("Inside updateTextGUI");
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+
+    //Display the options that the user is able to choose to update the status of the issue
+    public void return_status_option() {
+        String originalStatus = this.getStatus();
+        ArrayList<String> option_state = new ArrayList<>();
+        option_state.add(originalStatus);
+        if (originalStatus.equalsIgnoreCase("Open")) {
+            option_state.add("In Progress");
+            option_state.add("Resolved");
+            option_state.add("Closed");
+        } else if (originalStatus.equalsIgnoreCase("In Progress")) {
+            option_state.add("Closed");
+            option_state.add("Resolved");
+        } else if (originalStatus.equalsIgnoreCase("Resolved")) {
+            option_state.add("Closed");
+            option_state.add("Reopen");
+        } else if (originalStatus.equalsIgnoreCase("Closed")) {
+            option_state.add("Reopen");
+        }
+        set_status(option_state);
+    }
+
+    /**
+     * Reacting to a comment. Reacts by first checking that whether the user has reacted before
+     * @param commentID Comment that was reacted on
+     * @param reaction Reaction that was pressed
+     * @param current_people The user who reacted
+     */
+    public void reactComment(int commentID, String reaction, People current_people) {
+        this.comments.get(commentID).addReaction(reaction, current_people.getName());
     }
 
     @Override
@@ -1277,22 +1201,54 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     }
 
-    public void handle_thread() {
-        Thread thread = new Thread() {
-            public void run() {
-                while (exit == false) {
-                    text_undo.push(add_comment_text.getText());
-                    try {
-                        sleep(5000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        };
-        thread.start();
-    }
 
+      /*
+        -- Comparator Object --
+     */
+
+
+    /**
+     * Comparator for sorting the list by Project ID
+     */
+    public static Comparator<Issue> IDComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getID() - o2.getID();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Title
+     */
+    public static Comparator<Issue> TitleComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for ascending order
+            return o1.getTitle().compareTo(o2.getTitle());
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Priority
+     */
+    public static Comparator<Issue> priorityComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            //for descending order
+            return o2.getPriority() - o1.getPriority();
+        }
+    };
+
+    /**
+     * Comparator for sorting the list by Time
+     */
+    public static Comparator<Issue> timeComparator = new Comparator<Issue>() {
+        @Override
+        public int compare(Issue o1, Issue o2) {
+            return o1.getID().compareTo(o2.getID());
+        }
+    };
     /*
         -- Getter and setter methods --
      */
@@ -1334,6 +1290,10 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getAssignee() {
+        return assignee;
     }
 
     public void setAssignee(String assignee) {
@@ -1396,57 +1356,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         this.current_people = current_people;
     }
 
-    public Project getProject_belongsTo() {
-        return project_belongsTo;
-    }
 
-    public void setProject_belongsTo(Project project_belongsTo) {
-        this.project_belongsTo = project_belongsTo;
-    }
-
-    public static Comparator<Issue> getPriorityComparator() {
-        return priorityComparator;
-    }
-
-    public static void setPriorityComparator(Comparator<Issue> priorityComparator) {
-        Issue.priorityComparator = priorityComparator;
-    }
-
-    public static Comparator<Issue> getTimeComparator() {
-        return timeComparator;
-    }
-
-    public static void setTimeComparator(Comparator<Issue> timeComparator) {
-        Issue.timeComparator = timeComparator;
-    }
-
-    public static Comparator<Issue> getIDComparator() {
-        return IDComparator;
-    }
-
-    public static void setIDComparator(Comparator<Issue> IDComparator) {
-        Issue.IDComparator = IDComparator;
-    }
-
-    public Comparator<Issue> getTitleComparator() {
-        return TitleComparator;
-    }
-
-    public void setTitleComparator(Comparator<Issue> titleComparator) {
-        TitleComparator = titleComparator;
-    }
-
-    public Comparator<Issue> getStatusComparator() {
-        return statusComparator;
-    }
-
-    public void setStatusComparator(Comparator<Issue> statusComparator) {
-        this.statusComparator = statusComparator;
-    }
-
-    public Comparator<Issue> getTagComparator() {
-        return tagComparator;
-    }
 
     public int getNumberOfComments() {
         return numberOfComments;
@@ -1464,9 +1374,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         this.image_file = image_file;
     }
 
-    public void setTagComparator(Comparator<Issue> tagComparator) {
-        this.tagComparator = tagComparator;
-    }
+
 
     @Override
     public int compare(Issue o1, Issue o2) {

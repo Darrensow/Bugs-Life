@@ -5,26 +5,25 @@
  */
 package Semag;
 
+import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author xianp
  */
-public class client  {
+public class Client {
 
     final static int ServerPort = 1234;
 
 
-    public client(People people) throws UnknownHostException, IOException {
+    public Client(People people) throws UnknownHostException, IOException {
         Scanner scn = new Scanner(System.in);
 
         // getting localhost ip 
@@ -48,7 +47,7 @@ public class client  {
             int code = Integer.parseInt(code_string);
             dos.writeInt(code);
         }
-        new chat_window(dis, dos);
+        new ChatWindow(dis, dos);
 
     }
 

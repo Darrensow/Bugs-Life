@@ -8,7 +8,6 @@ package Semag;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author xianp
  */
-public class clienthander implements Runnable {
+public class ClientHandler implements Runnable {
 
    
     transient Scanner scn = new Scanner(System.in);
@@ -29,10 +28,10 @@ public class clienthander implements Runnable {
     final DataOutputStream dos;
     Socket s;
     boolean isloggedin;
-    server server = new server();
+    Server server = new Server();
 
     // constructor 
-    public clienthander(Socket s, String name, DataInputStream dis, DataOutputStream dos, int code, String position) {
+    public ClientHandler(Socket s, String name, DataInputStream dis, DataOutputStream dos, int code, String position) {
         this.dis = dis;
         this.dos = dos;
         this.name = name;
@@ -55,7 +54,7 @@ public class clienthander implements Runnable {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(clienthander.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         while (true) {
             try {
@@ -75,8 +74,8 @@ public class clienthander implements Runnable {
                 }
                 // break the string into message and recipient part 
                 // search for the recipient in the connected devices list. 
-                // ar is the vector storing client of active users
-                for (int j = 0; j < server.a.size(); j++) {//&& !server.a.get(j).equals(this)
+                // ar is the vector storing Client of active users
+                for (int j = 0; j < server.a.size(); j++) {//&& !Server.a.get(j).equals(this)
                     if (readname == true && server.a.get(j).isloggedin == true && server.a.get(j).code == (this.code)) {
                         server.a.get(j).dos.writeUTF(this.name + " : " + received);
                     } else if (server.a.get(j).code == (this.code) && !server.a.get(j).equals(this)) {

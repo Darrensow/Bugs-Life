@@ -16,9 +16,9 @@ public class read implements Runnable {
     
      private DataInputStream dis;
     Thread t;
-    chat_window gui;
+    ChatWindow gui;
 
-    public read(DataInputStream dis, chat_window gui) {
+    public read(DataInputStream dis, ChatWindow gui) {
         this.gui = gui;
         this.dis = dis;
         t = new Thread(this);
@@ -28,7 +28,7 @@ public class read implements Runnable {
     public void run() {
         while (!Thread.interrupted()) {
             try {
-                // read the message sent to this client 
+                // read the message sent to this Client
                 String msg = dis.readUTF();
                 if (msg.equals("logout")) {
                     this.t.interrupt();

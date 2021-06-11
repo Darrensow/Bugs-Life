@@ -63,12 +63,7 @@ public class Report {
         if(this.cumuADT.size() - o.cumuADT.size() > 0){    //evaluate if there is new guy in the office
             System.out.println(this.cumuADT.size() - o.cumuADT.size());
             int newGuyIndex = o.cumuADT.size();
-            int newGuyCount = this.cumuADT.size() - o.cumuADT.size();
-            System.out.println("newguyindex " + newGuyIndex);
-            System.out.println("newGuyCount " + newGuyCount);
-            for (int i = newGuyIndex; i < newGuyIndex+newGuyCount; i++) {
-                System.out.println("i = " + i);
-                System.out.println(newGuyIndex+newGuyCount);
+            for (int i = newGuyIndex; i < this.cumuADT.size(); i++) {
                 int difference = this.cumuADT.get(i).getNum_resolved();
 
                 if (difference > maxSolvedThisWeek) {
@@ -82,12 +77,10 @@ public class Report {
 
 
         for (int i = 0; i < o.cumuLabel.size(); i++) {
-
             int difference = this.cumuLabel.get(i).getTotal() - o.cumuLabel.get(i).getTotal();
             if (difference > maxTagsThisWeek) {
                 maxTagsThisWeek = difference;
                 topTagsThisWeek = this.cumuLabel.get(i).getName();
-
             } else if (difference == maxTagsThisWeek && maxTagsThisWeek > 0) {
                 topTagsThisWeek += this.cumuLabel.get(i).getName() + "; ";
             }
@@ -96,12 +89,8 @@ public class Report {
 
         if(this.cumuLabel.size() - o.cumuLabel.size() > 0){    //evaluate if there is new tags
             int newTagIndex = o.cumuLabel.size() ;
-            int newTagCount = this.cumuLabel.size() - o.cumuLabel.size();
-
-            for (int i = newTagIndex; i < newTagIndex+newTagCount; i++) {
-
+            for (int i = newTagIndex; i < this.cumuLabel.size(); i++) {
                 int difference = cumuLabel.get(i).getTotal();
-
                 if (difference > maxTagsThisWeek) {
                     maxTagsThisWeek = difference;
                     topTagsThisWeek = this.cumuLabel.get(i).getName();
@@ -181,10 +170,6 @@ public class Report {
     public int getMaxTagsThisWeek() {
         return maxTagsThisWeek;
     }
-
-
-
-
 
 
     // -- Getter & Setter --

@@ -5,9 +5,13 @@
  */
 package Semag;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -15,30 +19,16 @@ import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.border.Border;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 
 /**
  *
  * @author xianp
  */
-public class chat_window implements ActionListener, MouseListener {
+public class ChatWindow implements ActionListener, MouseListener {
 
     private String str = "";
     private boolean entered = false;
@@ -63,7 +53,7 @@ public class chat_window implements ActionListener, MouseListener {
     read read;
 
 
-    public chat_window(DataInputStream dis, DataOutputStream dos) {
+    public ChatWindow(DataInputStream dis, DataOutputStream dos) {
         this.dis = dis;
         this.dos = dos;
         read = new read(dis, this);
@@ -129,7 +119,7 @@ public class chat_window implements ActionListener, MouseListener {
             try {
                 dos.writeUTF(str);
             } catch (IOException ex) {
-                Logger.getLogger(chat_window.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -140,7 +130,7 @@ public class chat_window implements ActionListener, MouseListener {
             try {
                 tokenization(line[i]);
             } catch (BadLocationException ex) {
-                Logger.getLogger(chat_window.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         keyin_place.setText("Type a message");
@@ -248,7 +238,7 @@ public class chat_window implements ActionListener, MouseListener {
         }
         String[] tokens = token.split(" ");
 
-        chat_queue<String> tokens_queue = new chat_queue<>();
+        ChatQueue<String> tokens_queue = new ChatQueue<>();
         String temp = "";
         String special_header = "";
         for (int i = 0; i < tokens.length; i++) {

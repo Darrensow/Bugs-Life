@@ -5,18 +5,17 @@
  */
 package Semag;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  *
  * @author xianp
  */
-public class chat_queue<E>  {
+public class ChatQueue<E>  {
 
     private LinkedList<E> list = new LinkedList<>();
 
-    public chat_queue() {
+    public ChatQueue() {
     }
 
     public void enqueue(E e) {

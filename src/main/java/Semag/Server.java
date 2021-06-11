@@ -17,9 +17,9 @@ import java.util.Random;
  *
  * @author xianp
  */
-public class server{
+public class Server {
 
-    protected static ArrayList<clienthander> a = new ArrayList<>();
+    protected static ArrayList<ClientHandler> a = new ArrayList<>();
     private static ArrayList<Integer> code_list = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
@@ -27,35 +27,32 @@ public class server{
         Socket s;
         while (true) {
             s = ss.accept();
-//            System.out.println("New client request received : " + s);
 
             // obtain input and output streams 
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-//            System.out.println("Creating a new handler for this client...");
 
             // Create a new handler object for handling this request. 
             String name = dis.readUTF();
             int code = dis.readInt();
-            clienthander mtch;
+            ClientHandler mtch;
             if (code == -1) {
                 code = new Random().nextInt(999999 - 100000 + 1) + 100000;
                 while (code_list.contains(code)) {
                     code = new Random().nextInt(999999 - 100000 + 1) + 100000;
                 }
-                mtch = new clienthander(s, "->" + name, dis, dos, code, "owner");
+                mtch = new ClientHandler(s, "->" + name, dis, dos, code, "owner");
             } else {
-                mtch = new clienthander(s, "->" + name, dis, dos, code, "member");
+                mtch = new ClientHandler(s, "->" + name, dis, dos, code, "member");
             }
-//            System.out.println(code);
 
             // Create a new Thread with this object. 
             Thread t = new Thread(mtch);
 
-            System.out.println("Adding this client to active client list");
+            System.out.println("Adding this Client to active Client list");
 
-            // add this client to active clients list 
+            // add this Client to active clients list
             a.add(mtch);
             // start the thread. 
             t.start();

@@ -12,7 +12,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Properties;
 
 /**
@@ -21,7 +20,7 @@ import java.util.Properties;
  *
  * @author xianp
  */
-public class gmail_sender {
+public class GmailSender {
 
     private String send_to;
     private String send_by = "xianpua2001.sim02@gmail.com";
@@ -30,7 +29,7 @@ public class gmail_sender {
     private String content;
     private String host = "smtp.gmail.com";
 
-    public gmail_sender(String send_to, String title, String content) {
+    public GmailSender(String send_to, String title, String content) {
         this.send_to = send_to;
         this.title = title;
         this.content = content;
@@ -43,7 +42,7 @@ public class gmail_sender {
         // Get system properties
         Properties properties = System.getProperties();
 
-        // Setup mail server
+        // Setup mail Server
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "465");
         properties.put("mail.smtp.ssl.enable", "true");
@@ -109,7 +108,7 @@ public class gmail_sender {
         // Assuming you are sending email from through gmails smtp
         // Get system properties
         Properties properties = System.getProperties();
-        // Setup mail server
+        // Setup mail Server
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "465");
         properties.put("mail.smtp.ssl.enable", "true");
