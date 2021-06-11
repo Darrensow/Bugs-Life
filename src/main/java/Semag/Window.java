@@ -63,8 +63,8 @@ public class Window implements ActionListener {
     JButton button3 = new JButton();
     JPanel panel1 = new JPanel();
     JTextField text2 = new JTextField();
-    ImageIcon have_noti = new ImageIcon("notification with red.jpg");
-    ImageIcon no_noti = new ImageIcon("notification without red.jpg");
+    ImageIcon have_noti = new ImageIcon("notification with red.png");
+    ImageIcon no_noti = new ImageIcon("notification without red.png");
 
     ImageIcon call_image;
     static DefaultTableModel tableModel = new DefaultTableModel() {
@@ -84,7 +84,7 @@ public class Window implements ActionListener {
     ArrayList<JPanel> each_notification_panel_a = new ArrayList<>();
     JButton call;
     JComboBox setting_option_button = new JComboBox();
-    String[] setting_option = {"PDF report", "text report", "CSV report", "JSON file"};
+    String[] setting_option = {"PDF report", "Text report", "CSV report", "JSON file"};
     boolean in_delete_mode = false;
 
 
@@ -117,9 +117,9 @@ public class Window implements ActionListener {
     public void setupwindow() {
         // make it not visible first
         panel_notification.setVisible(true);
-        ImageIcon konoha = new ImageIcon("doge_image.jpg");
+        ImageIcon konoha = new ImageIcon("doge.png");
         frame.setLayout(null);
-        frame.setTitle("Doge");
+        frame.setTitle("Project Dashboard");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 frame.setVisible(false);
@@ -131,11 +131,11 @@ public class Window implements ActionListener {
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);
-        ImageIcon image = new ImageIcon("register backgroud.jpg");
+        ImageIcon image = new ImageIcon("background.png");
         JLabel label = new JLabel(image);
         label.setBounds(0, 0, 1350, 690);
         label.setVisible(true);
-        ImageIcon image2 = new ImageIcon("add.jpg");
+        ImageIcon image2 = new ImageIcon("add.png");
         button1.setIcon(image2);
         button1.setBounds(1180, 0, 50, 50);
         button1.setVisible(true);
@@ -245,8 +245,9 @@ public class Window implements ActionListener {
 
         //build call button
         call = new JButton();
-        call_image = new ImageIcon("whatapps icon.jpg");
+        call_image = new ImageIcon("whatapps icon.png");
         call.setIcon(call_image);
+        call.setBounds(1280, 0, 50, 50);
         call.setBounds(1280, 0, 50, 50);
         call.setVisible(true);
         call.addActionListener(this);
@@ -590,7 +591,7 @@ public class Window implements ActionListener {
 
             //this step is to check if the user wants to find by #ID
             if (isID(input)) {
-                toAppend = getProjectOfID(Integer.parseInt(input.substring(1)));
+                toAppend = obtainProjectOfID(Integer.parseInt(input.substring(1)));
                 if (toAppend != null) {
                     contains = true;
                 }
@@ -675,7 +676,7 @@ public class Window implements ActionListener {
      */
     public void enterTheProjext(int ID) {
         frame.setVisible(false);
-        getProjectOfID(ID).projectWindow(current_people, frame);
+        obtainProjectOfID(ID).projectWindow(current_people, frame);
     }
 
 
@@ -710,7 +711,7 @@ public class Window implements ActionListener {
         }
 
         for (int i = 0; i < project_Array.size(); i++) {
-            for (int j = 0; j < project_Array.get(i).getIssueArraySize(); j++) {
+            for (int j = 0; j < project_Array.get(i).obtainIssueArraySize(); j++) {
                 Issue temp = project_Array.get(i).getIssue().get(j);
                 switch (temp.getStatus()) {
                     case "Closed":
@@ -1005,7 +1006,7 @@ public class Window implements ActionListener {
 
 
 
-    public static People getPeopleByUsername(String username) {
+    public static People obtainPeopleByUsername(String username) {
         for (int i = 0; i < Window.people_Array.size(); i++) {
             if (username.equals(Window.people_Array.get(i).getName())) {
                 return Window.people_Array.get(i);
@@ -1014,7 +1015,7 @@ public class Window implements ActionListener {
         return null;
     }
 
-    private Project getProjectOfID(int ID) {
+    private Project obtainProjectOfID(int ID) {
         for (int i = 0; i < project_Array.size(); i++) {
             if (project_Array.get(i).getID() == ID) {
                 return project_Array.get(i);

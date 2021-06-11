@@ -63,10 +63,9 @@ public class Comment {
      */
     @Override
     public String toString() {
-        String str = "#" + this.ID;
-        str += "\tCreated on: " + timestamp + " \tBy: " + this.createdBy;
-        str += "\n" + this.text;
-        return str + "\n";
+        String str = this.text + "\n\n";
+        str += String.format("#%-10d Created on: %-34s By: %-12s\n", this.ID, this.timestamp, this.createdBy);
+        return str;
     }
 
     /*

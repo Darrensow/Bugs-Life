@@ -57,7 +57,7 @@ public class ChatWindow implements ActionListener, MouseListener {
         this.dis = dis;
         this.dos = dos;
         read = new read(dis, this);
-        ImageIcon app_icon = new ImageIcon("C:\\Users\\xianp\\OneDrive\\Documents\\NetBeansProjects\\SEMAG\\whatapps icon.jpg");
+        ImageIcon app_icon = new ImageIcon("whatapps icon.jpg");
         frame.setLayout(null);
         frame.setTitle("Chat window");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {

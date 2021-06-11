@@ -112,9 +112,9 @@ public class User implements ActionListener {
     public void window_setup() {
         //setup frame
 
-        ImageIcon konoha = new ImageIcon("doge_image.jpg");
+        ImageIcon konoha = new ImageIcon("doge.png");
         frame.setLayout(null);
-        frame.setTitle("login_register");
+        frame.setTitle("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(konoha.getImage());
         frame.setResizable(false);
@@ -123,7 +123,7 @@ public class User implements ActionListener {
         frame.setVisible(true);
 
         //set up back groud picture
-        ImageIcon image = new ImageIcon("register backgroud.jpg");
+        ImageIcon image = new ImageIcon("background.png");
         JLabel label = new JLabel(image);
         label.setBounds(0, 0, 1350, 690);
         label.setVisible(true);
@@ -155,7 +155,7 @@ public class User implements ActionListener {
         login_username.setVisible(true);
 
 //build login_password label
-        login_pass_label.setText("password : ");
+        login_pass_label.setText("Password : ");
         login_pass_label.setVisible(true);
         login_pass_label.setBounds(25, 175, 80, 50);
         login_pass_label.setForeground(Color.WHITE);
@@ -164,13 +164,13 @@ public class User implements ActionListener {
         login_pass_text.setVisible(true);
 
         //build login button
-        login_in.setText("Login In");
+        login_in.setText("Login");
         login_in.setVisible(true);
         login_in.addActionListener(this);
         login_in.setBounds(105, 235, 100, 30);
 //build the title of login panel
         login_label.setBounds(0, 0, 300, 35);
-        login_label.setText("Login In");
+        login_label.setText("Login");
         login_label.setHorizontalAlignment(0);
         login_label.setVerticalAlignment(0);
         login_label.setForeground(Color.red);
@@ -259,7 +259,7 @@ public class User implements ActionListener {
         register_pass_text.setBounds(125, 150, 150, 50);
 
         //build register password label
-        register_pass_text_label.setText("password :");
+        register_pass_text_label.setText("Password :");
         register_pass_text_label.setVisible(false);
         register_pass_text_label.setBounds(25, 150, 100, 50);
         register_pass_text_label.setForeground(Color.white);
@@ -268,7 +268,7 @@ public class User implements ActionListener {
         reg_confirm_pass_text.setBounds(125, 255, 150, 50);
 
         //build register confirm password label  
-        reg_confirm_pass_text_label.setText("re-enter password :");
+        reg_confirm_pass_text_label.setText("Re-enter password :");
         reg_confirm_pass_text_label.setVisible(false);
         reg_confirm_pass_text_label.setBounds(15, 255, 120, 50);
         reg_confirm_pass_text_label.setForeground(Color.white);
@@ -307,7 +307,7 @@ public class User implements ActionListener {
         register.addActionListener(this);
         register.setBounds(500, 200, 300, 100);
 //build the main login button
-        login.setText("login in");
+        login.setText("Login");
         login.setVisible(true);
         login.addActionListener(this);
         login.setBounds(500, 400, 300, 100);
@@ -337,7 +337,7 @@ public class User implements ActionListener {
             String password = new String(login_pass_text.getPassword());
             int b = getindex(name);
             if (b < 0) {
-                popwindow("login issue", "Invalid username or password. Please try again");
+                popwindow("Login Issue", "Invalid username or password. Please try again");
                 login_username.setText("Enter username");
                 login_pass_text.setText("");
             } else {
@@ -347,7 +347,7 @@ public class User implements ActionListener {
                     login_panel.setVisible(false);
                     frame.setVisible(false);
                 } else {
-                    popwindow("password issue", "Invalid username or password. Please try again");
+                    popwindow("Password issue", "Invalid username or password. Please try again");
                     login_username.setText("Enter username");
                     login_pass_text.setText("");
                 }
@@ -378,7 +378,7 @@ public class User implements ActionListener {
                 reg_confirm_pass_text.setVisible(true);
                 reg_confirm_pass_text_label.setVisible(true);
             } else {
-                verify_code_text.setText("wrong verified code");
+                verify_code_text.setText("Wrong verified code");
             }
 
         }
@@ -387,21 +387,20 @@ public class User implements ActionListener {
             String password = new String(register_pass_text.getPassword());
             String confirm_pass = new String(reg_confirm_pass_text.getPassword());
             if (people_array.contain(name) == true) {
-                popwindow("user issue", "name used");
+                popwindow("User Issue", "Name used");
                 register_username_text.setText("Enter username");
             } else if (!password_obj.isValid(password)) {
-                popwindow("password issue", "weak password");
+                popwindow("Password Issue", "Weak password");
                 register_pass_text.setText("");
                 reg_confirm_pass_text.setText("");
             } else if (!password.equals(confirm_pass)) {
-                popwindow("password issue", "wrong password");
+                popwindow("Password Issue", "Wrong password");
                 register_pass_text.setText("");
                 reg_confirm_pass_text.setText("");
             } else {
                 register_panel.setVisible(false);
                 people_obj = new People(password, name, ++ID, mail);
                 people_array.add(people_obj);
-                System.out.println("people added");
                 can_return = true;
                 frame.setVisible(false);
             }

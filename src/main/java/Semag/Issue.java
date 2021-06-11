@@ -41,10 +41,10 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     //gui
     JFrame frame = new JFrame();
-    ImageIcon backgroud_image = new ImageIcon("register backgroud.jpg");
+    ImageIcon backgroud_image = new ImageIcon("background.png");
     JLabel label = new JLabel(backgroud_image);
     JButton add_comment = new JButton();
-    ImageIcon add_image = new ImageIcon("add.jpg");
+    ImageIcon add_image = new ImageIcon("add.png");
     JPanel add_comment_panel = new JPanel();
     JLabel add_comment_title = new JLabel();
     JButton add_comment_submit = new JButton();
@@ -71,15 +71,15 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     ArrayList<JLabel> likecount = new ArrayList<>();
     ArrayList<JLabel> dislikecount = new ArrayList<>();
 
-    ImageIcon happy_icon = new ImageIcon("happy_icon.png");
-    ImageIcon angry_icon = new ImageIcon("angry_icon.png");
-    ImageIcon like_image = new ImageIcon("like_icon.png");
-    ImageIcon dislike_image = new ImageIcon("dislike_icon.png");
+    ImageIcon happy_icon = new ImageIcon("happy.png");
+    ImageIcon angry_icon = new ImageIcon("angry.png");
+    ImageIcon like_image = new ImageIcon("like.png");
+    ImageIcon dislike_image = new ImageIcon("dislike.png");
 
-    ImageIcon happy_icon_blue = new ImageIcon("happy_icon_blue.jpg");
-    ImageIcon angry_icon_blue = new ImageIcon("angry_icon_blue.jpg");
-    ImageIcon like_image_blue = new ImageIcon("like_icon_blue.png");
-    ImageIcon dislike_image_blue = new ImageIcon("dislike_icon_blue.jpg");
+    ImageIcon happy_icon_blue = new ImageIcon("happy_enabled.png");
+    ImageIcon angry_icon_blue = new ImageIcon("angry_enabled.png");
+    ImageIcon like_image_blue = new ImageIcon("like_enabled.png");
+    ImageIcon dislike_image_blue = new ImageIcon("dislike.jpg");
 
 
     ArrayList<JTextPane> comment = new ArrayList<>();
@@ -100,7 +100,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     JButton done_edit = new JButton();
     JButton insert_image_button = new JButton("Insert image");
     ImageIcon insert_image;
-    ImageIcon edit = new ImageIcon("edit_icon.png");
+    ImageIcon edit = new ImageIcon("edit.png");
     JButton edit_issue = new JButton();
     JLabel image = new JLabel();
     boolean undo_pressed = false;
@@ -195,9 +195,9 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     public void setupWindow() {
 
         //build window
-        ImageIcon konoha = new ImageIcon("doge_image.jpg");
+        ImageIcon konoha = new ImageIcon("doge.png");
         frame.setLayout(null);
-        frame.setTitle("ISSUE PAGE");
+        frame.setTitle("Issue Page");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 project_frame.setVisible(true);
@@ -236,6 +236,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         add_comment_text.setVisible(true);
         add_comment_text.setPreferredSize(new Dimension(900, 100000));
         add_comment_text.setEditable(true);
+        add_comment_text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         add_comment_text.setText("Enter comment there");
         add_comment_text.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) { //after mouse click
@@ -312,7 +313,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         edit_issue.addActionListener(this);
         //build setting button / quit
         open_changelog.setVisible(true);
-        open_changelog.setBounds(1000, 35, 150, 35);
+        open_changelog.setBounds(1100, 135, 150, 35);
         open_changelog.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         open_changelog.setText("Open Changelog");
         open_changelog.addActionListener(this);
@@ -325,7 +326,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         mid_panel.setOpaque(true);
         mid_panel.setLayout(new FlowLayout());
         //builf issue scroll
-        issue_scroll.setBounds(0, 200, 1100, 450);
+        issue_scroll.setBounds(0, 200,1100, 450);
         issue_scroll.setVisible(true);
         issue_scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         issue_scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
@@ -334,16 +335,17 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         issue_descrip.setPreferredSize(new Dimension(900, 200000));
         issue_descrip.setVisible(true);
         issue_descrip.setEditable(false);
+        issue_descrip.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
         //build issue scroll
-        issue_descrip_sp.setBounds(50, 50, 900, 150);
+        issue_descrip_sp.setBounds(95, 50, 900, 150);
         issue_descrip_sp.setVisible(true);
         issue_descrip_sp.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         issue_descrip_sp.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
 
         //build issue descrp panel
         issue_des_panel.setVisible(true);
-        issue_des_panel.setBounds(0, 0, 1000, 200);
+        issue_des_panel.setBounds(0, 0, 1100, 200);
         issue_des_panel.setLayout(null);
         issue_des_panel.setBackground(Color.red);
         issue_des_panel.setOpaque(true);
@@ -420,6 +422,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         changelog_textarea.setPreferredSize(new Dimension(900, 200000));
         changelog_textarea.setVisible(true);
         changelog_textarea.setEditable(false);
+        changelog_textarea.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
         //build chnagelog text sp
         changelog_textsp.setBounds(0, 0, 1150, 730);
@@ -537,6 +540,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             comment.get(i).setVisible(true);
             comment.get(i).setPreferredSize(new Dimension(900, 20000));
             comment.get(i).setEditable(false);
+            comment.get(i).setFont(new Font("TimesRoman", Font.PLAIN, 16));
             comment_sr.add(new JScrollPane(comment.get(i)));
             comment_sr.get(i).setBounds(0, 0, 900, 200);
             comment_sr.get(i).setVisible(true);
@@ -794,17 +798,17 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             }
         }
         for (int i = 0; i < like.size(); i++) {
-            if (com.get(i).reactedBefore("like", current_people.getName())) {
+            if (com.get(i).reactedBefore("likes", current_people.getName())) {
                 like.get(i).setIcon(like_image_blue);
             } else {
-                happy.get(i).setIcon(like_image);
+                like.get(i).setIcon(like_image);
             }
         }
         for (int i = 0; i < dislike.size(); i++) {
-            if (com.get(i).reactedBefore("dislike", current_people.getName())) {
-                happy.get(i).setIcon(dislike_image_blue);
+            if (com.get(i).reactedBefore("dislikes", current_people.getName())) {
+                dislike.get(i).setIcon(dislike_image_blue);
             } else {
-                happy.get(i).setIcon(dislike_image);
+                dislike.get(i).setIcon(dislike_image);
             }
         }
     }

@@ -34,11 +34,11 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
     //gui
     JFrame frame = new JFrame();
-    ImageIcon backgroud_image = new ImageIcon("register backgroud.jpg");
+    ImageIcon backgroud_image = new ImageIcon("background.png");
     JLabel label = new JLabel(backgroud_image);
     JTextField search_issue = new JTextField();
     JButton add_issue = new JButton();
-    ImageIcon add_image = new ImageIcon("add.jpg");
+    ImageIcon add_image = new ImageIcon("add.png");
     ImageIcon delete_project_image = new ImageIcon("trash_icon.png");
     JButton delete_project = new JButton();
     JComboBox sort_issue = new JComboBox();
@@ -132,9 +132,9 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     public void setupWindow() {
 
         //build window
-        ImageIcon konoha = new ImageIcon("doge_image.jpg");
+        ImageIcon konoha = new ImageIcon("doge.png");
         frame.setLayout(null);
-        frame.setTitle("Doge");
+        frame.setTitle("Issue Dashboard");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 window_frame.setVisible(true);
@@ -416,6 +416,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         //build issus description
         descrip.setSize(new Dimension(1100, 5000));
         descrip.setText("Add description there");
+        descrip.setFont(new Font("TimesRoman", Font.PLAIN, 14));
         descrip.setEditable(true);
         descrip.setVisible(true);
         descrip.addMouseListener(new MouseAdapter() {
@@ -669,7 +670,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             tags_text.setText("Enter tags");
             descrip.setText("Add description there");
             assignee_text.setText("Enter assignee");
-            People assignee_obj = Window.getPeopleByUsername(assignee);
+            People assignee_obj = Window.obtainPeopleByUsername(assignee);
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
             } else if (issue_name.equals("Enter issue name") || issue_name.equals("")) {
@@ -729,7 +730,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
         for (int i = 0; i < issue.size(); i++) {
             if (issue.get(i).getID() == ID) {
-                Window.getPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
+                Window.obtainPeopleByUsername(issue.get(i).getAssignee()).reduceAssigned();
                 issue.remove(i);
                 in_delete_mode = false;
                 break;
@@ -960,7 +961,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
             //this step is to check if the user wants to find by #ID
             if (isID(input)) {
-                toAppend = getIssueOfID(Integer.parseInt(input.substring(1)));
+                toAppend = obtainIssueOfID(Integer.parseInt(input.substring(1)));
                 if (toAppend != null) {
                     contains = true;
                 }
@@ -1077,12 +1078,11 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         }
     };
 
-
-    public int getIssueArraySize() {
+    public int obtainIssueArraySize() {
         return issue.size();
     }
 
-    public Issue getIssueOfID(int ID) {
+    public Issue obtainIssueOfID(int ID) {
         for (int i = 0; i < issue.size(); i++) {
             if (issue.get(i).getID() == ID) {
                 return issue.get(i);
@@ -1109,7 +1109,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         @Override
         public int compare(Project o1, Project o2) {
             //for ascending order
-            return o1.getIssueArraySize() - o2.getIssueArraySize();
+            return o1.obtainIssueArraySize() - o2.obtainIssueArraySize();
         }
     };
 
@@ -1118,7 +1118,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
      */
     public void enterTheIssue(int ID) {
         this.frame.setVisible(false);
-        getIssueOfID(ID).issueWindow(current_people, frame);
+        obtainIssueOfID(ID).issueWindow(current_people, frame);
     }
 
 
