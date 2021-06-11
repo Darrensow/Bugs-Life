@@ -11,22 +11,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author xianp
  */
-public class labelCounter implements Comparable<labelCounter>  {
-
+public class TagCounter {
     private String name;
     private Integer total = 0;
 
-    public labelCounter() {
+    public TagCounter() {
     }
 
-    public labelCounter(String name) {
+    public TagCounter(String name) {
         this.name = name;
-        add();
-    }
-
-    public labelCounter(String name,int num) {
-        this.name = name;
-        this.total = num;
     }
 
     public void add() {
@@ -38,25 +31,19 @@ public class labelCounter implements Comparable<labelCounter>  {
         return name;
     }
 
-    public int getTotal() {
-        return total;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getTotal() {
+        return total;
     }
 
     public void setTotal(Integer total) {
         this.total = total;
     }
 
-    @Override
-    public int compareTo(labelCounter o) {
-        return this.total.compareTo(o.total);
-    }
-
     // Save and read data -- Jackson -- JSON --
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
-
 }

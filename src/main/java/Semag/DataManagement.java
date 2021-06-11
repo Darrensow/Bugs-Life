@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * JSON File saving using Jackson library
@@ -39,11 +38,11 @@ public class DataManagement {
         }
     }
 
-    public void writeData(labelCounter obj) {
+    public void writeData(TagCounter obj) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("LabelCounter.json"), obj);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("TagCounter.json"), obj);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,10 +117,10 @@ public class DataManagement {
         return returnObj;
     }
 
-    public labelCounter readLabelCounterData() {
-        labelCounter returnObj = new labelCounter();
+    public TagCounter readLabelCounterData() {
+        TagCounter returnObj = new TagCounter();
         try {
-            returnObj = new ObjectMapper().readerFor(labelCounter.class).readValue(new File("LabelCounter.json"));
+            returnObj = new ObjectMapper().readerFor(TagCounter.class).readValue(new File("TagCounter.json"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

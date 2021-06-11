@@ -320,80 +320,68 @@ public class Window implements ActionListener {
         int res = choose.showSaveDialog(choose);     // select file to save
         if (res == JFileChooser.APPROVE_OPTION) {
             File file = new File(choose.getSelectedFile().getAbsolutePath());
-            createtextfile(file, num);
+            createReport(file, num);
         }
     }
 
-    public void createtextfile(File file_name, int num) throws IOException {
-        int resolved = 0;   //cum resolved
-        int unresolved = 0;   //cum unresolved
-        int in_progress = 0;   //in_progress
-        ArrayList<labelCounter> label = new ArrayList<>();
-        int num_label = 0;
-        ArrayList<labelCounter> top_label = new ArrayList<>();
+    public void createReport(File file_name, int num) throws IOException {
+        int cumuResolved = 0;   //cum resolved
+        int cumuUnresolved = 0;   //cum unresolved
+        int cumuInProgress = 0;   //in_progress
+
+        ArrayList<TagCounter> cumuLabel = new ArrayList<>();
+
+        for (int i = 0; i < Issue.tagsOption.size(); i++) {
+            cumuLabel.add(new TagCounter(Issue.tagsOption.get(i)));
+        }
+
         for (int i = 0; i < project_Array.size(); i++) {
             for (int j = 0; j < project_Array.get(i).issue_Arraysize(); j++) {
                 Issue temp = project_Array.get(i).issuegetindex(j);
                 switch (temp.getStatus()) {
                     case "Resolved":
-                        resolved++;
+                        cumuResolved++;
                         break;
                     case "In Progress":
-                        in_progress++;
+                        cumuInProgress++;
                         break;
                     default:
-                        unresolved++;
+                        cumuUnresolved++;
                 }
-                int have = 0;
-                for (int k = 0; k < label.size(); k++) {  // add if have that same tags in label
-                    String[] tagsArray = temp.getTag();
-                    for (int l = 0; l < tagsArray.length; l++) {
-                        if (label.get(k).getName().equals(tagsArray[l])) {
-                            label.get(k).add();
-                            have++;
+
+
+                String[] tagsArray = temp.getTag();
+                for (int l = 0; l < tagsArray.length; l++) {
+                    for (int k = 0; k < cumuLabel.size(); k++) {
+                        if(tagsArray[l].equals(cumuLabel.get(k).getName())){
+                            cumuLabel.get(k).add();
                             break;
                         }
-                    }
-                }
-                if (have != temp.getTag().length) {  // add the tags that no have in label
-                    String[] tagsArray = temp.getTag();
-                    for (int k = 0; k < tagsArray.length; k++) {
-                        if (label.size() > 0) {
-                            for (int m = 0; m < label.size(); m++) {
-                                if (!label.get(m).getName().equals(tagsArray[k])) {
-                                    label.add(new labelCounter(tagsArray[k]));
-                                    break;
-                                }
-                            }
-                        } else {
-                            label.add(new labelCounter(tagsArray[k]));
-                        }
-
                     }
                 }
             }
         }
 
 
-        ArrayList<people_int> people_int_obj = new ArrayList<>();
+        ArrayList<PerformanceCounter> cumuADT = new ArrayList<>();
         for (int i = 0; i < people_Array.size(); i++) {
-            people_int_obj.add(new people_int(people_Array.get(i).getName(), people_Array.get(i).getNumber_solved()));
+            cumuADT.add(new PerformanceCounter(people_Array.get(i).getName(), people_Array.get(i).getNumber_solved()));
         }
 
-        Report current = new Report(people_int_obj, resolved, unresolved, in_progress, label);
+        Report current = new Report(cumuADT, cumuResolved, cumuUnresolved, cumuInProgress, cumuLabel);
         current.finddifferent(report);
 
-
         //cum
-        String cum_topperform = current.getCum_topperform();
-        int cum_toperform_max = current.getCum_toperform_max();
-        String cum_toptags = current.getCum_toptags();
-        int cum_maxtags = current.getCum_maxtags();
+        String cum_topperform = current.getTopPerformCumu();
+        int cum_toperform_max = current.getMaxSolvedCumu();
+        String cum_toptags = current.getTopTagsCumu();
+        int cum_maxtags = current.getMaxTagsCumu();
+
         //weekly
-        String top_perform = current.getTop_perform();
-        int max = current.getMax();
-        String str = current.getTags();
-        int max_tags = current.getMax_tags();
+        String top_perform = current.getTopPerformThisWeek();
+        int max = current.getMaxSolvedThisWeek();
+        String str = current.getTopTagsThisWeek();
+        int max_tags = current.getMaxTagsThisWeek();
 
         if (num == 1) {
             try {
@@ -405,9 +393,9 @@ public class Window implements ActionListener {
                         "Below are the reports and statistics of the team's performance in the past and their weekly output. \n" +
                         "\n" +
                         "===== Cummulative data analysis =====");
-                out.println("- Number of issues resolved: " + resolved);
-                out.println("- Number of issues unresolved: " + unresolved);
-                out.println("- Number of issues in progress: " + in_progress);
+                out.println("- Number of issues resolved: " + cumuResolved);
+                out.println("- Number of issues unresolved: " + cumuUnresolved);
+                out.println("- Number of issues in progress: " + cumuInProgress);
                 if (cum_topperform.equals("")) {
                     out.println("Top performer in team: null");
                 } else {
@@ -421,9 +409,9 @@ public class Window implements ActionListener {
                 out.println();
                 out.println("===== Weekly performance analysis =====");
                 out.println();
-                out.println("- Number of issues resolved: " + current.getNum_solve());
-                out.println("- Number of issues unresolved: " + current.getNum_nosolved());
-                out.println("- Number of issues in progress: " + current.getInprogress());
+                out.println("- Number of issues resolved: " + current.getSolvedThisWeek());
+                out.println("- Number of issues unresolved: " + current.getUnsolvedThisWeek());
+                out.println("- Number of issues in progress: " + current.getInProgressThisWeek());
 
                 if (top_perform.equals("")) {
                     out.println("Top performer in team: null");
@@ -452,7 +440,7 @@ public class Window implements ActionListener {
                 PrintWriter out = new PrintWriter(new FileOutputStream(file_name));
                 out.println("Number of issues resolved, Number of issues unresolved, Number of issues in progress, Top performer in the team, Most frequently used tags, Number of issues resolved(weekly), Number of issues unresolved(weekly), Number of issues in progress(weekly), Top performer in the team(weekly), Most frequently used tags(weekly)");
                 String temp_string = "";
-                temp_string += resolved + ", " + unresolved + ", " + in_progress + ", ";
+                temp_string += cumuResolved + ", " + cumuUnresolved + ", " + cumuInProgress + ", ";
                 if (cum_topperform.equals("")) {
                     temp_string += "null, ";
                 } else {
@@ -463,7 +451,7 @@ public class Window implements ActionListener {
                 } else {
                     temp_string += cum_toptags + "(" + cum_maxtags + "), ";
                 }
-                temp_string += current.getNum_solve() + ", " + current.getNum_nosolved() + ", " + current.getInprogress() + ", ";
+                temp_string += current.getSolvedThisWeek() + ", " + current.getUnsolvedThisWeek() + ", " + current.getInProgressThisWeek() + ", ";
                 if (top_perform.equals("")) {
                     temp_string += "null, ";
                 } else {
@@ -483,12 +471,12 @@ public class Window implements ActionListener {
             ArrayList<String> text = new ArrayList<>();
             text.add("To whom it may concern, ");
             text.add("Below are the reports and statistics of the team's performance in the past and their weekly output.");
-           text.add(" ");
+            text.add(" ");
             text.add("===== Cummulative data analysis =====");
             text.add(" ");
-            text.add("- Number of issues resolved: " + resolved);
-            text.add("- Number of issues unresolved: " + unresolved);
-            text.add("- Number of issues in progress: " + in_progress);
+            text.add("- Number of issues resolved: " + cumuResolved);
+            text.add("- Number of issues unresolved: " + cumuUnresolved);
+            text.add("- Number of issues in progress: " + cumuInProgress);
             if (cum_topperform.equals("")) {
                 text.add("Top performer in team: null");
             } else {
@@ -502,9 +490,9 @@ public class Window implements ActionListener {
             text.add(" ");
             text.add("===== Weekly performance analysis =====");
             text.add(" ");
-            text.add("- Number of issues resolved: " + current.getNum_solve());
-            text.add("- Number of issues unresolved: " + current.getNum_nosolved());
-            text.add("- Number of issues in progress: " + current.getInprogress());
+            text.add("- Number of issues resolved: " + current.getSolvedThisWeek());
+            text.add("- Number of issues unresolved: " + current.getUnsolvedThisWeek());
+            text.add("- Number of issues in progress: " + current.getInProgressThisWeek());
             if (top_perform.equals("")) {
                 text.add("Top performer in team: null");
             } else {
@@ -525,10 +513,9 @@ public class Window implements ActionListener {
             text.add(" ");
             text.add("Admin ");
             text.add("Doge");
-
-
             createpdf(file_name, text);
         }
+
         report = current;
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};

@@ -1,283 +1,223 @@
 package Semag;
-import org.w3c.dom.html.HTMLIsIndexElement;
-
 import java.util.ArrayList;
 
 public class Report {
+    // only these five need to save
+    private ArrayList<PerformanceCounter> cumuADT = new ArrayList<>(); //cumulative PerformanceCounter
+    private ArrayList<TagCounter> cumuLabel = new ArrayList<>();      //cumulative label
+    private Integer cumuSolved;                                      //cumulative solved number
+    private Integer cumuUnsolved;                                   //cumulative unsolved number
+    private Integer cumuInProgress;                                //cumulative in progress number
 
-    private ArrayList<people_int> ADT = new ArrayList<>();
-    private ArrayList<labelCounter> label = new ArrayList<>();
-    private Integer num_solve;
-    private Integer num_nosolved;
-    private Integer inprogress;
+    private String TopPerformCumu = "";         //cumulative top performer
+    private int maxSolvedCumu = -1;             //his/her performance
+    private String topTagsCumu = "";            //cumulative top tags
+    private int maxTagsCumu = -1;               //tags' usage
 
-    private ArrayList<people_int> cum_ADT = new ArrayList<>();
-    private ArrayList<labelCounter> cum_label = new ArrayList<>();
-    private Integer cum_num_solve;
-    private Integer cum_num_nosolved;
-    private Integer cum_inprogress;
 
-    private String top_perform = "";  // no need store
-    private Integer max = -1;         //no
-    private String tags = "";         // no
-    private Integer max_tags = -1;    //no
+    private Integer solvedThisWeek;             //oneWeek Performance
+    private Integer unsolvedThisWeek;           //oneWeek Performance
+    private Integer inProgressThisWeek;
 
-   private String cum_topperform = "";
-    private int cum_toperform_max = -1;
-    private String cum_toptags = "";
-    private int cum_maxtags = -1;
+    private String topPerformThisWeek = "";     //oneWeek top performer
+    private Integer maxSolvedThisWeek = -1;     //oneWeek top performer's performance
+    private String topTagsThisWeek = "";        //oneWeek top tags
+    private Integer maxTagsThisWeek = -1;       //oneWeek top tags's usage
+
 
     public Report() {
     }
 
-    public Report(ArrayList<people_int> ADT, int num_solve, int num_nosolved, int inprogress, ArrayList<labelCounter> label) {
-        this.ADT = ADT;
-        this.cum_ADT=ADT;
-        this.num_solve = num_solve;
-        this.cum_num_solve =num_solve;
-        this.num_nosolved = num_nosolved;
-        this.cum_num_nosolved= num_nosolved;
-        this.inprogress = inprogress;
-        this.cum_inprogress =inprogress;
-        this.label = label;
-        this.cum_label =label;
-        FindCum();
+    public Report(ArrayList<PerformanceCounter> cumuADT, int cumuSolved, int cumuUnsolved, int cumuInProgress, ArrayList<TagCounter> cumuLabel) {
+        this.cumuADT =cumuADT;
+        this.cumuSolved = cumuSolved;
+        this.cumuUnsolved = cumuUnsolved;
+        this.cumuInProgress = cumuInProgress;
+        this.cumuLabel =cumuLabel;
+
+        FindCumuTopPerformerAndTags();
     }
 
-    public String getCum_topperform() {
-        return cum_topperform;
-    }
 
-    public int getCum_toperform_max() {
-        return cum_toperform_max;
-    }
-
-    public String getCum_toptags() {
-        return cum_toptags;
-    }
-
-    public int getCum_maxtags() {
-        return cum_maxtags;
-    }
-
-    public ArrayList<labelCounter> getLabel() {
-        return label;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public int getMax_tags() {
-        return max_tags;
-    }
     public void finddifferent(Report o) {
-        num_solve -= o.num_solve;
-        num_nosolved -= o.num_nosolved;
-        inprogress -= o.inprogress;
-        ArrayList<people_int> temp = new ArrayList<>();
-        for (int i = 0; i < ADT.size(); i++) {
-            if (o.cum_ADT.size() > i) {
-                temp.add(new people_int(ADT.get(i).getName(), ADT.get(i).getNum_resolved() - o.getCum_ADT().get(i).getNum_resolved()));
-            } else {
-                temp.add(new people_int(ADT.get(i).getName(), ADT.get(i).getNum_resolved()));
+        solvedThisWeek = this.solvedThisWeek - o.getCumuSolved();
+        unsolvedThisWeek = this.cumuSolved - o.getCumuUnsolved();
+        inProgressThisWeek = this.inProgressThisWeek - o.getCumuInProgress();
+
+        for (int i = 0; i < o.cumuADT.size(); i++) {     //previous worker evaluation
+            int difference = this.cumuADT.get(i).getNum_resolved() - o.cumuSolved;
+            if (difference > maxSolvedThisWeek) {
+                maxSolvedThisWeek = difference;
+                topPerformThisWeek = this.cumuADT.get(i).getName();
+
+            } else if (difference == maxSolvedThisWeek && maxSolvedThisWeek > 0) {
+                topPerformThisWeek += this.cumuADT.get(i).getName() + "; ";
             }
         }
-        ADT = temp;
-        findtopperform();
-        ArrayList<labelCounter> temp_label = new ArrayList<>();
-        for (int i = 0; i < label.size(); i++) {
-            boolean have = false;
-            for (int j = 0; j < o.cum_label.size(); j++) {
-                if (o.cum_label.get(j).getName().equals(label.get(i).getName())) {
-                    temp_label.add(new labelCounter(label.get(i).getName(), label.get(i).getTotal() - o.cum_label.get(j).getTotal()));
-                    have = true;
-                    break;
+
+        if(this.cumuADT.size() - o.cumuADT.size() > 0){    //evaluate if there is new guy in the office
+            int newgGuyIndex = o.cumuADT.size() + 1;
+            int newGuyCount = this.cumuADT.size() - o.cumuADT.size();
+
+            for (int i = newgGuyIndex; i <= newGuyCount; i++) {
+                int difference = cumuADT.get(i).getNum_resolved();
+
+                if (difference > maxSolvedThisWeek) {
+                    maxSolvedThisWeek = difference;
+                    topPerformThisWeek = this.cumuADT.get(i).getName();
+                } else if (difference == maxSolvedThisWeek && maxSolvedThisWeek > 0) {
+                    topPerformThisWeek += this.cumuADT.get(i).getName() + "; ";
                 }
             }
-            if(have==false){
-                temp_label.add(new labelCounter(label.get(i).getName(), label.get(i).getTotal()));
-            }
-        }
-        label =temp_label;
-        findtags();
-
-    }
-
-    public void findtopperform() {
-        for (int i = 0; i < ADT.size(); i++) {
-            if (ADT.get(i).getNum_resolved() > max) {
-                max = ADT.get(i).getNum_resolved();
-                top_perform = ADT.get(i).getName();
-            } else if (ADT.get(i).getNum_resolved() == max && max > 0) {
-                top_perform += ADT.get(i).getName() + "; ";
-            }
-        }
-    }
-
-    public void findtags() {
-
-        for (int i = 0; i < label.size(); i++) {
-            if (label.get(i).getTotal() > max_tags) {
-                max_tags = label.get(i).getTotal();
-                tags = label.get(i).getName();
-            } else if (label.get(i).getTotal() == max_tags && max_tags > 0) {
-                tags += label.get(i).getName() + "; ";
-            }
-        }
-    }
-
-    public void FindCum(){
-        for (int i = 0; i < cum_ADT.size(); i++) {
-            if (cum_ADT.get(i).getNum_resolved() > cum_toperform_max) {
-                cum_toperform_max = cum_ADT.get(i).getNum_resolved();
-                cum_topperform = cum_ADT.get(i).getName();
-            } else if (cum_ADT.get(i).getNum_resolved() == cum_toperform_max && cum_toperform_max > 0) {
-                cum_topperform += cum_ADT.get(i).getName() + "; ";
-            }
         }
 
-        for (int i = 0; i < cum_label.size(); i++) {
-            if (cum_label.get(i).getTotal() > cum_maxtags) {
-                cum_maxtags = cum_label.get(i).getTotal();
-                cum_toptags = cum_label.get(i).getName();
-            } else if (cum_label.get(i).getTotal() == cum_maxtags && cum_maxtags > 0) {
-                cum_toptags += cum_label.get(i).getName() + "; ";
+
+        for (int i = 0; i < o.cumuLabel.size(); i++) {
+
+            int difference = this.cumuLabel.get(i).getTotal() - o.cumuLabel.get(i).getTotal();
+            if (difference > maxTagsThisWeek) {
+                maxTagsThisWeek = difference;
+                topTagsThisWeek = this.cumuLabel.get(i).getName();
+
+            } else if (difference == maxTagsThisWeek && maxTagsThisWeek > 0) {
+                topTagsThisWeek += this.cumuLabel.get(i).getName() + "; ";
+            }
+
+        }
+
+        if(this.cumuLabel.size() - o.cumuLabel.size() > 0){    //evaluate if there is new tags
+            int newgTagIndex = o.cumuLabel.size() + 1;
+            int newTagCount = this.cumuLabel.size() - o.cumuLabel.size();
+
+            for (int i = newgTagIndex; i <= newTagCount; i++) {
+
+                int difference = cumuLabel.get(i).getTotal();
+
+                if (difference > maxTagsThisWeek) {
+                    maxTagsThisWeek = difference;
+                    topTagsThisWeek = this.cumuLabel.get(i).getName();
+                } else if (difference == maxTagsThisWeek && maxTagsThisWeek > 0) {
+                    topTagsThisWeek += this.cumuLabel.get(i).getName() + "; ";
+                }
             }
         }
     }
 
-    public ArrayList<people_int> getCum_ADT() {
-        return cum_ADT;
-    }
+    public void FindCumuTopPerformerAndTags(){
+        for (int i = 0; i < cumuADT.size(); i++) {
+            if (cumuADT.get(i).getNum_resolved() > maxSolvedCumu) {
+                maxSolvedCumu = cumuADT.get(i).getNum_resolved();
+                TopPerformCumu = cumuADT.get(i).getName();
+            } else if (cumuADT.get(i).getNum_resolved() == maxSolvedCumu && maxSolvedCumu > 0) {
+                TopPerformCumu += cumuADT.get(i).getName() + "; ";
+            }
+        }
 
-    public void setCum_ADT(ArrayList<people_int> cum_ADT) {
-        this.cum_ADT = cum_ADT;
-    }
-
-    public ArrayList<labelCounter> getCum_label() {
-        return cum_label;
-    }
-
-    public void setCum_label(ArrayList<labelCounter> cum_label) {
-        this.cum_label = cum_label;
-    }
-
-    public Integer getCum_num_solve() {
-        return cum_num_solve;
-    }
-
-    public void setCum_num_solve(Integer cum_num_solve) {
-        this.cum_num_solve = cum_num_solve;
-    }
-
-    public Integer getCum_num_nosolved() {
-        return cum_num_nosolved;
-    }
-
-    public void setCum_num_nosolved(Integer cum_num_nosolved) {
-        this.cum_num_nosolved = cum_num_nosolved;
-    }
-
-    public Integer getCum_inprogress() {
-        return cum_inprogress;
-    }
-
-    public void setCum_inprogress(Integer cum_inprogress) {
-        this.cum_inprogress = cum_inprogress;
-    }
-
-    public int getMax() {
-        return max;
-    }
-
-    public String getTop_perform() {
-        return top_perform;
-    }
-
-    public int getNum_solve() {
-        return num_solve;
+        for (int i = 0; i < cumuLabel.size(); i++) {
+            if (cumuLabel.get(i).getTotal() > maxTagsCumu) {
+                maxTagsCumu = cumuLabel.get(i).getTotal();
+                topTagsCumu = cumuLabel.get(i).getName();
+            } else if (cumuLabel.get(i).getTotal() == maxTagsCumu && maxTagsCumu > 0) {
+                topTagsCumu += cumuLabel.get(i).getName() + "; ";
+            }
+        }
     }
 
 
-    public void setNum_solve(int num_solve) {
-        this.num_solve = num_solve;
+    //-- Information to generate report, & do not need to save in json. --
+    //-- Another 3 info at below. --
+    public String getTopPerformCumu() {
+        return TopPerformCumu;
     }
 
-    public int getNum_nosolved() {
-        return num_nosolved;
+    public int getMaxSolvedCumu() {
+        return maxSolvedCumu;
     }
 
-    public void setNum_nosolved(int num_nosolved) {
-        this.num_nosolved = num_nosolved;
+    public String getTopTagsCumu() {
+        return topTagsCumu;
     }
 
-    public int getInprogress() {
-        return inprogress;
+    public int getMaxTagsCumu() {
+        return maxTagsCumu;
     }
 
-    public void setInprogress(int inprogress) {
-        this.inprogress = inprogress;
+
+    public int getSolvedThisWeek() {
+        return solvedThisWeek;
     }
 
-    public ArrayList<people_int> getADT() {
-        return ADT;
+    public int getUnsolvedThisWeek() {
+        return unsolvedThisWeek;
     }
 
-    public void setADT(ArrayList<people_int> ADT) {
-        this.ADT = ADT;
+
+    public int getInProgressThisWeek() {
+        return inProgressThisWeek;
     }
 
-    public Report(ArrayList<people_int> ADT) {
-        this.ADT = ADT;
+    public String getTopPerformThisWeek() {
+        return topPerformThisWeek;
     }
 
-    public void setLabel(ArrayList<labelCounter> label) {
-        this.label = label;
+    public int getMaxSolvedThisWeek() {
+        return maxSolvedThisWeek;
     }
 
-    public void setNum_solve(Integer num_solve) {
-        this.num_solve = num_solve;
+
+    public String getTopTagsThisWeek() {
+        return topTagsThisWeek;
     }
 
-    public void setNum_nosolved(Integer num_nosolved) {
-        this.num_nosolved = num_nosolved;
+    public int getMaxTagsThisWeek() {
+        return maxTagsThisWeek;
     }
 
-    public void setInprogress(Integer inprogress) {
-        this.inprogress = inprogress;
+
+
+
+
+
+    // -- Getter & Setter --
+    public ArrayList<PerformanceCounter> getCumuADT() {
+        return cumuADT;
     }
+
+    public void setCumuADT(ArrayList<PerformanceCounter> cumuADT) {
+        this.cumuADT = cumuADT;
+    }
+
+    public ArrayList<TagCounter> getCumuLabel() {
+        return cumuLabel;
+    }
+
+    public void setCumuLabel(ArrayList<TagCounter> cumuLabel) {
+        this.cumuLabel = cumuLabel;
+    }
+
+    public Integer getCumuSolved() {
+        return cumuSolved;
+    }
+
+    public void setCumuSolved(Integer cumuSolved) {
+        this.cumuSolved = cumuSolved;
+    }
+
+    public Integer getCumuUnsolved() {
+        return cumuUnsolved;
+    }
+
+    public void setCumuUnsolved(Integer cumuUnsolved) {
+        this.cumuUnsolved = cumuUnsolved;
+    }
+
+    public Integer getCumuInProgress() {
+        return cumuInProgress;
+    }
+
+    public void setCumuInProgress(Integer cumuInProgress) {
+        this.cumuInProgress = cumuInProgress;
+    }
+
 }
 
-class people_int {
-    private String name;
-    private Integer num_resolved;
-
-    public people_int() {
-    }
-
-    public people_int(String name, int num_resolved) {
-        this.name = name;
-        this.num_resolved = num_resolved;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getNum_resolved() {
-        return num_resolved;
-    }
-
-    public void setNum_resolved(int num_resolved) {
-        this.num_resolved = num_resolved;
-    }
-
-    public void setNum_resolved(Integer num_resolved) {
-        this.num_resolved = num_resolved;
-    }
-}
