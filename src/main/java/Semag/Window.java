@@ -360,36 +360,19 @@ public class Window implements ActionListener {
         for (int i = 0; i < people_Array.size(); i++) {
             people_int_obj.add(new people_int(people_Array.get(i).getName(), people_Array.get(i).getNumber_solved()));
         }
-        String cum_topperform = "";
-        int cum_toperform_max = -1;
-        for (int i = 0; i < people_int_obj.size(); i++) {
-            if (people_int_obj.get(i).getNum_resolved() > cum_toperform_max) {
-                cum_toperform_max = people_int_obj.get(i).getNum_resolved();
-                cum_topperform = people_int_obj.get(i).getName();
-            } else if (people_int_obj.get(i).getNum_resolved() == cum_toperform_max && cum_toperform_max > 0) {
-                cum_topperform += people_int_obj.get(i).getName() + "; ";
-            }
-        }
-
-        String cum_toptags = "";
-        int cum_maxtags = -1;
-        for (int i = 0; i < label.size(); i++) {
-            if (label.get(i).getTotal() > cum_maxtags) {
-                cum_maxtags = label.get(i).getTotal();
-                cum_toptags = label.get(i).getName();
-            } else if (label.get(i).getTotal() == cum_maxtags && cum_maxtags > 0) {
-                cum_toptags += label.get(i).getName() + "; ";
-            }
-        }
-
 
         Report current = new Report(people_int_obj, resolved, unresolved, in_progress, label);
         current.finddifferent(report);
 
 
+        //cum
+        String cum_topperform = current.getCum_topperform();
+        int cum_toperform_max = current.getCum_toperform_max();
+        String cum_toptags = current.getCum_toptags();
+        int cum_maxtags = current.getCum_maxtags();
+        //weekly
         String top_perform = current.getTop_perform();
         int max = current.getMax();
-
         String str = current.getTags();
         int max_tags = current.getMax_tags();
 
@@ -481,7 +464,9 @@ public class Window implements ActionListener {
             ArrayList<String> text = new ArrayList<>();
             text.add("To whom it may concern, ");
             text.add("Below are the reports and statistics of the team's performance in the past and their weekly output.");
+           text.add(" ");
             text.add("===== Cummulative data analysis =====");
+            text.add(" ");
             text.add("- Number of issues resolved: " + resolved);
             text.add("- Number of issues unresolved: " + unresolved);
             text.add("- Number of issues in progress: " + in_progress);
@@ -495,7 +480,9 @@ public class Window implements ActionListener {
             } else {
                 text.add("Most frequent label : " + cum_toptags + " (total: " + cum_maxtags + " )");
             }
+            text.add(" ");
             text.add("===== Weekly performance analysis =====");
+            text.add(" ");
             text.add("- Number of issues resolved: " + current.getNum_solve());
             text.add("- Number of issues unresolved: " + current.getNum_nosolved());
             text.add("- Number of issues in progress: " + current.getInprogress());
@@ -509,19 +496,21 @@ public class Window implements ActionListener {
             } else {
                 text.add("Most frequent label : " + str + " (total: " + max_tags + " )");
             }
+            text.add(" ");
+            text.add(" ");
             text.add("We hope that this report is able to aid you in determining future goals plan for the betterment of the team. ");
-            text.add("");
+            text.add(" ");
             text.add("Thank you. ");
-            text.add("");
+            text.add(" ");
             text.add("Yours sincerely, ");
-            text.add("");
+            text.add(" ");
             text.add("Admin ");
             text.add("Doge");
 
 
             createpdf(file_name, text);
         }
-//        report = current;
+        report = current;
         gmail_sender gmail_obj = new gmail_sender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
 
