@@ -1062,19 +1062,17 @@ public class Window implements ActionListener {
 
 
     // Save and read data -- Jackson -- JSON --
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
     /**
      * Method to save data, calls the writeData method in DataManagement Class
      */
+
     public void saveData() {
         StaticToNonStatic();
-        dm.writeData(this);
+        DataManagement.writeData(this);
     }
 
     public void loadData() {
-        Window temp = dm.readWindowData();
+        Window temp = DataManagement.readWindowData();
         this.report = temp.report;
         this.project_Array = temp.project_Array;
         this.numberproject = temp.numberproject;

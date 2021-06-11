@@ -45,22 +45,6 @@ public class PeopleADT  {
         return false;
     }
 
-    // Save and read data -- Jackson -- JSON --
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData() {
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        PeopleADT temp = dm.readPeopleADTData();
-        this.list = temp.getList();
-    }
-
     // -- Getter & Setter --
     public ArrayList<People> getList() {
         return list;

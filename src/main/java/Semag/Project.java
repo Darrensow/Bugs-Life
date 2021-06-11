@@ -1200,25 +1200,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         JOptionPane.showMessageDialog(null, content, title, JOptionPane.WARNING_MESSAGE);
     }
 
-    // Save and read data -- Jackson -- JSON --
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData() {
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        Project temp = dm.readProjectData();
-        this.ID = temp.ID;
-        this.name = temp.name;
-        this.owner = temp.owner;
-        this.issue = temp.issue;
-    }
-
     // -- Getter methods --
     public ArrayList<Issue> getIssue() {
         return issue;
@@ -1253,10 +1234,6 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    public static void setDm(DataManagement dm) {
-        Project.dm = dm;
     }
 
     public int getNumissue() {

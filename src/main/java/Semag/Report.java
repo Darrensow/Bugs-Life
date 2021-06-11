@@ -1,15 +1,20 @@
 package Semag;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties(value = {"topPerformCumu", "maxSolvedCumu", "topTagsCumu", "maxTagsCumu", "solvedThisWeek", "unsolvedThisWeek", "inProgressThisWeek", "topPerformThisWeek", "maxSolvedThisWeek", "topTagsThisWeek", "maxTagsThisWeek"})
 public class Report {
     // only these five need to save
     private ArrayList<PerformanceCounter> cumuADT = new ArrayList<>(); //cumulative PerformanceCounter
     private ArrayList<TagCounter> cumuLabel = new ArrayList<>();      //cumulative label
-    private Integer cumuSolved;                                      //cumulative solved number
-    private Integer cumuUnsolved;                                   //cumulative unsolved number
-    private Integer cumuInProgress;                                //cumulative in progress number
+    private Integer cumuSolved = 0;                                      //cumulative solved number
+    private Integer cumuUnsolved = 0;                                   //cumulative unsolved number
+    private Integer cumuInProgress = 0;                                //cumulative in progress number
 
-    private String TopPerformCumu = "";         //cumulative top performer
+    @JsonIgnore
+    private String topPerformCumu = "";         //cumulative top performer
     private int maxSolvedCumu = -1;             //his/her performance
     private String topTagsCumu = "";            //cumulative top tags
     private int maxTagsCumu = -1;               //tags' usage
@@ -40,12 +45,12 @@ public class Report {
 
 
     public void finddifferent(Report o) {
-        solvedThisWeek = this.solvedThisWeek - o.getCumuSolved();
-        unsolvedThisWeek = this.cumuSolved - o.getCumuUnsolved();
-        inProgressThisWeek = this.inProgressThisWeek - o.getCumuInProgress();
+        solvedThisWeek = this.getCumuSolved() - o.getCumuSolved();
+        unsolvedThisWeek = this.getCumuUnsolved() - o.getCumuUnsolved();
+        inProgressThisWeek = this.cumuInProgress - o.getCumuInProgress();
 
         for (int i = 0; i < o.cumuADT.size(); i++) {     //previous worker evaluation
-            int difference = this.cumuADT.get(i).getNum_resolved() - o.cumuSolved;
+            int difference = this.cumuADT.get(i).getNum_resolved() - o.cumuADT.get(i).getNum_resolved();
             if (difference > maxSolvedThisWeek) {
                 maxSolvedThisWeek = difference;
                 topPerformThisWeek = this.cumuADT.get(i).getName();
@@ -56,11 +61,15 @@ public class Report {
         }
 
         if(this.cumuADT.size() - o.cumuADT.size() > 0){    //evaluate if there is new guy in the office
-            int newgGuyIndex = o.cumuADT.size() + 1;
+            System.out.println(this.cumuADT.size() - o.cumuADT.size());
+            int newGuyIndex = o.cumuADT.size();
             int newGuyCount = this.cumuADT.size() - o.cumuADT.size();
-
-            for (int i = newgGuyIndex; i <= newGuyCount; i++) {
-                int difference = cumuADT.get(i).getNum_resolved();
+            System.out.println("newguyindex " + newGuyIndex);
+            System.out.println("newGuyCount " + newGuyCount);
+            for (int i = newGuyIndex; i < newGuyIndex+newGuyCount; i++) {
+                System.out.println("i = " + i);
+                System.out.println(newGuyIndex+newGuyCount);
+                int difference = this.cumuADT.get(i).getNum_resolved();
 
                 if (difference > maxSolvedThisWeek) {
                     maxSolvedThisWeek = difference;
@@ -86,10 +95,10 @@ public class Report {
         }
 
         if(this.cumuLabel.size() - o.cumuLabel.size() > 0){    //evaluate if there is new tags
-            int newgTagIndex = o.cumuLabel.size() + 1;
+            int newTagIndex = o.cumuLabel.size() ;
             int newTagCount = this.cumuLabel.size() - o.cumuLabel.size();
 
-            for (int i = newgTagIndex; i <= newTagCount; i++) {
+            for (int i = newTagIndex; i < newTagIndex+newTagCount; i++) {
 
                 int difference = cumuLabel.get(i).getTotal();
 
@@ -107,9 +116,9 @@ public class Report {
         for (int i = 0; i < cumuADT.size(); i++) {
             if (cumuADT.get(i).getNum_resolved() > maxSolvedCumu) {
                 maxSolvedCumu = cumuADT.get(i).getNum_resolved();
-                TopPerformCumu = cumuADT.get(i).getName();
+                topPerformCumu = cumuADT.get(i).getName();
             } else if (cumuADT.get(i).getNum_resolved() == maxSolvedCumu && maxSolvedCumu > 0) {
-                TopPerformCumu += cumuADT.get(i).getName() + "; ";
+                topPerformCumu += cumuADT.get(i).getName() + "; ";
             }
         }
 
@@ -127,7 +136,7 @@ public class Report {
     //-- Information to generate report, & do not need to save in json. --
     //-- Another 3 info at below. --
     public String getTopPerformCumu() {
-        return TopPerformCumu;
+        return topPerformCumu;
     }
 
     public int getMaxSolvedCumu() {

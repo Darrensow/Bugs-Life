@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * JSON File saving using Jackson library
@@ -18,47 +19,17 @@ import java.io.IOException;
      * Once done, call the saveData() in the specific classes to load the data into the JSON file.
  */
 
-public class DataManagement {
+public final class DataManagement {
 
     /*
-     * Below are all methods to save data into JSON File.
-     * All receives parameters of object and will straight away write into their separate JSON fileNames
-     * Have to create a method in
+        * Below these two methods are used to read and write data into and out of the Window.json file.
      */
 
-
-
-    public void writeData(Project obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Project.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeData(TagCounter obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("TagCounter.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeData(User obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("User.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeData(Window obj) {
+    /**
+     * Method to use Jackson's ObjectMapper to map POJO to Json objects with the destination file name of "Window.json"
+     * @param obj The window class instance to save
+     */
+    public static void writeData(Window obj) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -68,120 +39,16 @@ public class DataManagement {
         }
     }
 
-    public void writeData(Issue obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Issue.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeData(Comment obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("Comment.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeData(PeopleADT obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("bla.json"), obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * Below are all methods to read data into JSON File.
-     * All will read the individual JSON file and return the object.
-     * Have to refer to the object itself using 'this' keyword.
+    /**
+     * Method using Jackson's ObjectMapper to map Json objects back to POJO with the source file name of "Window.json"
+     * @return A Window class POJO that has all the data in "Window.json" loaded into it
      */
-
-
-    public Project readProjectData() {
-        Project returnObj = new Project();
-        try {
-            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Project.class).readValue(new File("Project.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public TagCounter readLabelCounterData() {
-        TagCounter returnObj = new TagCounter();
-        try {
-            returnObj = new ObjectMapper().readerFor(TagCounter.class).readValue(new File("TagCounter.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public User readUserData() {
-        User returnObj = new User();
-        try {
-            returnObj = new ObjectMapper().readerFor(User.class).readValue(new File("User.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public Window readWindowData() {
+    public static Window readWindowData() {
         Window returnObj = new Window();
         try {
             returnObj = new ObjectMapper().readerFor(Window.class).readValue(new File("Window.json"));
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public Issue readIssueData() {
-        Issue returnObj = new Issue();
-        try {
-            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Issue.class).readValue(new File("Issue.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public Comment readCommentData() {
-        Comment returnObj = new Comment();
-        try {
-            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Comment.class).readValue(new File("Comment.json"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return returnObj;
-    }
-
-    public PeopleADT readPeopleADTData() {
-        PeopleADT returnObj = new PeopleADT();
-        try {
-            returnObj = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readerFor(Comment.class).readValue(new File("PeopleADT.json"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -1294,12 +1294,6 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     }
 
     /*
-        -- Save and read data -- Jackson -- JSON --
-     */
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
-    /*
         -- Getter and setter methods --
      */
     public ArrayList<String> getChangelog() {

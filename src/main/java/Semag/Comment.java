@@ -33,9 +33,8 @@ public class Comment {
         }
     };
 
-    //empty constructor
-    public Comment() {
-    }
+    ///// Empty constructor /////
+    public Comment() {}
 
     /**
      * Constructor with three parameters
@@ -70,6 +69,9 @@ public class Comment {
         return str + "\n";
     }
 
+    /*
+        * These four methods are used to display out the count of the reaction
+     */
     public int happycount() {
         return counter.get("happy").size();
     }
@@ -86,13 +88,12 @@ public class Comment {
         return counter.get("likes").size();
     }
 
-
-    /*
-        -- Save and read data -- Jackson -- JSON --
+    /**
+     * Method to check whether the user has reacted before
+     * @param reaction The reaction
+     * @param username Username to be checked
+     * @return True if the user reacted on the reaction.
      */
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
     public boolean reactedBefore(String reaction, String username) {
         if (reaction == null) {
             throw new NullPointerException("Reaction cannot be null");
@@ -103,6 +104,11 @@ public class Comment {
         return counter.get(reaction).contains(username);
     }
 
+    /**
+     * Method to check if the user can react.
+     * @param username Username
+     * @return True if can react, false otherwise
+     */
     public boolean canReact(String username) {
         return !reactedBefore("happy", username) && !reactedBefore("angry", username)
                 && !reactedBefore("likes", username) && !reactedBefore("dislikes", username);
@@ -124,41 +130,21 @@ public class Comment {
 
     /**
      * This method will remove the reaction through hashmap
-     *
-     * @param reaction
-     * @param username
+     * @param reaction The reaction the user reacted on
+     * @param username Username of the person who reacted, used to add and check
      */
     public void addReaction(String reaction, String username) {
-//        System.out.println("Username " + username);
         if (canReact(username)) {                                           // User has no reaction to a particular comment
-//            System.out.println("Username react " + canReact(username) + " " + reaction);
             counter.get(reaction).add(username);                            // Add the reaction
         } else {
             if (reactedReaction(username).equals(reaction)) {               // User clicks on the same button
                 counter.get(reactedReaction(username)).remove(username);    // Removes the reaction
             } else {                                                        // User clicks on other buttons
-//                System.out.println("Username removed " + canReact(username) + " " + reaction);
                 counter.get(reactedReaction(username)).remove(username);    // Removes
                 counter.get(reaction).add(username);                        // Add new reaction
             }
         }
     }
-
-
-    public boolean a(String now, String name) {
-        String[] a = {"happy", "angry", "dislike", "like"};
-        for (int i = 0; i < a.length; i++) {
-            if (!now.equals(a[i])) {
-                if (reactedBefore(a[i], name)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
-
 
     /*
         --- Mutator methods ---
@@ -183,10 +169,10 @@ public class Comment {
     public File getImage_file() {
         return image_file;
     }
+
     /*
         --- Accessor methods ---
      */
-
 
     public int getID() {
         return ID;

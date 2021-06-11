@@ -103,23 +103,6 @@ public class User implements ActionListener {
         return -1;
     }
 
-    // Save and read data -- Jackson -- JSON --
-    @JsonIgnore
-    private static DataManagement dm = new DataManagement();
-
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData() {
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        User temp = dm.readUserData();
-        this.people_array = temp.people_array;
-        this.ID = temp.ID;
-    }
-
     // -- Getter and setter methods --
     public PeopleADT getPeople_array() {
         return people_array;
