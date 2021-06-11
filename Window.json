@@ -254,8 +254,8 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ ],
-          "dislikes" : [ "ang" ],
-          "angry" : [ ],
+          "dislikes" : [ ],
+          "angry" : [ "ang" ],
           "likes" : [ ]
         },
         "id" : 1
@@ -269,8 +269,26 @@
     "name" : "Minecraft ",
     "owner" : "mandy",
     "id" : 3
+  }, {
+    "issue" : [ ],
+    "numissue" : 0,
+    "name" : "Enter Project Nameaasdasd",
+    "owner" : "ang",
+    "id" : 4
+  }, {
+    "issue" : [ ],
+    "numissue" : 0,
+    "name" : "asdas",
+    "owner" : "ang",
+    "id" : 5
+  }, {
+    "issue" : [ ],
+    "numissue" : 0,
+    "name" : "asdasd",
+    "owner" : "ang",
+    "id" : 6
   } ],
-  "numberproject" : 4,
+  "numberproject" : 7,
   "people_Array_replica" : {
     "list" : [ {
       "newAssignedNotification" : [ {

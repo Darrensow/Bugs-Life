@@ -282,7 +282,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         image.setBounds(750, 0, 100, 50);
         image.setFocusable(true);
         image.addMouseListener(this);
-        image.setBackground(Color.red);
+        image.setBackground(Color.getHSBColor(19, 95, 100));
         image.setOpaque(true);
 
         //build add comment scroll
@@ -317,12 +317,12 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         open_changelog.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         open_changelog.setText("Open Changelog");
         open_changelog.addActionListener(this);
-        open_changelog.setBackground(Color.CYAN);
+        open_changelog.setBackground(Color.getHSBColor(19, 54, 100));
         open_changelog.setOpaque(true);
         //build issue show text
         mid_panel.setVisible(true);
         mid_panel.setPreferredSize(new Dimension(1000, 100000));
-        mid_panel.setBackground(Color.CYAN);
+        mid_panel.setBackground(Color.getHSBColor(19, 54, 100));
         mid_panel.setOpaque(true);
         mid_panel.setLayout(new FlowLayout());
         //builf issue scroll
@@ -347,7 +347,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         issue_des_panel.setVisible(true);
         issue_des_panel.setBounds(0, 0, 1100, 200);
         issue_des_panel.setLayout(null);
-        issue_des_panel.setBackground(Color.red);
+        issue_des_panel.setBackground(Color.getHSBColor(19, 95, 100));
         issue_des_panel.setOpaque(true);
         // add scroll to panel
         issue_des_panel.add(issue_descrip_sp);
@@ -355,7 +355,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         frame.add(issue_des_panel);
         //build edit panel
         edit_panel.setBounds(0, 80, 1000, 600);
-        edit_panel.setBackground(Color.yellow);
+        edit_panel.setBackground(Color.getHSBColor(19, 54, 100));
         edit_panel.setOpaque(true);
         edit_panel.setLayout(null);
         edit_panel.setVisible(false);
@@ -379,7 +379,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         edit_priop_title.setVisible(true);
         edit_priop_title.setBounds(800, 0, 100, 50);
         edit_priop_title.setFont(new Font("TimesRoman", Font.PLAIN, 12));
-        edit_priop_title.setBackground(Color.yellow);
+        edit_priop_title.setBackground(Color.getHSBColor(19, 54, 100));
         edit_priop_title.setOpaque(true);
         //build status
         edit_status.setBounds(900, 100, 100, 50);
@@ -526,7 +526,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             comment_panel.add(new JPanel());
             comment_panel.get(i).setLayout(null);
             comment_panel.get(i).setPreferredSize(new Dimension(900, 300));
-            comment_panel.get(i).setBackground(Color.YELLOW);
+            comment_panel.get(i).setBackground(Color.getHSBColor(19, 54, 100));
             comment_panel.get(i).setOpaque(true);
             comment_panel.get(i).setVisible(true);
             //build comment

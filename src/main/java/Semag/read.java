@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class read implements Runnable {
     
-     private DataInputStream dis;
+    private DataInputStream dis;
     Thread t;
     ChatWindow gui;
 

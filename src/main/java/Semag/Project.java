@@ -198,16 +198,16 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         // build the included title and button
         //title
         include_text.setText("Include Tags");
-        include_text.setBackground(Color.black);
+        include_text.setBackground(Color.getHSBColor(342, 61, 100));
         include_text.setOpaque(true);
         include_text.setVisible(true);
-        include_text.setForeground(Color.YELLOW);
+        include_text.setForeground(Color.blue);
         include_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
         include_text.setBounds(0, 0, 160, 35);
         include_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
         include_title = new JPanel();
-        include_title.setBackground(Color.black);
+        include_title.setBackground(Color.getHSBColor(342, 61, 100));
         include_title.setOpaque(true);
         include_title.setVisible(true);
         include_title.setLayout(null);
@@ -215,17 +215,17 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_title.add(include_text);
 
         //build exclude title and button
-        exclude_text.setText("Enclude Tags");
-        exclude_text.setBackground(Color.black);
+        exclude_text.setText("Exclude Tags");
+        exclude_text.setBackground(Color.getHSBColor(342, 61, 100));
         exclude_text.setOpaque(true);
         exclude_text.setVisible(true);
-        exclude_text.setForeground(Color.YELLOW);
+        exclude_text.setForeground(Color.blue);
         exclude_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
         exclude_text.setBounds(0, 0, 160, 35);
         exclude_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
         exluded_title = new JPanel();
-        exluded_title.setBackground(Color.black);
+        exluded_title.setBackground(Color.getHSBColor(342, 61, 100));
         exluded_title.setOpaque(true);
         exluded_title.setVisible(true);
         exluded_title.setLayout(null);
@@ -233,7 +233,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         exluded_title.add(exclude_text);
         //build the right_up black panel
         //build panel
-        black_panel_up.setBackground(Color.black);
+        black_panel_up.setBackground(Color.getHSBColor(342, 61, 100));
         black_panel_up.setPreferredSize(new Dimension(160, 2000));
         black_panel_up.setLayout(new FlowLayout());
         black_panel_up.setVisible(true);
@@ -245,7 +245,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
         //build the right_down black panel
         //build panel
-        black_panel_down.setBackground(Color.black);
+        black_panel_down.setBackground(Color.getHSBColor(342, 61, 100));
         black_panel_down.setPreferredSize(new Dimension(160, 2000));
         black_panel_down.setLayout(new FlowLayout());
         black_panel_down.setVisible(true);
@@ -257,7 +257,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
         ///
         include_state_text.setText("Include State");
-        include_state_text.setBackground(Color.GREEN);
+        include_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         include_state_text.setOpaque(true);
         include_state_text.setVisible(true);
         include_state_text.setForeground(Color.BLUE);
@@ -266,7 +266,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_state_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
         include_state_title = new JPanel();
-        include_state_title.setBackground(Color.GREEN);
+        include_state_title.setBackground(Color.getHSBColor(342, 61, 100));
         include_state_title.setOpaque(true);
         include_state_title.setVisible(true);
         include_state_title.setLayout(null);
@@ -274,8 +274,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_state_title.add(include_state_text);
 
         //build exclude title and button
-        exclude_state_text.setText("Enclude State");
-        exclude_state_text.setBackground(Color.GREEN);
+        exclude_state_text.setText("Exclude State");
+        exclude_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         exclude_state_text.setOpaque(true);
         exclude_state_text.setVisible(true);
         exclude_state_text.setForeground(Color.BLUE);
@@ -284,7 +284,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         exclude_state_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
         exluded_state_title = new JPanel();
-        exluded_state_title.setBackground(Color.GREEN);
+        exluded_state_title.setBackground(Color.getHSBColor(342, 61, 100));
         exluded_state_title.setOpaque(true);
         exluded_state_title.setVisible(true);
         exluded_state_title.setLayout(null);
@@ -292,7 +292,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         exluded_state_title.add(exclude_state_text);
         //build the right_up black panel
         //build panel
-        green_panel_up.setBackground(Color.GREEN);
+        green_panel_up.setBackground(Color.getHSBColor(342, 61, 100));
         green_panel_up.setPreferredSize(new Dimension(160, 2000));
         green_panel_up.setLayout(new FlowLayout());
         green_panel_up.setVisible(true);
@@ -304,7 +304,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
         //build the right_down black panel
         //build panel
-        green_panel_down.setBackground(Color.GREEN);
+        green_panel_down.setBackground(Color.getHSBColor(342, 61, 100));
         green_panel_down.setPreferredSize(new Dimension(160, 2000));
         green_panel_down.setLayout(new FlowLayout());
         green_panel_down.setVisible(true);

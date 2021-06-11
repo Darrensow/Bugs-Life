@@ -129,7 +129,7 @@ public class User implements ActionListener {
         label.setVisible(true);
 
         //builf login panel
-        login_panel.setBackground(Color.black);
+        login_panel.setBackground(Color.getHSBColor(42, 56, 100));
         login_panel.setOpaque(true);
         login_panel.setLayout(null);
         login_panel.setBounds(500, 200, 300, 300);
@@ -183,7 +183,7 @@ public class User implements ActionListener {
         login_panel.add(login_label);
         login_panel.add(login_in);
 //build register panel
-        register_panel.setBackground(Color.black);
+        register_panel.setBackground(Color.getHSBColor(42, 56, 100));
         register_panel.setOpaque(true);
         register_panel.setLayout(null);
         register_panel.setBounds(500, 200, 300, 400);

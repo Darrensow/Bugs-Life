@@ -210,10 +210,11 @@ public class Window implements ActionListener {
         option_button1.addItem("sort based on Name");
         option_button1.addItem("sort based on Issue count");
         option_button1.setBounds(850, 0, 150, 35);
+        option_button1.setBackground(Color.getHSBColor(47, 47, 100));
         option_button1.setVisible(true);
         option_button1.addActionListener(this);
 
-        panel1.setBackground(Color.BLUE);
+        panel1.setBackground(Color.getHSBColor(36, 81, 100));
         panel1.setOpaque(true);
         panel1.setLayout(null);
         panel1.setBounds(300, 100, 700, 500);
@@ -261,7 +262,7 @@ public class Window implements ActionListener {
         setting_option_button.setBounds(700, 0, 150, 35);
         setting_option_button.setFont(new java.awt.Font("TimesRoman", java.awt.Font.PLAIN, 12));
         setting_option_button.addActionListener(this);
-        setting_option_button.setBackground(Color.CYAN);
+        setting_option_button.setBackground(Color.getHSBColor(47, 47, 100));
         setting_option_button.setOpaque(true);
 
         //build notification button
@@ -471,7 +472,7 @@ public class Window implements ActionListener {
 
         // the notication panel
         panel_notification.setPreferredSize(new Dimension(300, 2000));
-        panel_notification.setBackground(Color.green);
+        panel_notification.setBackground(Color.getHSBColor(87, 69, 100));
         panel_notification.setLayout(new FlowLayout());
         panel_notification.setVisible(true);
 

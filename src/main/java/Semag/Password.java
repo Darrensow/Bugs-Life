@@ -105,13 +105,4 @@ public class Password  {
         return true;
 
     }
-
-    public boolean issecure(String password) {
-        if (password.equals("is secure")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }
