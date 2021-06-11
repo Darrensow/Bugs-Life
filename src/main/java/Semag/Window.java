@@ -630,7 +630,7 @@ public class Window implements ActionListener {
             }
         });
         frame.setIconImage(konoha.getImage());
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);
@@ -943,13 +943,11 @@ public class Window implements ActionListener {
                 if (e.getSource() == accept_a.get(i)) {
                     each_notification_panel_a.get(i).setVisible(false);
                     each_notification_panel_a.remove(i);
-                    System.out.println(notification.get(i));
                     notification.remove(i);
                     accept_a.remove(i);
                     ignore_a.remove(i);
                     frame.repaint();
-                    //need to add index
-                    System.out.println("accept " + i);
+                    current_people.dismissAndRemove(i);
                 }
             }
         }
@@ -962,8 +960,6 @@ public class Window implements ActionListener {
                     accept_a.remove(i);
                     ignore_a.remove(i);
                     frame.repaint();
-                    //need to add index
-                    System.out.println("ignore " + i);
                 }
             }
         }

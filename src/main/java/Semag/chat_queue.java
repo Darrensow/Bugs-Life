@@ -16,12 +16,6 @@ public class chat_queue<E>  {
 
     private LinkedList<E> list = new LinkedList<>();
 
-    public chat_queue(E[] e) {
-        for (int i = 0; i < e.length; i++) {
-            enqueue(e[i]);
-        }
-    }
-
     public chat_queue() {
     }
 
@@ -33,22 +27,10 @@ public class chat_queue<E>  {
         return list.removeFirst();
     }
 
-    public E getElement(int i) {  // just get the element without remove
-        return list.get(i);
-
-    }
-
-    public E peek() { // just get first element without remove
-        return list.peek();
-    }
-
-    public int getSize() {
+   public int getSize() {
         return list.size();
     }
 
-    public boolean contains(E e) {
-        return list.contains(e);
-    }
 
     public boolean isEmpty() {
         return list.isEmpty();

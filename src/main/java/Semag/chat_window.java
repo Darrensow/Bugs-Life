@@ -62,9 +62,6 @@ public class chat_window implements ActionListener, MouseListener {
     DataOutputStream dos;
     read read;
 
-    public chat_window(int num) {
-
-    }
 
     public chat_window(DataInputStream dis, DataOutputStream dos) {
         this.dis = dis;
@@ -83,7 +80,7 @@ public class chat_window implements ActionListener, MouseListener {
             }
         });
         frame.setIconImage(app_icon.getImage());
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(690, 700);
 
         title.setBackground(Color.red);
@@ -124,9 +121,6 @@ public class chat_window implements ActionListener, MouseListener {
 
     }
 
-    public String getStr() {
-        return str;
-    }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == button) {

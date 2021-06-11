@@ -145,7 +145,7 @@ public class User implements ActionListener {
         frame.setTitle("login_register");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(konoha.getImage());
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);

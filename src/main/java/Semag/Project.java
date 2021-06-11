@@ -325,7 +325,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             }
         });
         frame.setIconImage(konoha.getImage());
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);

@@ -56,25 +56,13 @@ public class People  {
         addAssigned();
     }
 
-    public void displayNewAssigned() {
-        if (!newAssignedNotification.isEmpty()) {
-            for (int i = newAssignedNotification.size(); i < 0; i--) {
-                if (newAssignedNotification.get(i).isAccepted() == false) {
-                    System.out.println(newAssignedNotification.get(i).getIssueInfo());
-                }
-            }
-            System.out.println("Choose Issue to be accepted(starting from 1): ");
-            acceptAssign(sc.nextInt());
-        }
-    }
-
     /**
      * Set the selected Issue to accepted, according to index
      *
      * @param select
      */
-    public void acceptAssign(int select) {
-        newAssignedNotification.get(newAssignedNotification.size() - select + 1).setAccepted(true);
+    public void dismissAndRemove(int select) {
+        newAssignedNotification.remove(select);
     }
 
     public void addResolved() {
@@ -156,7 +144,6 @@ public class People  {
 class AssignedIssue {
 
     private String IssueInfo = "";
-    private boolean accepted;
 
     public AssignedIssue() {
     }
@@ -167,23 +154,14 @@ class AssignedIssue {
         IssueInfo += String.format("Issue ID: %5d", IssueID);
         IssueInfo += String.format("Issue Name: %20s\n", IssueTitle);
         IssueInfo += String.format("Assigned by: %20s\n", creator);
-        accepted = false;
     }
-
     //Get the assigned Issue Info
     public String getIssueInfo() {
         return IssueInfo;
-    }
-
-    public boolean isAccepted() {
-        return accepted;
     }
 
     public void setIssueInfo(String issueInfo) {
         IssueInfo = issueInfo;
     }
 
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
 }

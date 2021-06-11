@@ -51,7 +51,7 @@
         "timestamp" : "09/08/2019 00:00:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [  ],
+          "happy" : [ ],
           "dislikes" : [ ],
           "angry" : [ "ang" ],
           "likes" : [ ]
@@ -63,9 +63,9 @@
         "timestamp" : "09/08/2019 05:55:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [  ],
+          "happy" : [ ],
           "dislikes" : [ "ang" ],
-          "angry" : [  ],
+          "angry" : [ ],
           "likes" : [ ]
         },
         "id" : 1
@@ -75,9 +75,9 @@
         "timestamp" : "10/08/2019 09:41:40 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [  ],
-          "dislikes" : [  ],
-          "angry" : [  ],
+          "happy" : [ ],
+          "dislikes" : [ ],
+          "angry" : [ ],
           "likes" : [ "jhoe" ]
         },
         "id" : 2
@@ -108,9 +108,9 @@
         "timestamp" : "07/10/2019 13:00:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [  ],
+          "happy" : [ ],
           "dislikes" : [ "btan", "liew" ],
-          "angry" : [  ],
+          "angry" : [ ],
           "likes" : [ "jhoe" ]
         },
         "id" : 0
@@ -120,9 +120,9 @@
         "timestamp" : "07/10/2019 17:00:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [  ],
-          "dislikes" : [  ],
-          "angry" : [  ],
+          "happy" : [ ],
+          "dislikes" : [ ],
+          "angry" : [ ],
           "likes" : [ "liew" ]
         },
         "id" : 1
@@ -133,9 +133,9 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ "btan" ],
-          "dislikes" : [  ],
-          "angry" : [  ],
-          "likes" : [  ]
+          "dislikes" : [ ],
+          "angry" : [ ],
+          "likes" : [ ]
         },
         "id" : 2
       } ],
@@ -160,9 +160,9 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ "btan", "liew" ],
-          "dislikes" : [  ],
-          "angry" : [  ],
-          "likes" : [  ]
+          "dislikes" : [ ],
+          "angry" : [ ],
+          "likes" : [ ]
         },
         "id" : 0
       }, {
@@ -172,9 +172,9 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ "btan", "liew", "ang", "ally" ],
-          "dislikes" : [  ],
-          "angry" : [  ],
-          "likes" : [  ]
+          "dislikes" : [ ],
+          "angry" : [ ],
+          "likes" : [ ]
         },
         "id" : 1
       } ],
@@ -205,8 +205,8 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ "ang", "ally" ],
-          "dislikes" : [  ],
-          "angry" : [  ],
+          "dislikes" : [ ],
+          "angry" : [ ],
           "likes" : [ "btan", "liew" ]
         },
         "id" : 0
@@ -216,9 +216,9 @@
         "timestamp" : "10/03/2020 23:56:06 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : ["ally" ],
-          "dislikes" : [  ],
-          "angry" : [  ],
+          "happy" : [ "ally" ],
+          "dislikes" : [ ],
+          "angry" : [ ],
           "likes" : [ "btan", "liew" ]
         },
         "id" : 1
@@ -250,8 +250,8 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ ],
-          "dislikes" : [  ],
-          "angry" : [  ],
+          "dislikes" : [ ],
+          "angry" : [ ],
           "likes" : [ ]
         },
         "id" : 1
@@ -318,5 +318,6 @@
     } ]
   },
   "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report" ],
-  "numberOfUsers" : 5
+  "numberOfUsers" : 5,
+  "report" : null
 }

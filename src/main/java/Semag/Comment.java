@@ -70,17 +70,6 @@ public class Comment {
         return str + "\n";
     }
 
-    //helper method for toString(), returns a String representation of all the reactions
-    private String reactionsToString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n$$ Reactions: ");
-        sb.append("happy: " + counter.get("happy"));
-        sb.append(" | angry: " + counter.get("angry"));
-        sb.append(" | likes: " + counter.get("likes"));
-        sb.append(" | dislikes: " + counter.get("dislikes"));
-        return sb.toString();
-    }
-
     public int happycount() {
         return counter.get("happy").size();
     }
@@ -97,36 +86,12 @@ public class Comment {
         return counter.get("likes").size();
     }
 
-    public String displayComment() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("#").append(getID()).append("\t");
-        sb.append("Created on: ").append(getTimestamp()).append("\t");
-        sb.append("By: ").append(getCreatedBy()).append("\n");
-        sb.append(getText());
-        return sb.toString();
-    }
 
     /*
         -- Save and read data -- Jackson -- JSON --
      */
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
-
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData() {
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        Comment temp = dm.readCommentData();
-        this.image_file = temp.image_file;
-        this.ID = temp.ID;
-        this.text = temp.text;
-        this.counter = temp.counter;
-        this.timestamp = temp.timestamp;
-    }
 
     public boolean reactedBefore(String reaction, String username) {
         if (reaction == null) {

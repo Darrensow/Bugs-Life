@@ -334,7 +334,6 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             sb.append("   - ").append(statusStr);
         }
         sb.append("\n");
-        System.out.println(sb.toString());
         this.changelog.add(sb.toString());
     }
 
@@ -407,7 +406,6 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         sb.append("      Original : ").append(showAllTags(this.tag)).append("\n");         // append original tags
         sb.append("      Edited   : ").append(showAllTags(updatedTags)).append("\n");      // append new tags
         this.tag = updatedTags;                                                     // update the tags array with the new tags
-//        this.changelog.add(sb.toString());                                          // add change description changelog
         return sb.toString();
     }
 
@@ -499,70 +497,8 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     }
 
 
-//     private String updateStatus(String change){
-//         StringBuilder sb = new StringBuilder();
-//        String originalStatus = this.getStatus();
-//        originalStatus.equals(change);
-//     }
 
-    /**
-     * Add the change description to the changeLog ArrayList
-     *
-     * @param changedDescription The description detailing the changes made. If
-     *                           the String is "", then it will not be added.
-     * @return True if successfully added to the changeLog, false otherwise.
-     */
-    private boolean addChangeLog(String changedDescription) {
-        if (!changedDescription.equals("")) {
-            this.changelog.add(changedDescription);
-            return true;
-        }
-        return false;
-    }
 
-    /**
-     * A method that returns the String representation of the change log
-     *
-     * @return String representation of the change log
-     */
-    public String returnChangeLog() {
-        StringBuilder sb = new StringBuilder();
-        for (String s : this.changelog) {
-            sb.append(s).append("\n");
-        }
-        return sb.toString();
-    }
-
-    /**
-     * A window to show the changelog
-     */
-    public void viewChangelog() {
-        print();
-    }
-
-    /**
-     * This method is overloading.
-     *
-     * @return String representation of the whole comment section.
-     */
-    public String displayCommentsSection() {
-        return displayCommentsSection(this);
-    }
-
-    /**
-     * Displays the whole comment section. Regarding the wrapping of the text,
-     * have to modify the toString() in Comment class
-     *
-     * @return String representation of the whole comment section.
-     */
-    public String displayCommentsSection(Issue o) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Comments\n-----------\n");
-        for (Comment value : comments) {
-            sb.append(value).append("\n");
-        }
-        return sb.toString();
-    }
 
     public void print() {
         print(this);
@@ -683,7 +619,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             }
         });
         frame.setIconImage(konoha.getImage());
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setSize(1350, 730);
         frame.setLayout(null);
         frame.setVisible(true);
@@ -804,7 +740,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         mid_panel.setOpaque(true);
         mid_panel.setLayout(new FlowLayout());
         //builf issue scroll
-        issue_scroll.setBounds(0, 200, 1000, 450);
+        issue_scroll.setBounds(0, 200, 1100, 450);
         issue_scroll.setVisible(true);
         issue_scroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
         issue_scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
@@ -939,15 +875,6 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     public void set_tags(String tags) {
         edit_tags.setText(tags);
-    }
-
-    public void edit_descrip(String descrip) {
-        edit_descrip.setText(descrip);
-    }
-
-    public void setissue_desrip(String str) {
-        issue_descrip.setText(str);
-        frame.repaint();
     }
 
     public void set_comment(ArrayList<Comment> com) {
@@ -1371,27 +1298,6 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
      */
     @JsonIgnore
     private static DataManagement dm = new DataManagement();
-
-    /**
-     * Method to save data, calls the writeData method in DataManagement Class
-     */
-    public void saveData() {
-        dm.writeData(this);
-    }
-
-    public void loadData() {
-        Issue temp = dm.readIssueData();
-        this.ID = temp.ID;
-        this.title = temp.title;
-        this.descriptionText = temp.descriptionText;
-        this.creator = temp.creator;
-        this.assignee = temp.assignee;
-        this.comments = temp.comments;
-        this.timestamp = temp.timestamp;
-        this.tag = temp.tag;
-        this.priority = temp.priority;
-        this.status = temp.status;
-    }
 
     /*
         -- Getter and setter methods --

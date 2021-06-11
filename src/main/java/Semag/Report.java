@@ -18,9 +18,9 @@ public class Report {
     private Integer cum_inprogress;
 
     private String top_perform = "";  // no need store
-    private Integer max = -1;             //no
+    private Integer max = -1;         //no
     private String tags = "";         // no
-    private Integer max_tags = -1;        //no
+    private Integer max_tags = -1;    //no
 
    private String cum_topperform = "";
     private int cum_toperform_max = -1;
