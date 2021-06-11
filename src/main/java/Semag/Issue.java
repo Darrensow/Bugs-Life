@@ -310,12 +310,15 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
     //Method to add the changes made to the ChangeLog
     private void updateChangeLog(int priorityFromGUI, String tagsFromGUI, String descriptionFromGUI, String statusFromGUI) {
         StringBuilder sb = new StringBuilder();
-        sb.append("========= Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append(" ==========\n");
 
         String priorityStr = updatePriorityGUI(priorityFromGUI);
         String tagsStr = updateTagsGUI(tagsFromGUI);
         String textStr = updateTextGUI(descriptionFromGUI);
         String statusStr = updateStatusGUI(statusFromGUI);
+
+        if (!priorityStr.equals("") || !tagsStr.equals("") || !textStr.equals("") || !statusStr.equals("")) {
+            sb.append("========= Time : ").append(new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000))).append(" ==========\n");
+        }
 
         //If "", then points out that no changes were made.
         if (!priorityStr.equals("")) {
