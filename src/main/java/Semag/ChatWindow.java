@@ -53,13 +53,13 @@ public class ChatWindow implements ActionListener, MouseListener {
     read read;
 
 
-    public ChatWindow(DataInputStream dis, DataOutputStream dos) {
+    public ChatWindow(DataInputStream dis, DataOutputStream dos, String name ) {
         this.dis = dis;
         this.dos = dos;
         read = new read(dis, this);
         ImageIcon app_icon = new ImageIcon("whatapps icon.jpg");
         frame.setLayout(null);
-        frame.setTitle("Chat window");
+        frame.setTitle("Chat window ( "+name +" )");
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 try {

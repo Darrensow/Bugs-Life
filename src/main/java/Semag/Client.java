@@ -47,7 +47,7 @@ public class Client {
             int code = Integer.parseInt(code_string);
             dos.writeInt(code);
         }
-        new ChatWindow(dis, dos);
+        new ChatWindow(dis, dos,people.getName());
 
     }
 

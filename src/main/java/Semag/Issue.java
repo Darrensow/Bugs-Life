@@ -648,6 +648,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
             add_comment.setVisible(true);
             numberOfComments++;
             comments.add(new Comment(current_people.getName(), add_comment_text.getText(), numberOfComments, image_file));
+            image_file=null;
             add_comment_text.setText("Enter comment there");
             insert_image = new ImageIcon();
             insert_image_button.setEnabled(true);
