@@ -1,6 +1,9 @@
 package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.inet.jortho.PopupListener;
+import com.inet.jortho.SpellChecker;
+import com.inet.jortho.SpellCheckerOptions;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,6 +12,7 @@ import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
@@ -136,7 +140,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 //add comment  // change properties //react done //quit // variable bolean,arraylist<integer>
 
 
-    public void issueWindow(People current_people, JFrame frame) {  //return one index ,int 0,1  arraylist<integer>
+    public void issueWindow(People current_people, JFrame frame) throws MalformedURLException {  //return one index ,int 0,1  arraylist<integer>
         this.current_people = current_people;
         project_frame = frame;
 
@@ -192,7 +196,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
 
     //gui method
-    public void setupWindow() {
+    public void setupWindow() throws MalformedURLException {
 
         //build window
         ImageIcon konoha = new ImageIcon("doge.png");
@@ -234,6 +238,16 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         add_comment_title.setBackground(faafa5);
         add_comment_title.setOpaque(true);
         //build add comment text
+
+        SpellChecker.registerDictionaries(new File("languages").toURI().toURL(), "en");
+        SpellCheckerOptions sco = new SpellCheckerOptions();
+        sco.setCaseSensitive(false);
+        sco.setSuggestionsLimitMenu(10);
+        sco.setLanguageDisableVisible(false);
+        sco.setIgnoreAllCapsWords(true);
+        JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
+        SpellChecker.register(add_comment_text);
+        add_comment_text.addMouseListener(new PopupListener(popup));
         add_comment_text.setVisible(true);
         add_comment_text.setPreferredSize(new Dimension(900, 100000));
         add_comment_text.setEditable(true);
@@ -389,6 +403,16 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         edit_status.setFocusable(true);
         edit_status.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         //build description text
+
+        SpellChecker.registerDictionaries(new File("languages").toURI().toURL(), "en");
+        SpellCheckerOptions sco2 = new SpellCheckerOptions();
+        sco.setCaseSensitive(false);
+        sco.setSuggestionsLimitMenu(10);
+        sco.setLanguageDisableVisible(false);
+        sco.setIgnoreAllCapsWords(true);
+        JPopupMenu popup2 = SpellChecker.createCheckerPopup(sco2);
+        SpellChecker.register(edit_descrip);
+        edit_descrip.addMouseListener(new PopupListener(popup2));
         edit_descrip.setVisible(true);
         edit_descrip.setEditable(true);
         edit_descrip.setPreferredSize(new Dimension(900, 10000));

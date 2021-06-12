@@ -1,5 +1,10 @@
 package Semag;
 
+import com.inet.jortho.FileUserDictionary;
+import com.inet.jortho.SpellChecker;
+
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,4 +32,5 @@ public class SEMAG{
         };
         thread.start();
     }
+
 }

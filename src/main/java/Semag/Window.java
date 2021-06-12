@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
@@ -154,7 +155,11 @@ public class Window implements ActionListener {
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
                 if (in_delete_mode != true) {
-                    enterTheProjext(value);
+                    try {
+                        enterTheProjext(value);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     deleteProject(value);
                     current_project_Array = project_Array;
@@ -675,7 +680,7 @@ public class Window implements ActionListener {
     /**
      * @param ID project index enter project window
      */
-    public void enterTheProjext(int ID) {
+    public void enterTheProjext(int ID) throws MalformedURLException {
         frame.setVisible(false);
         obtainProjectOfID(ID).projectWindow(current_people, frame);
     }

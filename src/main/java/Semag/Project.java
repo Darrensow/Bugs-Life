@@ -2,6 +2,10 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.inet.jortho.FileUserDictionary;
+import com.inet.jortho.PopupListener;
+import com.inet.jortho.SpellChecker;
+import com.inet.jortho.SpellCheckerOptions;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,7 +80,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     JButton reundo = new JButton();
     String[] list_priority = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     JButton submit = new JButton("SUBMIT");
-    String[] sort_option = {"Sort based ID","Sort based Title", "Sort based priority", "Sort based timestamp"};
+    String[] sort_option = {"Sort based ID", "Sort based Title", "Sort based priority", "Sort based timestamp"};
 
     String[] column = {"ID", "Title", "Status", "Tag", "Priority", "Time", "Assignee", "CreatedBy"};
     boolean exit = false;
@@ -113,11 +119,10 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     }
 
 
-
     /**
      * @param current_people determine whether is owner or not
      */
-    public void projectWindow(People current_people, JFrame frame) {
+    public void projectWindow(People current_people, JFrame frame) throws MalformedURLException {
         this.current_people = current_people;
         this.current_issue = issue;
         window_frame = frame;
@@ -130,7 +135,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     }
 
     //gui
-    public void setupWindow() {
+    public void setupWindow() throws MalformedURLException {
 
         //build window
         ImageIcon konoha = new ImageIcon("doge.png");
@@ -340,7 +345,11 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 int col = table.columnAtPoint(evt.getPoint());
                 int value = Integer.parseInt(table.getValueAt(row, 0).toString());
                 if (in_delete_mode == false) {
-                    enterTheIssue(value);
+                    try {
+                        enterTheIssue(value);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     deleteIssue(value);
                     current_issue = issue;
@@ -415,6 +424,16 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                 }
             }
         });
+
+        SpellChecker.registerDictionaries(new File("languages").toURI().toURL(), "en");
+        SpellCheckerOptions sco = new SpellCheckerOptions();
+        sco.setCaseSensitive(false);
+        sco.setSuggestionsLimitMenu(10);
+        sco.setLanguageDisableVisible(false);
+        sco.setIgnoreAllCapsWords(true);
+        JPopupMenu popup = SpellChecker.createCheckerPopup(sco);
+        SpellChecker.register(descrip);
+        descrip.addMouseListener(new PopupListener(popup));
         //build issus description
         descrip.setSize(new Dimension(1100, 5000));
         descrip.setText("Add description there");
@@ -1118,7 +1137,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     /**
      * @param ID issue index enter issue window
      */
-    public void enterTheIssue(int ID) {
+    public void enterTheIssue(int ID) throws MalformedURLException {
         this.frame.setVisible(false);
         obtainIssueOfID(ID).issueWindow(current_people, frame);
     }
