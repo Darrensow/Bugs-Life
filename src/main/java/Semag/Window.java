@@ -270,7 +270,7 @@ public class Window implements ActionListener {
         button3.setVisible(true);
         button3.setFocusable(true);
         button3.addActionListener(this);
-        check_icon(notification.size());
+        check_icon(current_people.getNewAssignedNotification().size());
 
         panel1.add(text2);
         panel1.add(button2);
@@ -308,6 +308,7 @@ public class Window implements ActionListener {
                     if (frame.isVisible() == false) {
                         current_project_Array = project_Array;
                         reset_Table(current_project_Array);
+                        check_icon(current_people.getNewAssignedNotification().size());
                     }
                     try {
                         Thread.sleep(1000);
@@ -356,12 +357,12 @@ public class Window implements ActionListener {
             if (panel_notification.isShowing() == true) {
                 table_scroll.setVisible(true);
                 sp_notification.setVisible(false);
-                check_icon(notification.size());
+                check_icon(current_people.getNewAssignedNotification().size());
             } else {
                 checkpeople();
                 table_scroll.setVisible(false);
                 sp_notification.setVisible(true);
-                check_icon(notification.size());
+                check_icon(current_people.getNewAssignedNotification().size());
             }
 
         }
@@ -370,11 +371,10 @@ public class Window implements ActionListener {
                 if (e.getSource() == accept_a.get(i)) {
                     each_notification_panel_a.get(i).setVisible(false);
                     each_notification_panel_a.remove(i);
-                    notification.remove(i);
                     accept_a.remove(i);
                     ignore_a.remove(i);
-                    frame.repaint();
                     current_people.dismissAndRemove(i);
+                    frame.repaint();
                 }
             }
         }
@@ -520,8 +520,8 @@ public class Window implements ActionListener {
     }
 
     public void setNotification(ArrayList<AssignedIssue> notification) {
-        this.notification = notification;
-        check_icon(this.notification.size());
+//        this.notification = notification;
+        check_icon(current_people.getNewAssignedNotification().size());
     }
 
     /**
