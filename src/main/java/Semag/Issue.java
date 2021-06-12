@@ -219,7 +219,8 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
         add_comment.setFocusable(true);
         add_comment.addActionListener(this);
         //build add comment panel
-        add_comment_panel.setBackground(Color.blue);
+        Color faafa5 = new Color(250, 175, 165);
+        add_comment_panel.setBackground(faafa5);
         add_comment_panel.setOpaque(true);
         add_comment_panel.setVisible(false);
         add_comment_panel.setBounds(100, 100, 1000, 600);
@@ -227,10 +228,10 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
         //build add comment title
         add_comment_title.setText("Add Comment");
-        add_comment_title.setFont(new Font("MV Boli", Font.PLAIN, 24));
+        add_comment_title.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
         add_comment_title.setBounds(400, 0, 200, 50);
         add_comment_title.setVisible(true);
-        add_comment_title.setBackground(Color.blue);
+        add_comment_title.setBackground(faafa5);
         add_comment_title.setOpaque(true);
         //build add comment text
         add_comment_text.setVisible(true);
@@ -1130,7 +1131,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (e.getSource() == image_file) {
+        if (e.getSource() == image) {
             image.setBounds(0, 0, 1000, 600);
         }
         if (dislike != null) {
@@ -1171,7 +1172,7 @@ public class Issue implements ActionListener, MouseListener, Comparator<Issue> {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (e.getSource() == image_file) {
+        if (e.getSource() == image) {
             image.setBounds(750, 0, 100, 50);
         }
         if (dislike != null) {

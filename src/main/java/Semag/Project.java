@@ -97,6 +97,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
     JFrame window_frame;
     boolean in_delete_mode = false;
 
+
     public Project() {
     }
 
@@ -201,8 +202,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_text.setBackground(Color.getHSBColor(342, 61, 100));
         include_text.setOpaque(true);
         include_text.setVisible(true);
-        include_text.setForeground(Color.blue);
-        include_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        include_text.setForeground(Color.black);
+        include_text.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
         include_text.setBounds(0, 0, 160, 35);
         include_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
@@ -219,8 +220,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         exclude_text.setBackground(Color.getHSBColor(342, 61, 100));
         exclude_text.setOpaque(true);
         exclude_text.setVisible(true);
-        exclude_text.setForeground(Color.blue);
-        exclude_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        exclude_text.setForeground(Color.black);
+        exclude_text.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
         exclude_text.setBounds(0, 0, 160, 35);
         exclude_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
@@ -260,8 +261,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         include_state_text.setOpaque(true);
         include_state_text.setVisible(true);
-        include_state_text.setForeground(Color.BLUE);
-        include_state_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        include_state_text.setForeground(Color.black);
+        include_state_text.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
         include_state_text.setBounds(0, 0, 160, 35);
         include_state_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
@@ -278,8 +279,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         exclude_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         exclude_state_text.setOpaque(true);
         exclude_state_text.setVisible(true);
-        exclude_state_text.setForeground(Color.BLUE);
-        exclude_state_text.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        exclude_state_text.setForeground(Color.black);
+        exclude_state_text.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
         exclude_state_text.setBounds(0, 0, 160, 35);
         exclude_state_text.setBorder(BorderFactory.createEmptyBorder());
         //title panel
@@ -354,7 +355,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         table_scroll.setVisible(true);
 
         //set adding issue panel
-        add_issue_panel.setBackground(Color.red);
+        Color faafa5 = new Color(250, 175, 165);
+        add_issue_panel.setBackground(faafa5);
         add_issue_panel.setOpaque(true);
         add_issue_panel.setBounds(0, 100, 1000, 550);
         add_issue_panel.setLayout(null);
@@ -384,9 +386,9 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         priop_text.setBounds(850, 0, 50, 35);
         priop_text.setText("Priority");
         priop_text.setVisible(true);
-        priop_text.setBackground(Color.red);
+        priop_text.setBackground(faafa5);
         priop_text.setOpaque(true);
-        priop_text.setForeground(Color.yellow);
+        priop_text.setForeground(Color.black);
         //build assignee
         assignee_text.setBounds(0, 60, 150, 50);
         assignee_text.setEditable(true);

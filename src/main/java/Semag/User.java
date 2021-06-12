@@ -47,6 +47,7 @@ public class User implements ActionListener {
     Password password_obj;
     People people_obj = null;
     boolean can_return = false;
+    Font f=new Font("Comic Sans MS",  Font.BOLD, 30);
 
     public User() {
     }
@@ -139,7 +140,7 @@ public class User implements ActionListener {
         login_user_label.setText("Username :");
         login_user_label.setBounds(25, 75, 80, 50);
         login_user_label.setVisible(true);
-        login_user_label.setForeground(Color.white);
+        login_user_label.setForeground(Color.black);
         //build login username text
 
         login_username.setText("Enter username");
@@ -158,7 +159,7 @@ public class User implements ActionListener {
         login_pass_label.setText("Password : ");
         login_pass_label.setVisible(true);
         login_pass_label.setBounds(25, 175, 80, 50);
-        login_pass_label.setForeground(Color.WHITE);
+        login_pass_label.setForeground(Color.black);
 //build login password text
         login_pass_text.setBounds(105, 175, 150, 50);
         login_pass_text.setVisible(true);
@@ -167,14 +168,14 @@ public class User implements ActionListener {
         login_in.setText("Login");
         login_in.setVisible(true);
         login_in.addActionListener(this);
-        login_in.setBounds(105, 235, 100, 30);
+        login_in.setBounds(105, 235, 100, 35);
 //build the title of login panel
-        login_label.setBounds(0, 0, 300, 35);
+        login_label.setBounds(0, 0, 300, 50);
         login_label.setText("Login");
         login_label.setHorizontalAlignment(0);
         login_label.setVerticalAlignment(0);
-        login_label.setForeground(Color.red);
-        login_label.setFont(new Font("Serif", Font.BOLD, 30));
+        login_label.setForeground(Color.black);
+        login_label.setFont(f);
 //add component to login panel
         login_panel.add(login_username);
         login_panel.add(login_user_label);
@@ -221,7 +222,7 @@ public class User implements ActionListener {
 //build the small title of sending email
         verify_label.setBounds(0, 150, 300, 35);
         verify_label.setText("Verify code sent to " + mail);
-        verify_label.setForeground(Color.red);
+        verify_label.setForeground(Color.black);
         verify_label.setFont(new Font("Serif", Font.BOLD, 20));
         verify_label.setVisible(false);
 //build the verify button
@@ -230,18 +231,18 @@ public class User implements ActionListener {
         verify_button.addActionListener(this);
         verify_button.setBounds(180, 240, 100, 50);
 //build the title of register panel
-        register_label.setBounds(0, 0, 300, 35);
+        register_label.setBounds(0, 0, 300, 50);
         register_label.setText("Register");
         register_label.setHorizontalAlignment(0);
         register_label.setVerticalAlignment(0);
-        register_label.setForeground(Color.red);
-        register_label.setFont(new Font("Serif", Font.BOLD, 30));
+        register_label.setForeground(Color.black);
+        register_label.setFont(f);
         register_label.setVisible(true);
 ///build register username text label
         register_user_label.setText("Username :");
         register_user_label.setVisible(false);
         register_user_label.setBounds(25, 50, 100, 50);
-        register_user_label.setForeground(Color.white);
+        register_user_label.setForeground(Color.black);
 //build the register username text
         register_username_text.setVisible(false);
         register_username_text.setText("Enter username");
@@ -262,7 +263,7 @@ public class User implements ActionListener {
         register_pass_text_label.setText("Password :");
         register_pass_text_label.setVisible(false);
         register_pass_text_label.setBounds(25, 150, 100, 50);
-        register_pass_text_label.setForeground(Color.white);
+        register_pass_text_label.setForeground(Color.black);
         //build register confirm pass   
         reg_confirm_pass_text.setVisible(false);
         reg_confirm_pass_text.setBounds(125, 255, 150, 50);
@@ -271,7 +272,7 @@ public class User implements ActionListener {
         reg_confirm_pass_text_label.setText("Re-enter password :");
         reg_confirm_pass_text_label.setVisible(false);
         reg_confirm_pass_text_label.setBounds(15, 255, 120, 50);
-        reg_confirm_pass_text_label.setForeground(Color.white);
+        reg_confirm_pass_text_label.setForeground(Color.black);
 //build the register button
         register_button.setText("Register");
         register_button.setVisible(false);
