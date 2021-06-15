@@ -419,7 +419,7 @@ public class Window implements ActionListener {
                 case 0: {
                     try {
                         selectFile(3);
-                    } catch (IOException ex) {
+                    } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -428,7 +428,7 @@ public class Window implements ActionListener {
                 case 1: {
                     try {
                         selectFile(1);
-                    } catch (IOException ex) {
+                    } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -436,7 +436,7 @@ public class Window implements ActionListener {
                 case 2: {
                     try {
                         selectFile(2);
-                    } catch (IOException ex) {
+                    } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -687,7 +687,7 @@ public class Window implements ActionListener {
 
 
     // 1 = txt , 2 = csv
-    public void selectFile(int num) throws IOException {  //select file location and set file name
+    public void selectFile(int num) throws IOException, InterruptedException {  //select file location and set file name
         JFileChooser choose = new JFileChooser();
         choose.setCurrentDirectory(new File("."));  // select where the file window start
         if (num == 1) {
@@ -705,7 +705,7 @@ public class Window implements ActionListener {
         }
     }
 
-    public void createReport(File file_name, int num) throws IOException {
+    public void createReport(File file_name, int num) throws IOException, InterruptedException {
         int cumuResolved = 0;   //cum resolved
         int cumuUnresolved = 0;   //cum unresolved
         int cumuInProgress = 0;   //in_progress
@@ -898,7 +898,7 @@ public class Window implements ActionListener {
             createPDF(file_name, text);
         }
 
-        report = current;
+//        report = current;
         GmailSender gmail_obj = new GmailSender(current_people.getGmail(), "Report by Doge", "Hi " + current_people.getName() + " this is the report file that required by you at " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss z").format(new java.util.Date(Instant.now().getEpochSecond() * 1000)));
         File[] file_send = {file_name};
 
@@ -914,6 +914,7 @@ public class Window implements ActionListener {
 
             }
         }
+        Thread.sleep(5000);
         gmail_obj.sendattachment(file_send);
 
     }

@@ -262,7 +262,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         black_ps_down.setVisible(true);
 
         ///
-        include_state_text.setText("Include State");
+        include_state_text.setText("Include Status");
         include_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         include_state_text.setOpaque(true);
         include_state_text.setVisible(true);
@@ -280,7 +280,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         include_state_title.add(include_state_text);
 
         //build exclude title and button
-        exclude_state_text.setText("Exclude State");
+        exclude_state_text.setText("Exclude Status");
         exclude_state_text.setBackground(Color.getHSBColor(342, 61, 100));
         exclude_state_text.setOpaque(true);
         exclude_state_text.setVisible(true);
@@ -607,6 +607,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
                     if (frame.isVisible() == false) {
                         current_issue = issue;
                         reset_table(current_issue);
+                        frame.repaint();
                     }
                     try {
                         Thread.sleep(1000);
