@@ -695,7 +695,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             assignee_text.setText("Enter assignee");
             People assignee_obj = Window.obtainPeopleByUsername(assignee);
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
