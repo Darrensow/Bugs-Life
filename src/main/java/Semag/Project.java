@@ -193,6 +193,7 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
         delete_project.addActionListener(this);
 
         //add sort combobox
+        sort_issue.removeAllItems();
         sort_issue.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         for (int i = 0; i < sort_option.length; i++) {
             sort_issue.addItem(sort_option[i]);
@@ -693,12 +694,17 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
             descrip.setText("Add description there");
             assignee_text.setText("Enter assignee");
             People assignee_obj = Window.obtainPeopleByUsername(assignee);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
             if (assignee_obj == null) {
                 popwindow("user issue", "invalid people");
             } else if (issue_name.equals("Enter issue name") || issue_name.equals("")) {
-                popwindow("Worring", "Please ENTER valid issue name");
+                popwindow("Warning", "Please ENTER valid issue name");
             } else if (tags.equals("Enter tags") || tags.equals("")) {
-                popwindow("Worring", "Please ENTER valid tags");
+                popwindow("Warning", "Please ENTER valid tags");
             } else {
                 issue_tags_array = addTag(issue_tags_array);
                 Issue iss = new Issue(numissue, issue_name, description, current_people.getName(), assignee_obj.getName(), issue_tags_array, priop, this);

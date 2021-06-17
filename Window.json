@@ -18,7 +18,7 @@
         "counter" : {
           "happy" : [ ],
           "dislikes" : [ ],
-          "angry" : [ "btan", "liew", "ally", "ang" ],
+          "angry" : [ "btan", "liew", "ang", "ally" ],
           "likes" : [ "jhoe" ]
         },
         "id" : 0
@@ -164,7 +164,7 @@
         "image_file" : null,
         "counter" : {
           "happy" : [ "btan", "liew" ],
-          "dislikes" : [ "ang" ],
+          "dislikes" : [ ],
           "angry" : [ ],
           "likes" : [ ]
         },
@@ -208,7 +208,7 @@
         "timestamp" : "07/09/2019 19:00:00 GMT+08:00",
         "image_file" : null,
         "counter" : {
-          "happy" : [ "ally" ],
+          "happy" : [ "ang", "ally" ],
           "dislikes" : [ ],
           "angry" : [ ],
           "likes" : [ "btan", "liew" ]
@@ -223,7 +223,7 @@
           "happy" : [ "ally" ],
           "dislikes" : [ ],
           "angry" : [ ],
-          "likes" : [ "btan", "liew", "ang" ]
+          "likes" : [ "btan", "liew" ]
         },
         "id" : 1
       } ],
@@ -255,7 +255,7 @@
         "counter" : {
           "happy" : [ ],
           "dislikes" : [ ],
-          "angry" : [ "ang" ],
+          "angry" : [ ],
           "likes" : [ ]
         },
         "id" : 1
@@ -264,31 +264,73 @@
       "image_file" : null,
       "id" : 0,
       "numbercomment" : 1
+    }, {
+      "title" : "issue",
+      "descriptionText" : "Add description there",
+      "creator" : "ang",
+      "assignee" : "ang",
+      "priority" : 1,
+      "timestamp" : "17/06/2021 12:31:40 MYT",
+      "changelog" : [ ],
+      "tag" : [ "tags" ],
+      "status" : "Open",
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "image_file" : null,
+      "id" : 1,
+      "numbercomment" : 0
+    }, {
+      "title" : "asd",
+      "descriptionText" : "asda",
+      "creator" : "ang",
+      "assignee" : "ang",
+      "priority" : 1,
+      "timestamp" : "17/06/2021 12:32:31 MYT",
+      "changelog" : [ ],
+      "tag" : [ "sd" ],
+      "status" : "Open",
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "image_file" : null,
+      "id" : 2,
+      "numbercomment" : 0
+    }, {
+      "title" : "issue",
+      "descriptionText" : "Add description there",
+      "creator" : "ang",
+      "assignee" : "ang",
+      "priority" : 1,
+      "timestamp" : "17/06/2021 12:35:24 MYT",
+      "changelog" : [ ],
+      "tag" : [ "jds" ],
+      "status" : "Open",
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "image_file" : null,
+      "id" : 3,
+      "numbercomment" : 0
+    }, {
+      "title" : "ds",
+      "descriptionText" : "Add description there",
+      "creator" : "ang",
+      "assignee" : "ang",
+      "priority" : 1,
+      "timestamp" : "17/06/2021 12:36:03 MYT",
+      "changelog" : [ ],
+      "tag" : [ "f" ],
+      "status" : "Open",
+      "comments" : [ ],
+      "numberOfComments" : 0,
+      "image_file" : null,
+      "id" : 4,
+      "numbercomment" : 0
     } ],
-    "numissue" : 1,
+    "numissue" : 5,
     "name" : "Minecraft ",
     "owner" : "mandy",
     "id" : 3
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "Enter Project Nameaasdasd",
-    "owner" : "ang",
-    "id" : 4
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "asdas",
-    "owner" : "ang",
-    "id" : 5
-  }, {
-    "issue" : [ ],
-    "numissue" : 0,
-    "name" : "asdasd",
-    "owner" : "ang",
-    "id" : 6
   } ],
-  "numberproject" : 7,
+  "numberproject" : 4,
   "people_Array_replica" : {
     "list" : [ {
       "newAssignedNotification" : [ {
@@ -317,10 +359,18 @@
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 3
     }, {
-      "newAssignedNotification" : [ ],
+      "newAssignedNotification" : [ {
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     1Issue Name:                issue\nAssigned by:                  ang\n"
+      }, {
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     2Issue Name:                  asd\nAssigned by:                  ang\n"
+      }, {
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     3Issue Name:                issue\nAssigned by:                  ang\n"
+      }, {
+        "issueInfo" : "Project ID:     3Project Name:           Minecraft \nIssue ID:     4Issue Name:                   ds\nAssigned by:                  ang\n"
+      } ],
       "password" : "password",
       "name" : "ang",
-      "assigned" : 1,
+      "assigned" : 5,
       "number_solved" : 0,
       "gmail" : "xianpua2001.sim03@gmail.com",
       "id" : 4
@@ -334,7 +384,7 @@
       "id" : 5
     } ]
   },
-  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report" ],
+  "tagsOption_replica" : [ "tough", "Frontend", "Backend", "cmty:bug-report", "tags", "sd", "jds", "f" ],
   "numberOfUsers" : 5,
   "report" : {
     "cumuADT" : [ ],
