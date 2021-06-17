@@ -2,7 +2,6 @@ package Semag;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.PopupListener;
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.SpellCheckerOptions;
@@ -1011,8 +1010,8 @@ public class Project implements ActionListener, Comparator<Project>, Comparable<
 
         Issue current;
         int score;
-        for (int i = 0; i < issue.size(); i++) {
-            current = issue.get(i);
+        for (int i = 0; i < current_issue.size(); i++) {
+            current = current_issue.get(i);
 
 
             score = Window.tokenSetPartialRatio(seachkeyword, current.getTitle());
