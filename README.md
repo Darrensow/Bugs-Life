@@ -1,6 +1,10 @@
 # Welcome to Doge's BugsLife. 
 
+## Introduction
+
 This project is developed by Doge, Group 30.
+
+This is a Java Desktop application to track all the issues from projects so that issues can be created, shared and discussed with the rest of the team to hasten the process of resolving issues of projects. 
 
 Our group members include:
 1) Pua Zhi Xian
@@ -8,11 +12,6 @@ Our group members include:
 3) Darren Sow Zhu Jian
 4) Tee Wei Lun
 
-## Introduction
-
-This is a Java Desktop application to track all the issues from projects so that issues can be created, shared and discussed with the rest of the team to hasten the process of resolving issues of projects. 
-
-<br></br>
 ## How to Use Doge?
 Run main program in SEMAG class to launch the program.
 `
@@ -33,7 +32,7 @@ public class SEMAG{
 
 `
 
-##How to use the Chat Function?
+## How to use the Chat Function?
 Before using the chat function, you need to launch the server in multi-thread.
 `
 public class Server {
@@ -47,4 +46,4 @@ public class Server {
 }
 
 `
-After launching this server, you can run another SEMAG class instance,log in different account, and two accounts user can chat to each other.
+After launching this server, you can run another SEMAG class instance, log into a different account, and two accounts user can chat to each other.
