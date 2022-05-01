@@ -8,6 +8,9 @@ Our group members include:
 3) Darren Sow Zhu Jian
 4) Tee Wei Lun
 
+## Introduction
+
+This is a Java Desktop application to track all the issues from projects so that issues can be created, shared and discussed with the rest of the team to hasten the process of resolving issues of projects. 
 
 <br></br>
 ## How to Use Doge?
